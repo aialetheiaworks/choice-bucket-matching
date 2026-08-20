@@ -8,6 +8,19 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 - `CHOICE_Bucket_Matching_Requirements.md` — original requirements/design
   doc with the reasoning behind those decisions.
 
+## Pick up here (paused 2026-08-20)
+
+**Immediate next action:** the user needs to deploy `streamlit_app.py` on
+Streamlit Community Cloud themselves (share.streamlit.io → sign in as
+GitHub account `aialetheiaworks` → New app → repo
+`aialetheiaworks/choice-bucket-matching`, branch `main`, file
+`streamlit_app.py` → Deploy). This needs their own browser/OAuth login,
+so it couldn't be done from here — everything up to that point (repo
+created, code pushed, `requirements.txt` ready) is done. Once they've
+deployed, next step is just confirming the live URL works, then decide
+between Phase 5 (persistence/logging) or the bucket-taxonomy-overlap
+question below.
+
 ## Current status (last updated: 2026-08-20)
 
 | Phase | What | Status |
