@@ -54,12 +54,27 @@ same way tests or a summary would be.
 
 ## Test UI (not part of the phased build — for internal testing only)
 
-`app.py` + `templates/index.html`: a minimal Flask app wrapping
-`get_tooltip.py` so testers can type a master prompt in a browser instead
-of the CLI. Added 2026-08-20, not in the original build brief. Run with
-`python3 app.py`, open `http://127.0.0.1:5000`. Not yet deployed anywhere
-— currently local-only. Requires `flask` (installed 2026-08-20, not yet
-in a requirements file since none exists in this project).
+Two front ends over the same pipeline, both added 2026-08-20:
+
+- `app.py` + `templates/index.html` — Flask version, local-only. Run with
+  `python3 app.py`, open `http://127.0.0.1:5000`. Was going to be
+  deployed via Docker to Hugging Face Spaces, but Docker Spaces need a
+  verified payment method on a free HF account — blocked, kept the
+  `Dockerfile` around in case that changes later.
+- `gradio_app.py` — Gradio version, same pipeline (`match_buckets` +
+  `get_tooltip`), built specifically to deploy on Hugging Face Spaces'
+  free tier without payment verification. This is the one `README.md`'s
+  Space front matter (`sdk: gradio`, `app_file: gradio_app.py`) points
+  at. Run locally with `python3 gradio_app.py`.
+
+`requirements.txt` covers both (`flask`, `gradio`, `spacy`, plus a direct
+wheel URL for `en_core_web_sm` — Gradio Spaces just run `pip install -r
+requirements.txt`, there's no Docker build step to run `spacy download`
+in, so the model has to be installable as a normal pip package).
+
+This project is now a git repo (`git init` done 2026-08-20, initial
+commit made) specifically so it can be pushed to a Hugging Face Space.
+Not yet pushed — needs the user's own HF account/token.
 
 ## Locked decisions (mirrored from the build brief — check that file for full rationale)
 

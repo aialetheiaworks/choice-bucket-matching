@@ -3,8 +3,9 @@ title: CHOICE Bucket Matching Test UI
 emoji: 🧭
 colorFrom: blue
 colorTo: indigo
-sdk: docker
-app_port: 7860
+sdk: gradio
+sdk_version: 6.25.0
+app_file: gradio_app.py
 ---
 
 # CHOICE Bucket Matching — Test UI
