@@ -1,0 +1,1749 @@
+bucket_id,bucket_name,tier,candidate_term,sources,approve (y/n)
+customer,Customer,1,account,datamuse,n
+customer,Customer,1,agent,datamuse,n
+customer,Customer,1,buyer,datamuse,y
+customer,Customer,1,client,datamuse|wordnet,y
+customer,Customer,1,clientele,datamuse,y
+customer,Customer,1,collaborator,datamuse,n
+customer,Customer,1,consumer,datamuse,y
+customer,Customer,1,employer,datamuse,n
+customer,Customer,1,lessee,datamuse,y
+customer,Customer,1,licensee,datamuse,y
+customer,Customer,1,patronage,datamuse,n
+customer,Customer,1,purchaser,datamuse,y
+customer,Customer,1,receivable,datamuse,n
+customer,Customer,1,subscribe,datamuse,n
+customer,Customer,1,user,datamuse,y
+value_proposition,Value Proposition,1,appraise,wordnet,n
+value_proposition,Value Proposition,1,appreciate,wordnet,n
+value_proposition,Value Proposition,1,assess,wordnet,n
+value_proposition,Value Proposition,1,brand equity,datamuse,y
+value_proposition,Value Proposition,1,business case,datamuse,y
+value_proposition,Value Proposition,1,competitive advantage,datamuse,y
+value_proposition,Value Proposition,1,economic value,wordnet,y
+value_proposition,Value Proposition,1,esteem,wordnet,n
+value_proposition,Value Proposition,1,evaluate,wordnet,n
+value_proposition,Value Proposition,1,line,datamuse,n
+value_proposition,Value Proposition,1,measure,wordnet,n
+value_proposition,Value Proposition,1,moneys worth,datamuse,y
+value_proposition,Value Proposition,1,note value,wordnet,n
+value_proposition,Value Proposition,1,pay off,datamuse,n
+value_proposition,Value Proposition,1,point of difference,datamuse,y
+value_proposition,Value Proposition,1,point of purchase,datamuse,n
+value_proposition,Value Proposition,1,prise,wordnet,n
+value_proposition,Value Proposition,1,private benefits,datamuse,y
+value_proposition,Value Proposition,1,prize,wordnet,n
+value_proposition,Value Proposition,1,proffer,wordnet,n
+value_proposition,Value Proposition,1,proposal,wordnet,n
+value_proposition,Value Proposition,1,proposition,datamuse|wordnet,y
+value_proposition,Value Proposition,1,rate,wordnet,n
+value_proposition,Value Proposition,1,respect,wordnet,n
+value_proposition,Value Proposition,1,suggestion,wordnet,n
+value_proposition,Value Proposition,1,time value,wordnet,y
+value_proposition,Value Proposition,1,transaction utility,datamuse,y
+value_proposition,Value Proposition,1,treasure,wordnet,n
+value_proposition,Value Proposition,1,valuate,wordnet,n
+value_proposition,Value Proposition,1,value,wordnet,y
+value_proposition,Value Proposition,1,value add,datamuse,y
+value_proposition,Value Proposition,1,value added service,datamuse,y
+value_proposition,Value Proposition,1,value proposition canvas,datamuse,y
+value_proposition,Value Proposition,1,value statement,datamuse,y
+problem_definition,Problem Definition,1,definition,wordnet,y
+problem_definition,Problem Definition,1,determination,datamuse,n
+problem_definition,Problem Definition,1,determine,datamuse,n
+problem_definition,Problem Definition,1,determining,datamuse,n
+problem_definition,Problem Definition,1,diagnostic,datamuse,y
+problem_definition,Problem Definition,1,figure,datamuse,n
+problem_definition,Problem Definition,1,hard,datamuse,n
+problem_definition,Problem Definition,1,hook,datamuse,n
+problem_definition,Problem Definition,1,imagination,datamuse,n
+problem_definition,Problem Definition,1,job,wordnet,n
+problem_definition,Problem Definition,1,perfect,datamuse,n
+problem_definition,Problem Definition,1,persuasion,datamuse,n
+problem_definition,Problem Definition,1,positioning,datamuse,n
+problem_definition,Problem Definition,1,problem,wordnet,y
+problem_definition,Problem Definition,1,set,datamuse,n
+problem_definition,Problem Definition,1,sort,datamuse,n
+problem_definition,Problem Definition,1,sorted,datamuse,n
+problem_definition,Problem Definition,1,trouble,wordnet,y
+problem_definition,Problem Definition,1,vicious circle,datamuse,y
+business_objective,Business Objective,1,accusative,wordnet,n
+business_objective,Business Objective,1,action,datamuse,n
+business_objective,Business Objective,1,aim,wordnet,y
+business_objective,Business Objective,1,business,wordnet,y
+business_objective,Business Objective,1,business concern,wordnet,y
+business_objective,Business Objective,1,business enterprise,wordnet,y
+business_objective,Business Objective,1,business organisation,wordnet,y
+business_objective,Business Objective,1,business organization,wordnet,y
+business_objective,Business Objective,1,business sector,wordnet,y
+business_objective,Business Objective,1,byplay,wordnet,n
+business_objective,Business Objective,1,case,datamuse,n
+business_objective,Business Objective,1,cause,datamuse,y
+business_objective,Business Objective,1,clientele,wordnet,n
+business_objective,Business Objective,1,commerce,datamuse,y
+business_objective,Business Objective,1,commercial enterprise,wordnet,y
+business_objective,Business Objective,1,commercialism,datamuse,y
+business_objective,Business Objective,1,concern,wordnet,y
+business_objective,Business Objective,1,documentary,wordnet,n
+business_objective,Business Objective,1,drive,datamuse,y
+business_objective,Business Objective,1,end,datamuse,y
+business_objective,Business Objective,1,failure,datamuse,n
+business_objective,Business Objective,1,fair,datamuse,n
+business_objective,Business Objective,1,game,datamuse,n
+business_objective,Business Objective,1,growth,datamuse,n
+business_objective,Business Objective,1,have,datamuse,n
+business_objective,Business Objective,1,home,datamuse,n
+business_objective,Business Objective,1,job,wordnet,n
+business_objective,Business Objective,1,line,datamuse|wordnet,n
+business_objective,Business Objective,1,line of work,wordnet,n
+business_objective,Business Objective,1,move,datamuse,n
+business_objective,Business Objective,1,nonsubjective,wordnet,n
+business_objective,Business Objective,1,object,wordnet,n
+business_objective,Business Objective,1,object glass,wordnet,n
+business_objective,Business Objective,1,object lens,wordnet,n
+business_objective,Business Objective,1,objective,wordnet,y
+business_objective,Business Objective,1,objective lens,wordnet,n
+business_objective,Business Objective,1,occupation,wordnet,n
+business_objective,Business Objective,1,patronage,wordnet,n
+business_objective,Business Objective,1,stage business,wordnet,n
+business_objective,Business Objective,1,target,wordnet,y
+market,Market,1,aftermarket,datamuse,y
+market,Market,1,bourse,datamuse,y
+market,Market,1,business,datamuse,y
+market,Market,1,commerce,datamuse,y
+market,Market,1,commercialise,wordnet,y
+market,Market,1,commercialize,datamuse|wordnet,y
+market,Market,1,food market,wordnet,n
+market,Market,1,grocery,datamuse|wordnet,n
+market,Market,1,grocery store,datamuse|wordnet,n
+market,Market,1,logistics,datamuse,n
+market,Market,1,market place,wordnet,y
+market,Market,1,marketplace,datamuse|wordnet,y
+market,Market,1,mart,wordnet,y
+market,Market,1,merchandising,datamuse,y
+market,Market,1,merchantable,datamuse,n
+market,Market,1,sales,datamuse,y
+market,Market,1,securities industry,datamuse|wordnet,y
+market,Market,1,trade,datamuse,y
+market,Market,1,trading,datamuse,y
+competition,Competition,1,battle,datamuse,n
+competition,Competition,1,challenge,datamuse,y
+competition,Competition,1,challenger,datamuse|wordnet,y
+competition,Competition,1,compete,datamuse,y
+competition,Competition,1,competing,datamuse,y
+competition,Competition,1,competitive,datamuse,y
+competition,Competition,1,competitiveness,datamuse,y
+competition,Competition,1,competitor,datamuse|wordnet,y
+competition,Competition,1,contender,datamuse|wordnet,y
+competition,Competition,1,contention,datamuse|wordnet,y
+competition,Competition,1,contest,datamuse|wordnet,y
+competition,Competition,1,fight,datamuse,n
+competition,Competition,1,meet,datamuse,n
+competition,Competition,1,rival,datamuse|wordnet,y
+competition,Competition,1,rivalry,datamuse|wordnet,y
+pricing,Pricing,1,billing,datamuse,y
+pricing,Pricing,1,charge,datamuse,y
+pricing,Pricing,1,cost,datamuse,y
+pricing,Pricing,1,costing,datamuse,y
+pricing,Pricing,1,damage,datamuse,n
+pricing,Pricing,1,discount,datamuse,y
+pricing,Pricing,1,monetary value,datamuse,y
+pricing,Pricing,1,price,wordnet,y
+pricing,Pricing,1,rate,datamuse,y
+pricing,Pricing,1,rates,datamuse,y
+pricing,Pricing,1,tariff,datamuse,y
+pricing,Pricing,1,tariffication,datamuse,y
+pricing,Pricing,1,terms,datamuse,n
+pricing,Pricing,1,toll,datamuse,n
+pricing,Pricing,1,underwriting,datamuse,n
+pricing,Pricing,1,valuation,datamuse,y
+revenue,Revenue,1,cash,datamuse,n
+revenue,Revenue,1,collections,datamuse,y
+revenue,Revenue,1,dividend,datamuse,y
+revenue,Revenue,1,earnings,datamuse,y
+revenue,Revenue,1,gross,datamuse|wordnet,y
+revenue,Revenue,1,income,datamuse,y
+revenue,Revenue,1,profit,datamuse,y
+revenue,Revenue,1,receipts,datamuse|wordnet,y
+revenue,Revenue,1,salary,datamuse,n
+revenue,Revenue,1,tax,datamuse,n
+revenue,Revenue,1,tax income,datamuse|wordnet,y
+revenue,Revenue,1,tax revenue,datamuse|wordnet,y
+revenue,Revenue,1,taxation,datamuse|wordnet,n
+revenue,Revenue,1,turnover,datamuse,y
+revenue,Revenue,1,wages,datamuse,n
+cost,Cost,1,be,datamuse|wordnet,n
+cost,Cost,1,budget,datamuse,y
+cost,Cost,1,charge,datamuse,y
+cost,Cost,1,dues,datamuse,y
+cost,Cost,1,funding,datamuse,y
+cost,Cost,1,monetary value,datamuse|wordnet,y
+cost,Cost,1,paid,datamuse,n
+cost,Cost,1,pay,datamuse,n
+cost,Cost,1,payment,datamuse,y
+cost,Cost,1,price,datamuse|wordnet,y
+cost,Cost,1,priced,datamuse,y
+cost,Cost,1,pricing,datamuse,y
+cost,Cost,1,purchase,datamuse,y
+cost,Cost,1,spending,datamuse,y
+cost,Cost,1,toll,datamuse|wordnet,n
+roi,ROI,1,affordability,datamuse,n
+roi,ROI,1,dir,datamuse,n
+roi,ROI,1,icr,datamuse,n
+roi,ROI,1,ihr,datamuse,n
+roi,ROI,1,investment,datamuse,y
+roi,ROI,1,irs,datamuse,n
+roi,ROI,1,isr,datamuse,n
+roi,ROI,1,liege,datamuse,n
+roi,ROI,1,mep,datamuse,n
+roi,ROI,1,monarch,datamuse,n
+roi,ROI,1,profit,datamuse,y
+roi,ROI,1,profitability,datamuse,y
+roi,ROI,1,profitable,datamuse,y
+roi,ROI,1,rci,datamuse,n
+roi,ROI,1,return on invested capital,wordnet,y
+roi,ROI,1,return on investment,wordnet,y
+roi,ROI,1,ruler,datamuse,n
+stakeholders,Stakeholders,1,actor,datamuse,y
+stakeholders,Stakeholders,1,actors,datamuse,y
+stakeholders,Stakeholders,1,actresses,datamuse,n
+stakeholders,Stakeholders,1,advocates,datamuse,y
+stakeholders,Stakeholders,1,agencies,datamuse,y
+stakeholders,Stakeholders,1,agents,datamuse,y
+stakeholders,Stakeholders,1,applicants,datamuse,n
+stakeholders,Stakeholders,1,applicators,datamuse,n
+stakeholders,Stakeholders,1,audiences,datamuse,n
+stakeholders,Stakeholders,1,beneficiaries,datamuse,y
+stakeholders,Stakeholders,1,bodies,datamuse,y
+stakeholders,Stakeholders,1,briefers,datamuse,n
+stakeholders,Stakeholders,1,caregivers,datamuse,n
+stakeholders,Stakeholders,1,clients,datamuse,y
+stakeholders,Stakeholders,1,collaborators,datamuse,y
+stakeholders,Stakeholders,1,stakeholder,wordnet,y
+user_journey,User Journey,1,access,datamuse,n
+user_journey,User Journey,1,bather,datamuse,n
+user_journey,User Journey,1,beneficiary,datamuse,n
+user_journey,User Journey,1,breaker,datamuse,n
+user_journey,User Journey,1,browser,datamuse,y
+user_journey,User Journey,1,buyer,datamuse,y
+user_journey,User Journey,1,caller,datamuse,n
+user_journey,User Journey,1,courier,datamuse,n
+user_journey,User Journey,1,drug user,wordnet,n
+user_journey,User Journey,1,end,datamuse,n
+user_journey,User Journey,1,exploiter,wordnet,n
+user_journey,User Journey,1,fare,datamuse,n
+user_journey,User Journey,1,goer,datamuse,n
+user_journey,User Journey,1,journey,wordnet,y
+user_journey,User Journey,1,journeying,wordnet,y
+user_journey,User Journey,1,lap,datamuse,n
+user_journey,User Journey,1,sleep,datamuse,n
+user_journey,User Journey,1,substance abuser,wordnet,n
+user_journey,User Journey,1,tourist,datamuse,n
+user_journey,User Journey,1,travel,wordnet,y
+user_journey,User Journey,1,trip,datamuse,y
+user_journey,User Journey,1,user,wordnet,y
+customer_experience,Customer Experience,1,brand relationship,datamuse,y
+customer_experience,Customer Experience,1,buyer decision process,datamuse,y
+customer_experience,Customer Experience,1,client,wordnet,y
+customer_experience,Customer Experience,1,co creation,datamuse,y
+customer_experience,Customer Experience,1,cognitive,datamuse,n
+customer_experience,Customer Experience,1,consumer behaviour,datamuse,y
+customer_experience,Customer Experience,1,consumer education,datamuse,y
+customer_experience,Customer Experience,1,customer,wordnet,y
+customer_experience,Customer Experience,1,customer analytics,datamuse,y
+customer_experience,Customer Experience,1,customer engagement,datamuse,y
+customer_experience,Customer Experience,1,customer insight,datamuse,y
+customer_experience,Customer Experience,1,customer intelligence,datamuse,y
+customer_experience,Customer Experience,1,customer relationship management,datamuse,y
+customer_experience,Customer Experience,1,customer success,datamuse,y
+customer_experience,Customer Experience,1,customer value proposition,datamuse,y
+customer_experience,Customer Experience,1,experience,wordnet,y
+customer_experience,Customer Experience,1,experience management,datamuse,y
+customer_experience,Customer Experience,1,feel,wordnet,n
+customer_experience,Customer Experience,1,get,wordnet,n
+customer_experience,Customer Experience,1,go through,wordnet,n
+customer_experience,Customer Experience,1,have,wordnet,n
+customer_experience,Customer Experience,1,know,wordnet,n
+customer_experience,Customer Experience,1,live,wordnet,n
+customer_experience,Customer Experience,1,receive,wordnet,n
+customer_experience,Customer Experience,1,see,wordnet,n
+customer_experience,Customer Experience,1,service design,datamuse,y
+technology,Technology,1,applied science,datamuse|wordnet,y
+technology,Technology,1,computerization,datamuse,y
+technology,Technology,1,computing,datamuse,y
+technology,Technology,1,cyber,datamuse,y
+technology,Technology,1,engineering,datamuse|wordnet,y
+technology,Technology,1,engineering science,datamuse|wordnet,y
+technology,Technology,1,hi tech,datamuse,y
+technology,Technology,1,polytechnic,datamuse,n
+technology,Technology,1,science,datamuse,y
+technology,Technology,1,scientific,datamuse,y
+technology,Technology,1,tech,datamuse,y
+technology,Technology,1,technical,datamuse,y
+technology,Technology,1,technicality,datamuse,n
+technology,Technology,1,technique,datamuse,n
+technology,Technology,1,technological,datamuse,y
+data,Data,1,computer,datamuse,n
+data,Data,1,data point,wordnet,y
+data,Data,1,databank,datamuse,y
+data,Data,1,database,datamuse,y
+data,Data,1,datafile,datamuse,y
+data,Data,1,dataset,datamuse,y
+data,Data,1,datasheet,datamuse,y
+data,Data,1,datatype,datamuse,y
+data,Data,1,datum,wordnet,y
+data,Data,1,informatics,datamuse,y
+data,Data,1,information,datamuse|wordnet,y
+data,Data,1,record,datamuse,y
+data,Data,1,sample,datamuse,y
+data,Data,1,statistic,datamuse,y
+data,Data,1,statistical,datamuse,y
+data,Data,1,statistics,datamuse,y
+data,Data,1,stats,datamuse,y
+security,Security,1,certificate,datamuse|wordnet,y
+security,Security,1,confidentiality,datamuse,y
+security,Security,1,continuity,datamuse,y
+security,Security,1,peace,datamuse,n
+security,Security,1,protection,datamuse|wordnet,y
+security,Security,1,safe,datamuse,y
+security,Security,1,safely,datamuse,n
+security,Security,1,safety,datamuse,y
+security,Security,1,secure,datamuse,y
+security,Security,1,security department,wordnet,y
+security,Security,1,security measure,wordnet,y
+security,Security,1,security measures,datamuse|wordnet,y
+security,Security,1,security system,datamuse|wordnet,y
+security,Security,1,stability,datamuse,y
+security,Security,1,sure,datamuse,n
+security,Security,1,surety,datamuse|wordnet,y
+security,Security,1,uncertainty,datamuse,n
+privacy,Privacy,1,anonymity,datamuse,y
+privacy,Privacy,1,clandestine,datamuse,n
+privacy,Privacy,1,closed,datamuse,n
+privacy,Privacy,1,concealment,datamuse|wordnet,n
+privacy,Privacy,1,confidential,datamuse,y
+privacy,Privacy,1,confidentiality,datamuse,y
+privacy,Privacy,1,confidentially,datamuse,y
+privacy,Privacy,1,private,datamuse,y
+privacy,Privacy,1,privateness,datamuse|wordnet,y
+privacy,Privacy,1,privy,datamuse,y
+privacy,Privacy,1,seclusion,datamuse|wordnet,n
+privacy,Privacy,1,secrecy,datamuse|wordnet,y
+privacy,Privacy,1,secret,datamuse,y
+privacy,Privacy,1,tranquility,datamuse,n
+privacy,Privacy,1,tranquillity,datamuse,n
+legal,Legal,1,effectual,wordnet,n
+legal,Legal,1,eligible,datamuse,n
+legal,Legal,1,ineligible,datamuse,n
+legal,Legal,1,judicial,datamuse,y
+legal,Legal,1,jural,datamuse,y
+legal,Legal,1,jurisprudence,datamuse,y
+legal,Legal,1,juristic,datamuse,y
+legal,Legal,1,lawful,datamuse,y
+legal,Legal,1,legitimate,datamuse,y
+legal,Legal,1,licit,datamuse,y
+legal,Legal,1,ratified,datamuse,y
+legal,Legal,1,sanctioned,datamuse,y
+legal,Legal,1,sound,datamuse|wordnet,n
+legal,Legal,1,statutory,datamuse,y
+legal,Legal,1,sub judice,datamuse,y
+legal,Legal,1,valid,datamuse,y
+risk,Risk,1,adventure,datamuse|wordnet,n
+risk,Risk,1,chance,datamuse|wordnet,y
+risk,Risk,1,danger,datamuse|wordnet,y
+risk,Risk,1,endangerment,wordnet,y
+risk,Risk,1,gamble,datamuse|wordnet,y
+risk,Risk,1,hazard,datamuse|wordnet,y
+risk,Risk,1,high risk,datamuse,y
+risk,Risk,1,jeopardy,datamuse|wordnet,y
+risk,Risk,1,lay on the line,datamuse|wordnet,n
+risk,Risk,1,peril,datamuse|wordnet,y
+risk,Risk,1,put on the line,datamuse|wordnet,n
+risk,Risk,1,risk of exposure,wordnet,n
+risk,Risk,1,risk of infection,wordnet,n
+risk,Risk,1,riskiness,datamuse,y
+risk,Risk,1,risky,datamuse,y
+risk,Risk,1,run a risk,datamuse|wordnet,n
+risk,Risk,1,take a chance,datamuse|wordnet,n
+risk,Risk,1,take chances,datamuse|wordnet,n
+dependencies,Dependencies,1,addiction,datamuse|wordnet,n
+dependencies,Dependencies,1,addictions,datamuse,n
+dependencies,Dependencies,1,agencies,datamuse,n
+dependencies,Dependencies,1,appurtenances,datamuse,n
+dependencies,Dependencies,1,branches,datamuse,n
+dependencies,Dependencies,1,cells,datamuse,n
+dependencies,Dependencies,1,colonies,datamuse,n
+dependencies,Dependencies,1,colony,wordnet,n
+dependencies,Dependencies,1,departments,datamuse,n
+dependencies,Dependencies,1,dependance,wordnet,y
+dependencies,Dependencies,1,dependence,wordnet,y
+dependencies,Dependencies,1,dependences,datamuse,y
+dependencies,Dependencies,1,dependency,wordnet,y
+dependencies,Dependencies,1,dependent,datamuse,y
+dependencies,Dependencies,1,desks,datamuse,n
+dependencies,Dependencies,1,divisions,datamuse,n
+dependencies,Dependencies,1,entities,datamuse,n
+dependencies,Dependencies,1,establishments,datamuse,n
+dependencies,Dependencies,1,facilities,datamuse,n
+dependencies,Dependencies,1,habituation,wordnet,n
+resources,Resources,1,allocation,datamuse,y
+resources,Resources,1,allocations,datamuse,y
+resources,Resources,1,amount,datamuse,n
+resources,Resources,1,amounts,datamuse,n
+resources,Resources,1,appeal,datamuse,n
+resources,Resources,1,appeals,datamuse,n
+resources,Resources,1,approaches,datamuse,n
+resources,Resources,1,appropriations,datamuse,y
+resources,Resources,1,asset,datamuse,y
+resources,Resources,1,assets,datamuse,y
+resources,Resources,1,available,datamuse,n
+resources,Resources,1,avenues,datamuse,y
+resources,Resources,1,average,datamuse,n
+resources,Resources,1,imagination,datamuse|wordnet,n
+resources,Resources,1,resource,wordnet,y
+resources,Resources,1,resourcefulness,datamuse|wordnet,y
+timeline,Timeline,1,agenda,datamuse,y
+timeline,Timeline,1,calendar,datamuse,y
+timeline,Timeline,1,calendaring,datamuse,y
+timeline,Timeline,1,chronological,datamuse,y
+timeline,Timeline,1,chronology,datamuse,y
+timeline,Timeline,1,historical,datamuse,n
+timeline,Timeline,1,schedule,datamuse,y
+timeline,Timeline,1,scheduling,datamuse,y
+timeline,Timeline,1,sequence,datamuse,y
+timeline,Timeline,1,time scale,datamuse,y
+timeline,Timeline,1,time table,datamuse,y
+timeline,Timeline,1,timeframe,datamuse,y
+timeline,Timeline,1,timescale,datamuse,y
+timeline,Timeline,1,timetable,datamuse,y
+timeline,Timeline,1,timing,datamuse,y
+change_management,Change Management,1,adaptive control function,datamuse,n
+change_management,Change Management,1,alter,wordnet,y
+change_management,Change Management,1,alteration,wordnet,y
+change_management,Change Management,1,breaking change,datamuse,y
+change_management,Change Management,1,bucket,datamuse,n
+change_management,Change Management,1,change,wordnet,y
+change_management,Change Management,1,changelog,datamuse,y
+change_management,Change Management,1,commute,wordnet,n
+change_management,Change Management,1,compatibility,datamuse,y
+change_management,Change Management,1,configuration,datamuse,y
+change_management,Change Management,1,continuous integration,datamuse,y
+change_management,Change Management,1,convert,wordnet,y
+change_management,Change Management,1,deepen,wordnet,n
+change_management,Change Management,1,direction,wordnet,n
+change_management,Change Management,1,edit,datamuse,n
+change_management,Change Management,1,exchange,wordnet,n
+change_management,Change Management,1,interchange,wordnet,n
+change_management,Change Management,1,management,wordnet,n
+change_management,Change Management,1,management system,datamuse,n
+change_management,Change Management,1,modification,wordnet,y
+change_management,Change Management,1,modify,wordnet,y
+change_management,Change Management,1,reprogramming,datamuse,y
+change_management,Change Management,1,shift,wordnet,y
+change_management,Change Management,1,software configuration management,datamuse,y
+change_management,Change Management,1,source configuration management,datamuse,y
+change_management,Change Management,1,source control,datamuse,y
+change_management,Change Management,1,subversioning,datamuse,y
+change_management,Change Management,1,switch,wordnet,y
+change_management,Change Management,1,transfer,wordnet,y
+change_management,Change Management,1,variety,wordnet,n
+change_management,Change Management,1,vary,wordnet,n
+change_management,Change Management,1,version control,datamuse,y
+operations,Operations,1,act,datamuse,n
+operations,Operations,1,action,datamuse,n
+operations,Operations,1,actions,datamuse,n
+operations,Operations,1,activities,datamuse,y
+operations,Operations,1,activity,datamuse,y
+operations,Operations,1,acts,datamuse,n
+operations,Operations,1,affairs,datamuse,n
+operations,Operations,1,apd,datamuse,n
+operations,Operations,1,assignments,datamuse,n
+operations,Operations,1,attacks,datamuse,n
+operations,Operations,1,battle,datamuse,n
+operations,Operations,1,bombers,datamuse,n
+operations,Operations,1,bombing,datamuse,n
+operations,Operations,1,bombings,datamuse,n
+operations,Operations,1,cognitive operation,wordnet,n
+operations,Operations,1,cognitive process,wordnet,n
+operations,Operations,1,functioning,wordnet,y
+operations,Operations,1,mathematical operation,wordnet,n
+operations,Operations,1,mathematical process,wordnet,n
+operations,Operations,1,mental process,wordnet,n
+operations,Operations,1,military operation,wordnet,n
+operations,Operations,1,operation,wordnet,y
+operations,Operations,1,performance,wordnet,n
+operations,Operations,1,procedure,wordnet,y
+operations,Operations,1,process,wordnet,y
+operations,Operations,1,surgery,wordnet,n
+operations,Operations,1,surgical operation,wordnet,n
+operations,Operations,1,surgical procedure,wordnet,n
+operations,Operations,1,surgical process,wordnet,n
+operations,Operations,1,trading operations,datamuse|wordnet,y
+scalability,Scalability,1,add on,datamuse,y
+scalability,Scalability,1,broadening,datamuse,y
+scalability,Scalability,1,enlargement,datamuse,y
+scalability,Scalability,1,escalation,datamuse,n
+scalability,Scalability,1,expandability,datamuse,y
+scalability,Scalability,1,expandable,datamuse,y
+scalability,Scalability,1,expansion,datamuse,y
+scalability,Scalability,1,extensibility,datamuse,y
+scalability,Scalability,1,extension,datamuse,y
+scalability,Scalability,1,magnification,datamuse,n
+scalability,Scalability,1,scalable,datamuse,y
+scalability,Scalability,1,scales,datamuse,n
+scalability,Scalability,1,scaling,datamuse,y
+scalability,Scalability,1,stretch,datamuse,n
+scalability,Scalability,1,widening,datamuse,y
+reliability,Reliability,1,authenticity,datamuse,n
+reliability,Reliability,1,credibility,datamuse,y
+reliability,Reliability,1,credible,datamuse,y
+reliability,Reliability,1,dependability,datamuse|wordnet,y
+reliability,Reliability,1,dependable,datamuse,y
+reliability,Reliability,1,dependableness,datamuse|wordnet,y
+reliability,Reliability,1,integrity,datamuse,y
+reliability,Reliability,1,reliable,datamuse,y
+reliability,Reliability,1,reliableness,datamuse|wordnet,y
+reliability,Reliability,1,reliance,datamuse,y
+reliability,Reliability,1,soundness,datamuse,y
+reliability,Reliability,1,trust,datamuse,y
+reliability,Reliability,1,trustworthiness,datamuse,y
+reliability,Reliability,1,trustworthy,datamuse,y
+reliability,Reliability,1,veracity,datamuse,n
+performance,Performance,1,action,datamuse,n
+performance,Performance,1,carrying into action,datamuse|wordnet,n
+performance,Performance,1,carrying out,datamuse|wordnet,n
+performance,Performance,1,demonstration,datamuse,n
+performance,Performance,1,doing,datamuse,n
+performance,Performance,1,execution,datamuse|wordnet,y
+performance,Performance,1,function,datamuse,y
+performance,Performance,1,functioning,datamuse|wordnet,y
+performance,Performance,1,operating,datamuse,y
+performance,Performance,1,operation,datamuse|wordnet,y
+performance,Performance,1,perform,datamuse,y
+performance,Performance,1,public presentation,datamuse|wordnet,n
+performance,Performance,1,show,datamuse,n
+performance,Performance,1,showing,datamuse,n
+performance,Performance,1,working,datamuse,y
+quality,Quality,1,caliber,datamuse|wordnet,y
+quality,Quality,1,calibre,datamuse|wordnet,y
+quality,Quality,1,character,datamuse|wordnet,n
+quality,Quality,1,choice,datamuse|wordnet,n
+quality,Quality,1,excellence,datamuse,y
+quality,Quality,1,fine,datamuse,n
+quality,Quality,1,lineament,datamuse|wordnet,n
+quality,Quality,1,prime,datamuse|wordnet,y
+quality,Quality,1,prize,datamuse|wordnet,n
+quality,Quality,1,select,datamuse|wordnet,y
+quality,Quality,1,superior,datamuse,y
+quality,Quality,1,timber,datamuse|wordnet,n
+quality,Quality,1,timbre,datamuse|wordnet,n
+quality,Quality,1,tone,datamuse|wordnet,n
+quality,Quality,1,upper class,datamuse,n
+innovation,Innovation,1,conception,datamuse|wordnet,n
+innovation,Innovation,1,creation,wordnet,n
+innovation,Innovation,1,creative,datamuse,y
+innovation,Innovation,1,creativeness,datamuse,y
+innovation,Innovation,1,creativity,datamuse,y
+innovation,Innovation,1,design,datamuse|wordnet,n
+innovation,Innovation,1,excogitation,datamuse|wordnet,n
+innovation,Innovation,1,foundation,wordnet,n
+innovation,Innovation,1,founding,wordnet,n
+innovation,Innovation,1,groundbreaking,datamuse,y
+innovation,Innovation,1,ingenuity,datamuse,y
+innovation,Innovation,1,initiation,wordnet,n
+innovation,Innovation,1,innovate,datamuse,y
+innovation,Innovation,1,innovative,datamuse,y
+innovation,Innovation,1,innovatively,datamuse,y
+innovation,Innovation,1,innovativeness,datamuse,y
+innovation,Innovation,1,innovator,datamuse,y
+innovation,Innovation,1,instauration,wordnet,n
+innovation,Innovation,1,institution,wordnet,n
+innovation,Innovation,1,introduction,wordnet,n
+innovation,Innovation,1,invention,datamuse|wordnet,y
+innovation,Innovation,1,inventive,datamuse,y
+innovation,Innovation,1,origination,wordnet,n
+sustainability,Sustainability,1,affordability,datamuse,n
+sustainability,Sustainability,1,autonomy,datamuse,n
+sustainability,Sustainability,1,balance,datamuse,n
+sustainability,Sustainability,1,conservation,datamuse,y
+sustainability,Sustainability,1,consolidate,datamuse,n
+sustainability,Sustainability,1,consolidation,datamuse,n
+sustainability,Sustainability,1,depositor,datamuse,n
+sustainability,Sustainability,1,duration,datamuse,n
+sustainability,Sustainability,1,liveability,datamuse,y
+sustainability,Sustainability,1,practicality,datamuse,n
+sustainability,Sustainability,1,preservation,datamuse,y
+sustainability,Sustainability,1,preserving,datamuse,y
+sustainability,Sustainability,1,protection,datamuse,n
+sustainability,Sustainability,1,supportability,datamuse,y
+sustainability,Sustainability,1,workability,datamuse,y
+ethics,Ethics,1,behaviour,datamuse,n
+ethics,Ethics,1,deontological,datamuse,y
+ethics,Ethics,1,deontology,datamuse,y
+ethics,Ethics,1,ethic,wordnet,y
+ethics,Ethics,1,ethical,datamuse,y
+ethics,Ethics,1,ethical code,wordnet,y
+ethics,Ethics,1,ethical motive,datamuse|wordnet,y
+ethics,Ethics,1,ethically,datamuse,y
+ethics,Ethics,1,ethos,datamuse,y
+ethics,Ethics,1,fairness,datamuse,y
+ethics,Ethics,1,moral,datamuse,y
+ethics,Ethics,1,moral philosophy,datamuse|wordnet,y
+ethics,Ethics,1,moral principle,wordnet,y
+ethics,Ethics,1,morality,datamuse|wordnet,y
+ethics,Ethics,1,morally,datamuse,y
+ethics,Ethics,1,morals,datamuse|wordnet,y
+ethics,Ethics,1,mores,datamuse,y
+ethics,Ethics,1,value orientation,wordnet,n
+ethics,Ethics,1,value system,wordnet,y
+ethics,Ethics,1,virtue,datamuse,y
+accessibility,Accessibility,1,access,datamuse,y
+accessibility,Accessibility,1,affordable,datamuse,n
+accessibility,Accessibility,1,approachability,datamuse|wordnet,y
+accessibility,Accessibility,1,assistive,datamuse,y
+accessibility,Accessibility,1,availability,datamuse|wordnet,y
+accessibility,Accessibility,1,available,datamuse,n
+accessibility,Accessibility,1,availableness,datamuse|wordnet,y
+accessibility,Accessibility,1,convenient,datamuse,n
+accessibility,Accessibility,1,entry,datamuse,n
+accessibility,Accessibility,1,handiness,datamuse|wordnet,y
+accessibility,Accessibility,1,practicality,datamuse,n
+accessibility,Accessibility,1,proximity,datamuse,n
+accessibility,Accessibility,1,reach,datamuse,y
+accessibility,Accessibility,1,reachability,datamuse,y
+accessibility,Accessibility,1,willingness,datamuse,n
+localization,Localization,1,adaptation,datamuse,y
+localization,Localization,1,fix,datamuse|wordnet,n
+localization,Localization,1,identification,datamuse,n
+localization,Localization,1,indigenization,datamuse,y
+localization,Localization,1,locale,datamuse,y
+localization,Localization,1,localisation,datamuse|wordnet,y
+localization,Localization,1,localisation of function,wordnet,n
+localization,Localization,1,localisation principle,wordnet,n
+localization,Localization,1,locality,datamuse,y
+localization,Localization,1,localization of function,wordnet,y
+localization,Localization,1,localization principle,wordnet,n
+localization,Localization,1,locate,datamuse,n
+localization,Localization,1,locating,datamuse|wordnet,n
+localization,Localization,1,location,datamuse|wordnet,y
+localization,Localization,1,locator,datamuse,n
+localization,Localization,1,placement,datamuse,n
+localization,Localization,1,position,datamuse,n
+localization,Localization,1,positioning,datamuse,n
+localization,Localization,1,translation,datamuse,y
+supply_chain,Supply Chain,1,add,wordnet,n
+supply_chain,Supply Chain,1,append,wordnet,n
+supply_chain,Supply Chain,1,cater,wordnet,n
+supply_chain,Supply Chain,1,chain,wordnet,n
+supply_chain,Supply Chain,1,chain of mountains,wordnet,n
+supply_chain,Supply Chain,1,channel of distribution,datamuse,y
+supply_chain,Supply Chain,1,chemical chain,wordnet,n
+supply_chain,Supply Chain,1,clsc,datamuse,y
+supply_chain,Supply Chain,1,cold chain,datamuse,y
+supply_chain,Supply Chain,1,concatenation,wordnet,n
+supply_chain,Supply Chain,1,distribution channel,datamuse,y
+supply_chain,Supply Chain,1,ernst boris chain,wordnet,n
+supply_chain,Supply Chain,1,furnish,wordnet,n
+supply_chain,Supply Chain,1,issue,wordnet,n
+supply_chain,Supply Chain,1,line,datamuse,n
+supply_chain,Supply Chain,1,line of supply,datamuse,y
+supply_chain,Supply Chain,1,logistics,datamuse,y
+supply_chain,Supply Chain,1,mountain chain,wordnet,n
+supply_chain,Supply Chain,1,mountain range,wordnet,n
+supply_chain,Supply Chain,1,ply,wordnet,n
+supply_chain,Supply Chain,1,provide,wordnet,n
+supply_chain,Supply Chain,1,provision,wordnet,y
+supply_chain,Supply Chain,1,purchasing,datamuse,y
+supply_chain,Supply Chain,1,range,wordnet,n
+supply_chain,Supply Chain,1,range of mountains,wordnet,n
+supply_chain,Supply Chain,1,render,wordnet,n
+supply_chain,Supply Chain,1,services,datamuse,n
+supply_chain,Supply Chain,1,shipment,datamuse,y
+supply_chain,Supply Chain,1,shipping,datamuse,y
+supply_chain,Supply Chain,1,shopping,datamuse,n
+supply_chain,Supply Chain,1,sir ernst boris chain,wordnet,n
+supply_chain,Supply Chain,1,sourcing,datamuse,y
+supply_chain,Supply Chain,1,strand,wordnet,n
+supply_chain,Supply Chain,1,string,wordnet,n
+supply_chain,Supply Chain,1,supply,wordnet,y
+supply_chain,Supply Chain,1,supply chain visibility,datamuse,y
+supply_chain,Supply Chain,1,supply line,datamuse,y
+supply_chain,Supply Chain,1,supplying,wordnet,y
+sales,Sales,1,commercialization,datamuse,y
+sales,Sales,1,cut rate sale,wordnet,n
+sales,Sales,1,distribution,datamuse,n
+sales,Sales,1,gross revenue,datamuse|wordnet,y
+sales,Sales,1,gross sales,datamuse|wordnet,y
+sales,Sales,1,market,datamuse,y
+sales,Sales,1,marketing,datamuse,y
+sales,Sales,1,merchandising,datamuse,y
+sales,Sales,1,retail,datamuse,y
+sales,Sales,1,retailing,datamuse,y
+sales,Sales,1,sale,wordnet,y
+sales,Sales,1,sales agreement,wordnet,y
+sales,Sales,1,sales event,wordnet,n
+sales,Sales,1,sell,datamuse,y
+sales,Sales,1,sell off,datamuse,n
+sales,Sales,1,selling,datamuse,y
+sales,Sales,1,trade,datamuse,y
+sales,Sales,1,trading,datamuse,y
+sales,Sales,1,turnover,datamuse,n
+marketing,Marketing,1,business,datamuse,n
+marketing,Marketing,1,commerce,datamuse,n
+marketing,Marketing,1,commercialise,wordnet,y
+marketing,Marketing,1,commercialize,wordnet,y
+marketing,Marketing,1,commercially,datamuse,y
+marketing,Marketing,1,commodity,datamuse,n
+marketing,Marketing,1,market,wordnet,y
+marketing,Marketing,1,marketer,datamuse,y
+marketing,Marketing,1,merchandise,datamuse,y
+marketing,Marketing,1,merchandising,datamuse|wordnet,y
+marketing,Marketing,1,product,datamuse,n
+marketing,Marketing,1,sale,datamuse,y
+marketing,Marketing,1,sales,datamuse,y
+marketing,Marketing,1,sell,datamuse,y
+marketing,Marketing,1,selling,datamuse|wordnet,y
+marketing,Marketing,1,shopping,datamuse,n
+marketing,Marketing,1,trade,datamuse,y
+marketing,Marketing,1,trading,datamuse,y
+support,Support,1,abide,wordnet,n
+support,Support,1,accompaniment,wordnet,n
+support,Support,1,affirm,datamuse|wordnet,n
+support,Support,1,back,datamuse|wordnet,n
+support,Support,1,back up,datamuse|wordnet,n
+support,Support,1,backing,datamuse|wordnet,n
+support,Support,1,backup,wordnet,y
+support,Support,1,bear,wordnet,n
+support,Support,1,bear out,datamuse|wordnet,n
+support,Support,1,bolster,datamuse,n
+support,Support,1,bread and butter,wordnet,n
+support,Support,1,brook,wordnet,n
+support,Support,1,confirm,datamuse|wordnet,n
+support,Support,1,corroborate,datamuse|wordnet,n
+support,Support,1,defend,datamuse|wordnet,n
+support,Support,1,digest,wordnet,n
+support,Support,1,documentation,wordnet,y
+support,Support,1,endorse,datamuse|wordnet,n
+support,Support,1,endure,wordnet,n
+support,Support,1,fend for,wordnet,n
+support,Support,1,financial backing,wordnet,y
+support,Support,1,financial support,wordnet,y
+support,Support,1,funding,wordnet,y
+support,Support,1,hold,datamuse|wordnet,n
+support,Support,1,hold up,datamuse|wordnet,y
+support,Support,1,indorse,wordnet,n
+support,Support,1,keep,datamuse|wordnet,n
+support,Support,1,keep going,wordnet,n
+support,Support,1,livelihood,datamuse|wordnet,n
+support,Support,1,living,datamuse|wordnet,n
+support,Support,1,musical accompaniment,wordnet,n
+support,Support,1,patronage,datamuse|wordnet,n
+support,Support,1,patronise,wordnet,n
+support,Support,1,patronize,datamuse|wordnet,n
+support,Support,1,plump for,wordnet,n
+support,Support,1,plunk for,wordnet,n
+support,Support,1,put up,wordnet,n
+support,Support,1,reenforcement,wordnet,y
+support,Support,1,reinforcement,datamuse|wordnet,y
+support,Support,1,stand,datamuse|wordnet,n
+support,Support,1,stick out,wordnet,n
+support,Support,1,stomach,wordnet,n
+support,Support,1,subscribe,wordnet,n
+support,Support,1,substantiate,datamuse|wordnet,n
+support,Support,1,suffer,wordnet,n
+support,Support,1,supporting,wordnet,n
+support,Support,1,sustain,datamuse|wordnet,y
+support,Support,1,sustenance,datamuse|wordnet,y
+support,Support,1,tolerate,wordnet,n
+support,Support,1,underpin,wordnet,y
+metrics,Metrics,1,action,datamuse,n
+metrics,Metrics,1,actions,datamuse,n
+metrics,Metrics,1,extent,datamuse,n
+metrics,Metrics,1,figures,datamuse,y
+metrics,Metrics,1,measure,datamuse,y
+metrics,Metrics,1,measured,datamuse,y
+metrics,Metrics,1,measurement,datamuse,y
+metrics,Metrics,1,metric,wordnet,y
+metrics,Metrics,1,metric function,wordnet,y
+metrics,Metrics,1,metric unit,wordnet,y
+metrics,Metrics,1,metrical,datamuse,n
+metrics,Metrics,1,metrology,datamuse,y
+metrics,Metrics,1,parameter,datamuse,y
+metrics,Metrics,1,prosody,wordnet,n
+metrics,Metrics,1,rhythmic,datamuse,n
+metrics,Metrics,1,rhythmical,datamuse,n
+metrics,Metrics,1,scales,datamuse,n
+metrics,Metrics,1,statistics,datamuse,y
+metrics,Metrics,1,system of measurement,wordnet,y
+metrics,Metrics,1,tons,datamuse,n
+experimentation,Experimentation,1,attempt,datamuse,n
+experimentation,Experimentation,1,demonstration,datamuse,n
+experimentation,Experimentation,1,experience,datamuse,n
+experimentation,Experimentation,1,experiences,datamuse,n
+experimentation,Experimentation,1,experiment,datamuse|wordnet,y
+experimentation,Experimentation,1,experimental,datamuse,y
+experimentation,Experimentation,1,investigational,datamuse,y
+experimentation,Experimentation,1,laboratory,datamuse,n
+experimentation,Experimentation,1,pilot,datamuse,y
+experimentation,Experimentation,1,piloting,datamuse,y
+experimentation,Experimentation,1,test,datamuse,y
+experimentation,Experimentation,1,tester,datamuse,n
+experimentation,Experimentation,1,testing,datamuse,y
+experimentation,Experimentation,1,trial,datamuse,y
+experimentation,Experimentation,1,trialing,datamuse,y
+experimentation,Experimentation,1,trials,datamuse,y
+product_strategy,Product Strategy,1,brand management,datamuse,y
+product_strategy,Product Strategy,1,business plan,datamuse,y
+product_strategy,Product Strategy,1,business process mapping,datamuse,n
+product_strategy,Product Strategy,1,cartesian product,wordnet,n
+product_strategy,Product Strategy,1,intersection,wordnet,n
+product_strategy,Product Strategy,1,marketing strategy,datamuse,y
+product_strategy,Product Strategy,1,mathematical product,wordnet,n
+product_strategy,Product Strategy,1,merchandise,wordnet,n
+product_strategy,Product Strategy,1,new product development,datamuse,y
+product_strategy,Product Strategy,1,pricing,datamuse,n
+product_strategy,Product Strategy,1,product,wordnet,y
+product_strategy,Product Strategy,1,product marketing,datamuse,y
+product_strategy,Product Strategy,1,product planning,datamuse,y
+product_strategy,Product Strategy,1,production,wordnet,y
+product_strategy,Product Strategy,1,production schedule,datamuse,n
+product_strategy,Product Strategy,1,requirements management,datamuse,y
+product_strategy,Product Strategy,1,sales and operations planning,datamuse,y
+product_strategy,Product Strategy,1,sales operations,datamuse,y
+product_strategy,Product Strategy,1,scheme,wordnet,n
+product_strategy,Product Strategy,1,strategic management,datamuse,y
+product_strategy,Product Strategy,1,strategic planning,datamuse,y
+product_strategy,Product Strategy,1,strategy,wordnet,y
+product_strategy,Product Strategy,1,technology strategy,datamuse,y
+product_strategy,Product Strategy,1,ware,wordnet,n
+backlog,Backlog,1,build up,datamuse,y
+backlog,Backlog,1,congestion,datamuse,y
+backlog,Backlog,1,dam,datamuse,n
+backlog,Backlog,1,gap,datamuse,n
+backlog,Backlog,1,jam,datamuse,n
+backlog,Backlog,1,log,datamuse,n
+backlog,Backlog,1,logjam,datamuse,y
+backlog,Backlog,1,overhang,datamuse,y
+backlog,Backlog,1,reserve,datamuse|wordnet,n
+backlog,Backlog,1,retardation,datamuse,n
+backlog,Backlog,1,roll,datamuse,n
+backlog,Backlog,1,roll up,datamuse,n
+backlog,Backlog,1,rolling,datamuse,n
+backlog,Backlog,1,slippage,datamuse,y
+backlog,Backlog,1,stockpile,datamuse|wordnet,y
+process,Process,1,act,datamuse,n
+process,Process,1,action,wordnet,n
+process,Process,1,appendage,datamuse|wordnet,n
+process,Process,1,cognitive operation,datamuse|wordnet,n
+process,Process,1,cognitive process,datamuse|wordnet,n
+process,Process,1,litigate,datamuse|wordnet,n
+process,Process,1,march,datamuse|wordnet,n
+process,Process,1,mental process,wordnet,n
+process,Process,1,operation,datamuse|wordnet,y
+process,Process,1,outgrowth,datamuse|wordnet,n
+process,Process,1,physical process,wordnet,n
+process,Process,1,procedure,datamuse|wordnet,y
+process,Process,1,serve,datamuse|wordnet,n
+process,Process,1,sue,datamuse|wordnet,n
+process,Process,1,summons,datamuse|wordnet,n
+process,Process,1,swear out,datamuse|wordnet,n
+process,Process,1,treat,datamuse|wordnet,n
+process,Process,1,unconscious process,datamuse|wordnet,n
+process,Process,1,work,datamuse|wordnet,y
+process,Process,1,work on,datamuse|wordnet,n
+governance,Governance,1,administering,datamuse,y
+governance,Governance,1,administration,datamuse|wordnet,y
+governance,Governance,1,administrative,datamuse,y
+governance,Governance,1,brass,datamuse|wordnet,n
+governance,Governance,1,directorate,datamuse,y
+governance,Governance,1,establishment,datamuse|wordnet,n
+governance,Governance,1,governing,datamuse|wordnet,y
+governance,Governance,1,governing body,wordnet,y
+governance,Governance,1,government,datamuse|wordnet,y
+governance,Governance,1,government activity,wordnet,y
+governance,Governance,1,governmental,datamuse,y
+governance,Governance,1,governorate,datamuse,y
+governance,Governance,1,organisation,datamuse|wordnet,y
+governance,Governance,1,organization,datamuse|wordnet,y
+governance,Governance,1,policymaking,datamuse,y
+governance,Governance,1,political,datamuse,n
+governance,Governance,1,regime,datamuse,y
+finance,Finance,1,accounting,datamuse,y
+finance,Finance,1,banking,datamuse,y
+finance,Finance,1,capital,datamuse,y
+finance,Finance,1,cash,datamuse,y
+finance,Finance,1,cash in hand,datamuse,y
+finance,Finance,1,financer,datamuse,n
+finance,Finance,1,financial,datamuse,y
+finance,Finance,1,financials,datamuse,y
+finance,Finance,1,financier,datamuse,y
+finance,Finance,1,fiscal,datamuse,y
+finance,Finance,1,funds,datamuse,y
+finance,Finance,1,monetary resource,datamuse,y
+finance,Finance,1,money,datamuse,y
+finance,Finance,1,pecuniary resource,datamuse,y
+finance,Finance,1,tax,datamuse,y
+compliance,Compliance,1,abidance,datamuse|wordnet,y
+compliance,Compliance,1,adequacy,datamuse,n
+compliance,Compliance,1,complaisance,datamuse|wordnet,n
+compliance,Compliance,1,compliancy,datamuse|wordnet,y
+compliance,Compliance,1,compliant,datamuse,y
+compliance,Compliance,1,comply,datamuse,y
+compliance,Compliance,1,conform,datamuse,y
+compliance,Compliance,1,conformation,datamuse|wordnet,y
+compliance,Compliance,1,conformity,datamuse|wordnet,y
+compliance,Compliance,1,deference,datamuse|wordnet,n
+compliance,Compliance,1,obedience,datamuse,n
+compliance,Compliance,1,obligingness,datamuse|wordnet,n
+compliance,Compliance,1,pursuant,datamuse,y
+compliance,Compliance,1,submission,datamuse|wordnet,n
+compliance,Compliance,1,suitability,datamuse,n
+partnerships,Partnerships,1,agreements,datamuse,y
+partnerships,Partnerships,1,allegiances,datamuse,n
+partnerships,Partnerships,1,alliance,datamuse,y
+partnerships,Partnerships,1,alliances,datamuse,y
+partnerships,Partnerships,1,associates,datamuse,y
+partnerships,Partnerships,1,association,datamuse,y
+partnerships,Partnerships,1,associations,datamuse,y
+partnerships,Partnerships,1,cartels,datamuse,n
+partnerships,Partnerships,1,clubs,datamuse,n
+partnerships,Partnerships,1,coalitions,datamuse,y
+partnerships,Partnerships,1,collaborating,datamuse,y
+partnerships,Partnerships,1,collaboration,datamuse,y
+partnerships,Partnerships,1,collaborations,datamuse,y
+partnerships,Partnerships,1,collaborative,datamuse,y
+partnerships,Partnerships,1,collaborators,datamuse,y
+partnerships,Partnerships,1,partnership,wordnet,y
+talent,Talent,1,aptitude,datamuse,y
+talent,Talent,1,competence,datamuse,y
+talent,Talent,1,endowment,datamuse|wordnet,n
+talent,Talent,1,expertise,datamuse,y
+talent,Talent,1,flair,datamuse,y
+talent,Talent,1,genius,datamuse,n
+talent,Talent,1,gift,datamuse|wordnet,y
+talent,Talent,1,gifted,datamuse,y
+talent,Talent,1,ingenuity,datamuse,y
+talent,Talent,1,knack,datamuse,y
+talent,Talent,1,natural endowment,datamuse|wordnet,y
+talent,Talent,1,proficiency,datamuse,y
+talent,Talent,1,resourcefulness,datamuse,n
+talent,Talent,1,skill,datamuse,y
+talent,Talent,1,wisdom,datamuse,n
+knowledge,Knowledge,1,cognisance,datamuse,y
+knowledge,Knowledge,1,cognition,datamuse|wordnet,y
+knowledge,Knowledge,1,experience,datamuse,n
+knowledge,Knowledge,1,information,datamuse,y
+knowledge,Knowledge,1,informed,datamuse,n
+knowledge,Knowledge,1,intelligence,datamuse,n
+knowledge,Knowledge,1,know,datamuse,n
+knowledge,Knowledge,1,know how,datamuse,y
+knowledge,Knowledge,1,knowhow,datamuse,y
+knowledge,Knowledge,1,knowing,datamuse,n
+knowledge,Knowledge,1,knowledgeable,datamuse,y
+knowledge,Knowledge,1,knows,datamuse,n
+knowledge,Knowledge,1,learned,datamuse,n
+knowledge,Knowledge,1,noesis,wordnet,n
+knowledge,Knowledge,1,understand,datamuse,n
+knowledge,Knowledge,1,understanding,datamuse,y
+communication,Communication,1,briefing,datamuse,y
+communication,Communication,1,communicating,datamuse|wordnet,y
+communication,Communication,1,communicator,datamuse,y
+communication,Communication,1,communiqu,datamuse,n
+communication,Communication,1,communique,datamuse,y
+communication,Communication,1,correspondence,datamuse,y
+communication,Communication,1,document,datamuse,n
+communication,Communication,1,memorandum,datamuse,y
+communication,Communication,1,message,datamuse,y
+communication,Communication,1,note,datamuse,n
+communication,Communication,1,publicize,datamuse,n
+communication,Communication,1,transmission,datamuse,y
+communication,Communication,1,transmittal,datamuse,y
+communication,Communication,1,transmitted,datamuse,n
+communication,Communication,1,transmitting,datamuse,n
+implementation,Implementation,1,administering,datamuse,y
+implementation,Implementation,1,administration,datamuse,y
+implementation,Implementation,1,carrying out,datamuse|wordnet,n
+implementation,Implementation,1,commissioning,datamuse,y
+implementation,Implementation,1,effectuation,datamuse|wordnet,y
+implementation,Implementation,1,execution,datamuse|wordnet,y
+implementation,Implementation,1,incorporation,datamuse,y
+implementation,Implementation,1,institution,datamuse,n
+implementation,Implementation,1,institutionalization,datamuse,y
+implementation,Implementation,1,management,datamuse,n
+implementation,Implementation,1,monitoring,datamuse,n
+implementation,Implementation,1,outturn,datamuse,n
+implementation,Implementation,1,process,datamuse,y
+implementation,Implementation,1,program,datamuse,y
+implementation,Implementation,1,work,datamuse,n
+monitoring,Monitoring,1,admonisher,datamuse,n
+monitoring,Monitoring,1,censorship,datamuse,n
+monitoring,Monitoring,1,inspectorate,datamuse,y
+monitoring,Monitoring,1,monitor,wordnet,y
+monitoring,Monitoring,1,monitor lizard,datamuse,n
+monitoring,Monitoring,1,proctor,datamuse,n
+monitoring,Monitoring,1,reminder,datamuse,n
+monitoring,Monitoring,1,ride herd on,datamuse,n
+monitoring,Monitoring,1,superintendence,datamuse,y
+monitoring,Monitoring,1,supervise,datamuse|wordnet,y
+monitoring,Monitoring,1,supervised,datamuse,y
+monitoring,Monitoring,1,supervision,datamuse,y
+monitoring,Monitoring,1,supervisory,datamuse,y
+monitoring,Monitoring,1,surveillance,datamuse,y
+monitoring,Monitoring,1,varan,datamuse,n
+monitoring,Monitoring,1,vigilante,datamuse,n
+feedback,Feedback,1,actual,datamuse,n
+feedback,Feedback,1,advice,datamuse,y
+feedback,Feedback,1,answer,datamuse,n
+feedback,Feedback,1,comment,datamuse,y
+feedback,Feedback,1,debriefing,datamuse,y
+feedback,Feedback,1,guidance,datamuse,y
+feedback,Feedback,1,information,datamuse,n
+feedback,Feedback,1,input,datamuse,y
+feedback,Feedback,1,notice,datamuse,n
+feedback,Feedback,1,opinion,datamuse,y
+feedback,Feedback,1,reaction,datamuse,y
+feedback,Feedback,1,reply,datamuse,y
+feedback,Feedback,1,response,datamuse,y
+feedback,Feedback,1,retroactive,datamuse,n
+feedback,Feedback,1,view,datamuse,n
+continuous_improvement,Continuous Improvement,1,advance,wordnet,n
+continuous_improvement,Continuous Improvement,1,advancement,datamuse,y
+continuous_improvement,Continuous Improvement,1,betterment,wordnet,y
+continuous_improvement,Continuous Improvement,1,continuous,wordnet,y
+continuous_improvement,Continuous Improvement,1,continuousness,datamuse,y
+continuous_improvement,Continuous Improvement,1,economic growth,datamuse,n
+continuous_improvement,Continuous Improvement,1,improve,datamuse,y
+continuous_improvement,Continuous Improvement,1,improvement,wordnet,y
+continuous_improvement,Continuous Improvement,1,improvements,datamuse,y
+continuous_improvement,Continuous Improvement,1,improving,datamuse,y
+continuous_improvement,Continuous Improvement,1,incrementalism,datamuse,y
+continuous_improvement,Continuous Improvement,1,innovation,datamuse,n
+continuous_improvement,Continuous Improvement,1,melioration,wordnet,y
+continuous_improvement,Continuous Improvement,1,progress,datamuse,y
+continuous_improvement,Continuous Improvement,1,progressing,datamuse,y
+continuous_improvement,Continuous Improvement,1,progression,datamuse,y
+continuous_improvement,Continuous Improvement,1,progressional,datamuse,n
+continuous_improvement,Continuous Improvement,1,progressiveness,datamuse,y
+continuous_improvement,Continuous Improvement,1,uninterrupted,wordnet,y
+continuous_improvement,Continuous Improvement,1,upgradability,datamuse,y
+continuous_improvement,Continuous Improvement,1,upgradation,datamuse,y
+scenario_planning,Scenario Planning,1,be after,wordnet,n
+scenario_planning,Scenario Planning,1,contrive,wordnet,n
+scenario_planning,Scenario Planning,1,design,wordnet,n
+scenario_planning,Scenario Planning,1,design thinking,datamuse,n
+scenario_planning,Scenario Planning,1,enterprise risk management,datamuse,y
+scenario_planning,Scenario Planning,1,organization development,datamuse,n
+scenario_planning,Scenario Planning,1,plan,wordnet,y
+scenario_planning,Scenario Planning,1,planning,wordnet,y
+scenario_planning,Scenario Planning,1,preparation,wordnet,y
+scenario_planning,Scenario Planning,1,project,wordnet,n
+scenario_planning,Scenario Planning,1,provision,wordnet,n
+scenario_planning,Scenario Planning,1,scenario,wordnet,y
+scenario_planning,Scenario Planning,1,situation analysis,datamuse,y
+scenario_planning,Scenario Planning,1,soft systems methodology,datamuse,y
+scenario_planning,Scenario Planning,1,strategic control,datamuse,y
+scenario_planning,Scenario Planning,1,strategic design,datamuse,y
+scenario_planning,Scenario Planning,1,strategic environmental assessment,datamuse,y
+scenario_planning,Scenario Planning,1,strategic leadership,datamuse,y
+scenario_planning,Scenario Planning,1,strategic management,datamuse,y
+scenario_planning,Scenario Planning,1,strategic planning,datamuse,y
+scenario_planning,Scenario Planning,1,strategic thinking,datamuse,y
+scenario_planning,Scenario Planning,1,strategy map,datamuse,y
+scenario_planning,Scenario Planning,1,swot analysis,datamuse,y
+scenario_planning,Scenario Planning,1,technology strategy,datamuse,n
+decision_criteria,Decision Criteria,1,classification,datamuse,y
+decision_criteria,Decision Criteria,1,conclusion,wordnet,y
+decision_criteria,Decision Criteria,1,conditions,datamuse,y
+decision_criteria,Decision Criteria,1,criterion,datamuse|wordnet,y
+decision_criteria,Decision Criteria,1,decision,wordnet,y
+decision_criteria,Decision Criteria,1,decisiveness,wordnet,y
+decision_criteria,Decision Criteria,1,determination,wordnet,y
+decision_criteria,Decision Criteria,1,disqualification,datamuse,y
+decision_criteria,Decision Criteria,1,examination,datamuse,n
+decision_criteria,Decision Criteria,1,litmus test,datamuse,y
+decision_criteria,Decision Criteria,1,logic,datamuse,n
+decision_criteria,Decision Criteria,1,measure,wordnet,n
+decision_criteria,Decision Criteria,1,qualification,datamuse,y
+decision_criteria,Decision Criteria,1,respect,datamuse,n
+decision_criteria,Decision Criteria,1,selection,datamuse,y
+decision_criteria,Decision Criteria,1,specification,datamuse,y
+decision_criteria,Decision Criteria,1,standard,datamuse|wordnet,y
+decision_criteria,Decision Criteria,1,terms,datamuse,n
+decision_criteria,Decision Criteria,1,tests,datamuse,n
+decision_criteria,Decision Criteria,1,touchstone,wordnet,y
+decision_criteria,Decision Criteria,1,views,datamuse,n
+constraints,Constraints,1,barrier,datamuse,y
+constraints,Constraints,1,barriers,datamuse,y
+constraints,Constraints,1,bonds,datamuse,n
+constraints,Constraints,1,borders,datamuse,n
+constraints,Constraints,1,bottlenecks,datamuse,y
+constraints,Constraints,1,boundaries,datamuse,y
+constraints,Constraints,1,boundary,datamuse,y
+constraints,Constraints,1,bounds,datamuse,y
+constraints,Constraints,1,brakes,datamuse,n
+constraints,Constraints,1,burdens,datamuse,y
+constraints,Constraints,1,challenge,datamuse,y
+constraints,Constraints,1,challenges,datamuse,y
+constraints,Constraints,1,commitments,datamuse,n
+constraints,Constraints,1,compressions,datamuse,n
+constraints,Constraints,1,constraint,wordnet,y
+constraints,Constraints,1,restraint,datamuse|wordnet,y
+assumptions,Assumptions,1,affairs,datamuse,n
+assumptions,Assumptions,1,allegations,datamuse,n
+assumptions,Assumptions,1,alleged,datamuse,n
+assumptions,Assumptions,1,arguments,datamuse,y
+assumptions,Assumptions,1,assertions,datamuse,y
+assumptions,Assumptions,1,assumption,wordnet,y
+assumptions,Assumptions,1,assumption of mary,datamuse|wordnet,n
+assumptions,Assumptions,1,august 15,datamuse|wordnet,n
+assumptions,Assumptions,1,beliefs,datamuse,y
+assumptions,Assumptions,1,budgets,datamuse,n
+assumptions,Assumptions,1,effrontery,wordnet,n
+assumptions,Assumptions,1,laying claim,datamuse|wordnet,n
+assumptions,Assumptions,1,premise,datamuse|wordnet,y
+assumptions,Assumptions,1,premiss,datamuse|wordnet,y
+assumptions,Assumptions,1,presumption,datamuse|wordnet,y
+assumptions,Assumptions,1,presumptuousness,datamuse|wordnet,n
+assumptions,Assumptions,1,supposal,wordnet,y
+assumptions,Assumptions,1,supposition,datamuse|wordnet,y
+success_measures,Success Measures,1,accomplishment,datamuse,y
+success_measures,Success Measures,1,achievement,datamuse,y
+success_measures,Success Measures,1,achiever,wordnet,n
+success_measures,Success Measures,1,amount,wordnet,n
+success_measures,Success Measures,1,appraise,wordnet,n
+success_measures,Success Measures,1,assess,wordnet,n
+success_measures,Success Measures,1,avail,datamuse,n
+success_measures,Success Measures,1,availing,datamuse,n
+success_measures,Success Measures,1,bar,wordnet,n
+success_measures,Success Measures,1,beat,wordnet,n
+success_measures,Success Measures,1,bill,wordnet,n
+success_measures,Success Measures,1,break,datamuse,n
+success_measures,Success Measures,1,cadence,wordnet,n
+success_measures,Success Measures,1,criterion,wordnet,y
+success_measures,Success Measures,1,desperate,datamuse,n
+success_measures,Success Measures,1,effectiveness,datamuse,y
+success_measures,Success Measures,1,efficiency,datamuse,y
+success_measures,Success Measures,1,evaluate,wordnet,n
+success_measures,Success Measures,1,gedge,datamuse,n
+success_measures,Success Measures,1,hedge,datamuse,n
+success_measures,Success Measures,1,hedging,datamuse,n
+success_measures,Success Measures,1,match,datamuse,n
+success_measures,Success Measures,1,measure,wordnet,y
+success_measures,Success Measures,1,measure out,wordnet,n
+success_measures,Success Measures,1,measurement,wordnet,y
+success_measures,Success Measures,1,measuring,wordnet,y
+success_measures,Success Measures,1,measuring rod,wordnet,y
+success_measures,Success Measures,1,measuring stick,wordnet,y
+success_measures,Success Measures,1,mensurate,wordnet,n
+success_measures,Success Measures,1,mensuration,wordnet,y
+success_measures,Success Measures,1,meter,wordnet,y
+success_measures,Success Measures,1,metre,wordnet,y
+success_measures,Success Measures,1,mos,datamuse,n
+success_measures,Success Measures,1,palm,datamuse,n
+success_measures,Success Measures,1,performance,datamuse,y
+success_measures,Success Measures,1,quantify,wordnet,y
+success_measures,Success Measures,1,quantity,wordnet,y
+success_measures,Success Measures,1,standard,wordnet,y
+success_measures,Success Measures,1,step,wordnet,n
+success_measures,Success Measures,1,succeeder,wordnet,n
+success_measures,Success Measures,1,success,wordnet,y
+success_measures,Success Measures,1,touchstone,wordnet,y
+success_measures,Success Measures,1,valuate,wordnet,n
+success_measures,Success Measures,1,value,wordnet,n
+success_measures,Success Measures,1,winner,wordnet,n
+lessons_learned,Lessons Learned,1,acquire,wordnet,n
+lessons_learned,Lessons Learned,1,ascertain,wordnet,n
+lessons_learned,Lessons Learned,1,behavior,datamuse,n
+lessons_learned,Lessons Learned,1,check,wordnet,n
+lessons_learned,Lessons Learned,1,con,wordnet,n
+lessons_learned,Lessons Learned,1,conditioned,wordnet,n
+lessons_learned,Lessons Learned,1,contextualization,datamuse,n
+lessons_learned,Lessons Learned,1,determine,wordnet,n
+lessons_learned,Lessons Learned,1,deterrent example,wordnet,y
+lessons_learned,Lessons Learned,1,discover,wordnet,n
+lessons_learned,Lessons Learned,1,erudite,wordnet,n
+lessons_learned,Lessons Learned,1,example,wordnet,y
+lessons_learned,Lessons Learned,1,experience,datamuse,n
+lessons_learned,Lessons Learned,1,experiential learning,datamuse,y
+lessons_learned,Lessons Learned,1,find out,wordnet,n
+lessons_learned,Lessons Learned,1,get a line,wordnet,n
+lessons_learned,Lessons Learned,1,get wind,wordnet,n
+lessons_learned,Lessons Learned,1,get word,wordnet,n
+lessons_learned,Lessons Learned,1,hear,wordnet,n
+lessons_learned,Lessons Learned,1,incentivisation,datamuse,y
+lessons_learned,Lessons Learned,1,inquiry based learning,datamuse,y
+lessons_learned,Lessons Learned,1,instruct,wordnet,n
+lessons_learned,Lessons Learned,1,knowing,wordnet,n
+lessons_learned,Lessons Learned,1,knowledgeable,wordnet,n
+lessons_learned,Lessons Learned,1,larn,wordnet,n
+lessons_learned,Lessons Learned,1,learn,wordnet,n
+lessons_learned,Lessons Learned,1,learned,wordnet,n
+lessons_learned,Lessons Learned,1,learning analytics,datamuse,y
+lessons_learned,Lessons Learned,1,lesson,wordnet,y
+lessons_learned,Lessons Learned,1,lettered,wordnet,n
+lessons_learned,Lessons Learned,1,life lesson,datamuse,y
+lessons_learned,Lessons Learned,1,memorise,wordnet,n
+lessons_learned,Lessons Learned,1,memorize,wordnet,n
+lessons_learned,Lessons Learned,1,moral,wordnet,y
+lessons_learned,Lessons Learned,1,object lesson,datamuse|wordnet,y
+lessons_learned,Lessons Learned,1,observational learning,datamuse,y
+lessons_learned,Lessons Learned,1,pedagogy,datamuse,y
+lessons_learned,Lessons Learned,1,pick up,wordnet,n
+lessons_learned,Lessons Learned,1,present perfect,datamuse,n
+lessons_learned,Lessons Learned,1,read,wordnet,n
+lessons_learned,Lessons Learned,1,see,wordnet,n
+lessons_learned,Lessons Learned,1,situation awareness,datamuse,y
+lessons_learned,Lessons Learned,1,skill,datamuse,n
+lessons_learned,Lessons Learned,1,study,wordnet,n
+lessons_learned,Lessons Learned,1,take,wordnet,n
+lessons_learned,Lessons Learned,1,teach,wordnet,n
+lessons_learned,Lessons Learned,1,teachable moment,datamuse,y
+lessons_learned,Lessons Learned,1,watch,wordnet,n
+lessons_learned,Lessons Learned,1,well educated,wordnet,n
+lessons_learned,Lessons Learned,1,well read,wordnet,n
+external_environment,External Environment,2,enviroment,datamuse,n
+external_environment,External Environment,2,environment,wordnet,y
+external_environment,External Environment,2,environmental,datamuse,y
+external_environment,External Environment,2,environmental condition,datamuse,y
+external_environment,External Environment,2,environmental factors,datamuse,y
+external_environment,External Environment,2,environmentally,datamuse,y
+external_environment,External Environment,2,environments,datamuse,y
+external_environment,External Environment,2,environs,wordnet,n
+external_environment,External Environment,2,exterior,datamuse,n
+external_environment,External Environment,2,exteriority,datamuse,n
+external_environment,External Environment,2,external,wordnet,y
+external_environment,External Environment,2,externalistic,datamuse,n
+external_environment,External Environment,2,externalization,datamuse,n
+external_environment,External Environment,2,externalized,datamuse,n
+external_environment,External Environment,2,externally,datamuse,y
+external_environment,External Environment,2,extraneous,wordnet,y
+external_environment,External Environment,2,international,wordnet,y
+external_environment,External Environment,2,microenvironment,datamuse,y
+external_environment,External Environment,2,microenvironments,datamuse,y
+external_environment,External Environment,2,outside,wordnet,n
+external_environment,External Environment,2,surround,wordnet,n
+external_environment,External Environment,2,surroundings,datamuse|wordnet,n
+competitive_landscape,Competitive Landscape,2,business analytics,datamuse,y
+competitive_landscape,Competitive Landscape,2,business economics,datamuse,y
+competitive_landscape,Competitive Landscape,2,business management tools,datamuse,n
+competitive_landscape,Competitive Landscape,2,competitive,wordnet,y
+competitive_landscape,Competitive Landscape,2,competitive intelligence,datamuse,y
+competitive_landscape,Competitive Landscape,2,competitor analysis,datamuse,y
+competitive_landscape,Competitive Landscape,2,competitory,wordnet,n
+competitive_landscape,Competitive Landscape,2,cost breakdown analysis,datamuse,y
+competitive_landscape,Competitive Landscape,2,customer analytics,datamuse,n
+competitive_landscape,Competitive Landscape,2,financial analysis,datamuse,y
+competitive_landscape,Competitive Landscape,2,free enterprise,wordnet,y
+competitive_landscape,Competitive Landscape,2,fundamental analysis,datamuse,y
+competitive_landscape,Competitive Landscape,2,landscape,wordnet,y
+competitive_landscape,Competitive Landscape,2,landscape painting,wordnet,n
+competitive_landscape,Competitive Landscape,2,market intelligence,datamuse,y
+competitive_landscape,Competitive Landscape,2,marketing intelligence,datamuse,y
+competitive_landscape,Competitive Landscape,2,militant,wordnet,n
+competitive_landscape,Competitive Landscape,2,private enterprise,wordnet,y
+competitive_landscape,Competitive Landscape,2,product strategy,datamuse,n
+competitive_landscape,Competitive Landscape,2,situation analysis,datamuse,y
+competitive_landscape,Competitive Landscape,2,six forces model,datamuse,y
+competitive_landscape,Competitive Landscape,2,swot analysis,datamuse,y
+strategic_positioning,Strategic Positioning,2,advice,datamuse,n
+strategic_positioning,Strategic Positioning,2,aligning,wordnet,y
+strategic_positioning,Strategic Positioning,2,command,datamuse,n
+strategic_positioning,Strategic Positioning,2,cover,datamuse,n
+strategic_positioning,Strategic Positioning,2,covers,datamuse,n
+strategic_positioning,Strategic Positioning,2,develop,datamuse,n
+strategic_positioning,Strategic Positioning,2,direction,datamuse,n
+strategic_positioning,Strategic Positioning,2,directions,datamuse,n
+strategic_positioning,Strategic Positioning,2,dover,datamuse,n
+strategic_positioning,Strategic Positioning,2,emplacement,wordnet,y
+strategic_positioning,Strategic Positioning,2,focus,datamuse,y
+strategic_positioning,Strategic Positioning,2,gallipoli,datamuse,n
+strategic_positioning,Strategic Positioning,2,guidance,datamuse,n
+strategic_positioning,Strategic Positioning,2,guidelines,datamuse,y
+strategic_positioning,Strategic Positioning,2,lay,wordnet,n
+strategic_positioning,Strategic Positioning,2,leadership,datamuse,y
+strategic_positioning,Strategic Positioning,2,locating,wordnet,n
+strategic_positioning,Strategic Positioning,2,location,wordnet,n
+strategic_positioning,Strategic Positioning,2,maneuver,datamuse,y
+strategic_positioning,Strategic Positioning,2,place,wordnet,y
+strategic_positioning,Strategic Positioning,2,placement,wordnet,y
+strategic_positioning,Strategic Positioning,2,pose,wordnet,n
+strategic_positioning,Strategic Positioning,2,position,datamuse|wordnet,y
+strategic_positioning,Strategic Positioning,2,positioning,wordnet,y
+strategic_positioning,Strategic Positioning,2,put,wordnet,n
+strategic_positioning,Strategic Positioning,2,set,wordnet,n
+strategic_positioning,Strategic Positioning,2,strategic,wordnet,y
+strategic_positioning,Strategic Positioning,2,strategical,wordnet,y
+growth_strategy,Growth Strategy,2,business model,datamuse,y
+growth_strategy,Growth Strategy,2,business plan,datamuse,y
+growth_strategy,Growth Strategy,2,developement,datamuse,n
+growth_strategy,Growth Strategy,2,development,datamuse|wordnet,y
+growth_strategy,Growth Strategy,2,economic growth,datamuse,y
+growth_strategy,Growth Strategy,2,emergence,wordnet,y
+growth_strategy,Growth Strategy,2,evolvement,datamuse,y
+growth_strategy,Growth Strategy,2,growing,wordnet,y
+growth_strategy,Growth Strategy,2,growth,wordnet,y
+growth_strategy,Growth Strategy,2,growth rate,datamuse,y
+growth_strategy,Growth Strategy,2,growthful,datamuse,n
+growth_strategy,Growth Strategy,2,increase,wordnet,y
+growth_strategy,Growth Strategy,2,increment,wordnet,y
+growth_strategy,Growth Strategy,2,marketing strategy,datamuse,y
+growth_strategy,Growth Strategy,2,maturation,wordnet,y
+growth_strategy,Growth Strategy,2,ontogenesis,wordnet,n
+growth_strategy,Growth Strategy,2,ontogeny,wordnet,n
+growth_strategy,Growth Strategy,2,outgrowth,wordnet,n
+growth_strategy,Growth Strategy,2,progression,datamuse,n
+growth_strategy,Growth Strategy,2,rapid growth,datamuse,y
+growth_strategy,Growth Strategy,2,scheme,wordnet,n
+growth_strategy,Growth Strategy,2,strategic,datamuse,y
+growth_strategy,Growth Strategy,2,strategic plan,datamuse,y
+growth_strategy,Growth Strategy,2,strategical,datamuse,y
+growth_strategy,Growth Strategy,2,strategies,datamuse,y
+growth_strategy,Growth Strategy,2,strategy,wordnet,y
+market_opportunity,Market Opportunity,2,boom,datamuse,y
+market_opportunity,Market Opportunity,2,chance,wordnet,n
+market_opportunity,Market Opportunity,2,commercialise,wordnet,y
+market_opportunity,Market Opportunity,2,commercialize,wordnet,y
+market_opportunity,Market Opportunity,2,down,datamuse,n
+market_opportunity,Market Opportunity,2,food market,wordnet,n
+market_opportunity,Market Opportunity,2,forum,datamuse,n
+market_opportunity,Market Opportunity,2,grocery,wordnet,n
+market_opportunity,Market Opportunity,2,grocery store,wordnet,n
+market_opportunity,Market Opportunity,2,ground floor,datamuse,y
+market_opportunity,Market Opportunity,2,ipo,datamuse,y
+market_opportunity,Market Opportunity,2,job,datamuse,n
+market_opportunity,Market Opportunity,2,licence,datamuse,n
+market_opportunity,Market Opportunity,2,market,wordnet,y
+market_opportunity,Market Opportunity,2,market place,wordnet,y
+market_opportunity,Market Opportunity,2,marketplace,wordnet,y
+market_opportunity,Market Opportunity,2,mart,wordnet,y
+market_opportunity,Market Opportunity,2,niche,datamuse,y
+market_opportunity,Market Opportunity,2,open,datamuse,n
+market_opportunity,Market Opportunity,2,opening,datamuse,y
+market_opportunity,Market Opportunity,2,opportunities,datamuse,y
+market_opportunity,Market Opportunity,2,opportunity,wordnet,y
+market_opportunity,Market Opportunity,2,sale,datamuse,y
+market_opportunity,Market Opportunity,2,securities industry,wordnet,y
+market_opportunity,Market Opportunity,2,vent,datamuse,n
+market_opportunity,Market Opportunity,2,vented,datamuse,n
+market_opportunity,Market Opportunity,2,venting,datamuse,n
+customer_needs,Customer Needs,2,ask,wordnet,n
+customer_needs,Customer Needs,2,business owner,datamuse,n
+customer_needs,Customer Needs,2,call for,wordnet,n
+customer_needs,Customer Needs,2,client,wordnet,y
+customer_needs,Customer Needs,2,consumer,datamuse,y
+customer_needs,Customer Needs,2,costumer,datamuse,n
+customer_needs,Customer Needs,2,costumers,datamuse,n
+customer_needs,Customer Needs,2,customer,wordnet,y
+customer_needs,Customer Needs,2,customer base,datamuse,y
+customer_needs,Customer Needs,2,customer service,datamuse,y
+customer_needs,Customer Needs,2,customers,datamuse,y
+customer_needs,Customer Needs,2,demand,wordnet,y
+customer_needs,Customer Needs,2,emergency,datamuse,n
+customer_needs,Customer Needs,2,employee,datamuse,n
+customer_needs,Customer Needs,2,indigence,wordnet,n
+customer_needs,Customer Needs,2,inevitably,wordnet,n
+customer_needs,Customer Needs,2,involve,wordnet,n
+customer_needs,Customer Needs,2,motivation,wordnet,y
+customer_needs,Customer Needs,2,motive,wordnet,y
+customer_needs,Customer Needs,2,necessarily,wordnet,n
+customer_needs,Customer Needs,2,necessitate,wordnet,y
+customer_needs,Customer Needs,2,necessities,datamuse,y
+customer_needs,Customer Needs,2,need,wordnet,y
+customer_needs,Customer Needs,2,needs,wordnet,y
+customer_needs,Customer Needs,2,of necessity,wordnet,n
+customer_needs,Customer Needs,2,pauperism,wordnet,n
+customer_needs,Customer Needs,2,pauperization,wordnet,n
+customer_needs,Customer Needs,2,penury,wordnet,n
+customer_needs,Customer Needs,2,postulate,wordnet,y
+customer_needs,Customer Needs,2,purchaser,datamuse,y
+customer_needs,Customer Needs,2,require,wordnet,y
+customer_needs,Customer Needs,2,salesperson,datamuse,n
+customer_needs,Customer Needs,2,service,datamuse,n
+customer_needs,Customer Needs,2,servicing,datamuse,n
+customer_needs,Customer Needs,2,storeowner,datamuse,n
+customer_needs,Customer Needs,2,take,wordnet,n
+customer_needs,Customer Needs,2,want,wordnet,y
+customer_segmentation,Customer Segmentation,2,aisle,datamuse,n
+customer_segmentation,Customer Segmentation,2,alienation,datamuse,n
+customer_segmentation,Customer Segmentation,2,chap,datamuse,n
+customer_segmentation,Customer Segmentation,2,cleavage,wordnet,n
+customer_segmentation,Customer Segmentation,2,client,wordnet,y
+customer_segmentation,Customer Segmentation,2,come,datamuse,n
+customer_segmentation,Customer Segmentation,2,customer,wordnet,y
+customer_segmentation,Customer Segmentation,2,discontinued operation,datamuse,n
+customer_segmentation,Customer Segmentation,2,division,wordnet,y
+customer_segmentation,Customer Segmentation,2,executive,datamuse,n
+customer_segmentation,Customer Segmentation,2,gavel,datamuse,n
+customer_segmentation,Customer Segmentation,2,isolation,datamuse,n
+customer_segmentation,Customer Segmentation,2,neurasthenic,datamuse,n
+customer_segmentation,Customer Segmentation,2,partition,wordnet,y
+customer_segmentation,Customer Segmentation,2,partitioning,wordnet,y
+customer_segmentation,Customer Segmentation,2,piece,datamuse,n
+customer_segmentation,Customer Segmentation,2,sectionalisation,wordnet,y
+customer_segmentation,Customer Segmentation,2,sectionalization,wordnet,y
+customer_segmentation,Customer Segmentation,2,segmentation,wordnet,y
+customer_segmentation,Customer Segmentation,2,segregationist,datamuse,n
+customer_segmentation,Customer Segmentation,2,separatist,datamuse,n
+customer_segmentation,Customer Segmentation,2,service department,datamuse,n
+customer_segmentation,Customer Segmentation,2,stage,datamuse,n
+customer_segmentation,Customer Segmentation,2,ward,datamuse,n
+value_proposition_v2,Value Proposition,2,appraise,wordnet,n
+value_proposition_v2,Value Proposition,2,appreciate,wordnet,n
+value_proposition_v2,Value Proposition,2,assess,wordnet,n
+value_proposition_v2,Value Proposition,2,brand equity,datamuse,y
+value_proposition_v2,Value Proposition,2,business case,datamuse,y
+value_proposition_v2,Value Proposition,2,competitive advantage,datamuse,y
+value_proposition_v2,Value Proposition,2,economic value,wordnet,y
+value_proposition_v2,Value Proposition,2,esteem,wordnet,n
+value_proposition_v2,Value Proposition,2,evaluate,wordnet,n
+value_proposition_v2,Value Proposition,2,line,datamuse,n
+value_proposition_v2,Value Proposition,2,measure,wordnet,n
+value_proposition_v2,Value Proposition,2,moneys worth,datamuse,y
+value_proposition_v2,Value Proposition,2,note value,wordnet,n
+value_proposition_v2,Value Proposition,2,pay off,datamuse,n
+value_proposition_v2,Value Proposition,2,point of difference,datamuse,y
+value_proposition_v2,Value Proposition,2,point of purchase,datamuse,n
+value_proposition_v2,Value Proposition,2,prise,wordnet,n
+value_proposition_v2,Value Proposition,2,private benefits,datamuse,y
+value_proposition_v2,Value Proposition,2,prize,wordnet,n
+value_proposition_v2,Value Proposition,2,proffer,wordnet,n
+value_proposition_v2,Value Proposition,2,proposal,wordnet,n
+value_proposition_v2,Value Proposition,2,proposition,datamuse|wordnet,y
+value_proposition_v2,Value Proposition,2,rate,wordnet,n
+value_proposition_v2,Value Proposition,2,respect,wordnet,n
+value_proposition_v2,Value Proposition,2,suggestion,wordnet,n
+value_proposition_v2,Value Proposition,2,time value,wordnet,y
+value_proposition_v2,Value Proposition,2,transaction utility,datamuse,y
+value_proposition_v2,Value Proposition,2,treasure,wordnet,n
+value_proposition_v2,Value Proposition,2,valuate,wordnet,n
+value_proposition_v2,Value Proposition,2,value,wordnet,y
+value_proposition_v2,Value Proposition,2,value add,datamuse,y
+value_proposition_v2,Value Proposition,2,value added service,datamuse,y
+value_proposition_v2,Value Proposition,2,value proposition canvas,datamuse,y
+value_proposition_v2,Value Proposition,2,value statement,datamuse,y
+product_strategy_v2,Product Strategy,2,brand management,datamuse,y
+product_strategy_v2,Product Strategy,2,business plan,datamuse,y
+product_strategy_v2,Product Strategy,2,business process mapping,datamuse,n
+product_strategy_v2,Product Strategy,2,cartesian product,wordnet,n
+product_strategy_v2,Product Strategy,2,intersection,wordnet,n
+product_strategy_v2,Product Strategy,2,marketing strategy,datamuse,y
+product_strategy_v2,Product Strategy,2,mathematical product,wordnet,n
+product_strategy_v2,Product Strategy,2,merchandise,wordnet,n
+product_strategy_v2,Product Strategy,2,new product development,datamuse,y
+product_strategy_v2,Product Strategy,2,pricing,datamuse,n
+product_strategy_v2,Product Strategy,2,product,wordnet,y
+product_strategy_v2,Product Strategy,2,product marketing,datamuse,y
+product_strategy_v2,Product Strategy,2,product planning,datamuse,y
+product_strategy_v2,Product Strategy,2,production,wordnet,y
+product_strategy_v2,Product Strategy,2,production schedule,datamuse,n
+product_strategy_v2,Product Strategy,2,requirements management,datamuse,y
+product_strategy_v2,Product Strategy,2,sales and operations planning,datamuse,y
+product_strategy_v2,Product Strategy,2,sales operations,datamuse,y
+product_strategy_v2,Product Strategy,2,scheme,wordnet,n
+product_strategy_v2,Product Strategy,2,strategic management,datamuse,y
+product_strategy_v2,Product Strategy,2,strategic planning,datamuse,y
+product_strategy_v2,Product Strategy,2,strategy,wordnet,y
+product_strategy_v2,Product Strategy,2,technology strategy,datamuse,y
+product_strategy_v2,Product Strategy,2,ware,wordnet,n
+pricing_monetization,Pricing & Monetization,2,bureaucratization,datamuse,n
+pricing_monetization,Pricing & Monetization,2,commercialisation,datamuse,y
+pricing_monetization,Pricing & Monetization,2,commercialization,datamuse,y
+pricing_monetization,Pricing & Monetization,2,commodification,datamuse,y
+pricing_monetization,Pricing & Monetization,2,decommercialization,datamuse,n
+pricing_monetization,Pricing & Monetization,2,decommodification,datamuse,n
+pricing_monetization,Pricing & Monetization,2,democratization,datamuse,n
+pricing_monetization,Pricing & Monetization,2,demonetisation,datamuse,n
+pricing_monetization,Pricing & Monetization,2,demonetization,datamuse,n
+pricing_monetization,Pricing & Monetization,2,deregulation,datamuse,n
+pricing_monetization,Pricing & Monetization,2,institutionalization,datamuse,n
+pricing_monetization,Pricing & Monetization,2,internationalization,datamuse,n
+pricing_monetization,Pricing & Monetization,2,liberalisation,datamuse,n
+pricing_monetization,Pricing & Monetization,2,monetisation,wordnet,y
+pricing_monetization,Pricing & Monetization,2,monetise,datamuse,y
+pricing_monetization,Pricing & Monetization,2,monetization,wordnet,y
+pricing_monetization,Pricing & Monetization,2,monetize,datamuse,y
+pricing_monetization,Pricing & Monetization,2,price,wordnet,y
+pricing_monetization,Pricing & Monetization,2,pricing,wordnet,y
+financial_viability,Financial Viability,2,business model,datamuse,y
+financial_viability,Financial Viability,2,cash flow,datamuse,y
+financial_viability,Financial Viability,2,cashflow,datamuse,y
+financial_viability,Financial Viability,2,cost effectiveness,datamuse,y
+financial_viability,Financial Viability,2,economic value,datamuse,y
+financial_viability,Financial Viability,2,economical,datamuse,n
+financial_viability,Financial Viability,2,economically,datamuse,n
+financial_viability,Financial Viability,2,feasibility,datamuse,y
+financial_viability,Financial Viability,2,finances,datamuse,y
+financial_viability,Financial Viability,2,financial,wordnet,y
+financial_viability,Financial Viability,2,financial leverage,datamuse,y
+financial_viability,Financial Viability,2,financial risk,datamuse,y
+financial_viability,Financial Viability,2,financial support,datamuse,y
+financial_viability,Financial Viability,2,financially,datamuse,n
+financial_viability,Financial Viability,2,financials,datamuse,y
+financial_viability,Financial Viability,2,fiscal,wordnet,y
+financial_viability,Financial Viability,2,profitability,datamuse,y
+financial_viability,Financial Viability,2,viability,wordnet,y
+operational_readiness,Operational Readiness,2,activated,datamuse,n
+operational_readiness,Operational Readiness,2,alert,datamuse,n
+operational_readiness,Operational Readiness,2,arm,datamuse,n
+operational_readiness,Operational Readiness,2,aut,datamuse,n
+operational_readiness,Operational Readiness,2,eagerness,wordnet,n
+operational_readiness,Operational Readiness,2,effectiveness,datamuse,y
+operational_readiness,Operational Readiness,2,efficiency,datamuse,y
+operational_readiness,Operational Readiness,2,enable,datamuse,y
+operational_readiness,Operational Readiness,2,enabled,datamuse,y
+operational_readiness,Operational Readiness,2,enabling,datamuse,y
+operational_readiness,Operational Readiness,2,facility,wordnet,n
+operational_readiness,Operational Readiness,2,forwardness,wordnet,n
+operational_readiness,Operational Readiness,2,function,datamuse,n
+operational_readiness,Operational Readiness,2,functional,wordnet,y
+operational_readiness,Operational Readiness,2,in operation,wordnet,y
+operational_readiness,Operational Readiness,2,operable,wordnet,y
+operational_readiness,Operational Readiness,2,operating,wordnet,y
+operational_readiness,Operational Readiness,2,operational,wordnet,y
+operational_readiness,Operational Readiness,2,operations,datamuse,y
+operational_readiness,Operational Readiness,2,preparation,wordnet,y
+operational_readiness,Operational Readiness,2,preparedness,wordnet,y
+operational_readiness,Operational Readiness,2,readiness,wordnet,y
+operational_readiness,Operational Readiness,2,set,wordnet,n
+operational_readiness,Operational Readiness,2,stand down,datamuse,n
+operational_readiness,Operational Readiness,2,task,datamuse,n
+operational_readiness,Operational Readiness,2,upping,datamuse,n
+operational_readiness,Operational Readiness,2,ups,datamuse,n
+operational_readiness,Operational Readiness,2,usable,wordnet,y
+operational_readiness,Operational Readiness,2,useable,wordnet,y
+operational_readiness,Operational Readiness,2,zeal,wordnet,n
+technology_feasibility,Technology Feasibility,2,able,datamuse,n
+technology_feasibility,Technology Feasibility,2,accomplishment,datamuse,n
+technology_feasibility,Technology Feasibility,2,adept,datamuse,n
+technology_feasibility,Technology Feasibility,2,administrative,datamuse,n
+technology_feasibility,Technology Feasibility,2,agrology,datamuse,n
+technology_feasibility,Technology Feasibility,2,airmanship,datamuse,n
+technology_feasibility,Technology Feasibility,2,ambidextrous,datamuse,n
+technology_feasibility,Technology Feasibility,2,applied science,wordnet,y
+technology_feasibility,Technology Feasibility,2,can,datamuse,n
+technology_feasibility,Technology Feasibility,2,communication,datamuse,n
+technology_feasibility,Technology Feasibility,2,engineering,wordnet,y
+technology_feasibility,Technology Feasibility,2,engineering science,wordnet,y
+technology_feasibility,Technology Feasibility,2,feasibility,wordnet,y
+technology_feasibility,Technology Feasibility,2,feasibleness,wordnet,y
+technology_feasibility,Technology Feasibility,2,futurology,datamuse,n
+technology_feasibility,Technology Feasibility,2,lead,datamuse,n
+technology_feasibility,Technology Feasibility,2,opportunity,datamuse,n
+technology_feasibility,Technology Feasibility,2,potential,datamuse,y
+technology_feasibility,Technology Feasibility,2,stealth,datamuse,n
+technology_feasibility,Technology Feasibility,2,technology,wordnet,y
+technology_feasibility,Technology Feasibility,2,wifi,datamuse,n
+data_ai,Data & AI,2,agar,datamuse,n
+data_ai,Data & AI,2,ai,wordnet,n
+data_ai,Data & AI,2,amnesty,datamuse,n
+data_ai,Data & AI,2,anon,datamuse,n
+data_ai,Data & AI,2,army intelligence,wordnet,n
+data_ai,Data & AI,2,artificial insemination,wordnet,n
+data_ai,Data & AI,2,artificial intelligence,wordnet,y
+data_ai,Data & AI,2,bot,datamuse,y
+data_ai,Data & AI,2,bradypus tridactylus,wordnet,n
+data_ai,Data & AI,2,complex,datamuse,n
+data_ai,Data & AI,2,data,wordnet,y
+data_ai,Data & AI,2,data point,wordnet,y
+data_ai,Data & AI,2,datum,wordnet,y
+data_ai,Data & AI,2,did,datamuse,n
+data_ai,Data & AI,2,information,wordnet,y
+data_ai,Data & AI,2,interval,datamuse,n
+data_ai,Data & AI,2,isolative,datamuse,n
+data_ai,Data & AI,2,java,datamuse,y
+data_ai,Data & AI,2,list,datamuse,n
+data_ai,Data & AI,2,person,datamuse,n
+data_ai,Data & AI,2,prolog,datamuse,y
+data_ai,Data & AI,2,sloth,datamuse,n
+data_ai,Data & AI,2,soon,datamuse,n
+data_ai,Data & AI,2,three toed sloth,wordnet,n
+data_ai,Data & AI,2,was,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,accident,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,adventure,datamuse|wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,adventurer,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,adventuring,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,adventurous,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,careful,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,chance,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,chanceful,datamuse,y
+risk_uncertainty,Risk & Uncertainty,2,chancy,datamuse,y
+risk_uncertainty,Risk & Uncertainty,2,compromise,datamuse,y
+risk_uncertainty,Risk & Uncertainty,2,critical,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,danger,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,doubt,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,doubtfulness,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,dubiety,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,dubiousness,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,endangerment,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,fear,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,gamble,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,guess,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,hazard,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,hesitate,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,incertitude,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,jeopardy,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,lay on the line,wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,peril,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,precariousness,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,put on the line,wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,risk,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,risk of exposure,wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,risk of infection,wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,risky,datamuse,y
+risk_uncertainty,Risk & Uncertainty,2,run a risk,wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,take a chance,wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,take chances,wordnet,n
+risk_uncertainty,Risk & Uncertainty,2,teeter,datamuse,n
+risk_uncertainty,Risk & Uncertainty,2,uncertainness,wordnet,y
+risk_uncertainty,Risk & Uncertainty,2,uncertainty,wordnet,y
+governance_compliance,Governance & Compliance,2,abidance,wordnet,y
+governance_compliance,Governance & Compliance,2,administering,datamuse,y
+governance_compliance,Governance & Compliance,2,administration,datamuse|wordnet,y
+governance_compliance,Governance & Compliance,2,autonomy,datamuse,n
+governance_compliance,Governance & Compliance,2,brass,wordnet,n
+governance_compliance,Governance & Compliance,2,business,datamuse,n
+governance_compliance,Governance & Compliance,2,complaisance,wordnet,n
+governance_compliance,Governance & Compliance,2,compliance,wordnet,y
+governance_compliance,Governance & Compliance,2,compliancy,wordnet,y
+governance_compliance,Governance & Compliance,2,conformation,wordnet,y
+governance_compliance,Governance & Compliance,2,conformity,wordnet,y
+governance_compliance,Governance & Compliance,2,control,datamuse,y
+governance_compliance,Governance & Compliance,2,deference,wordnet,n
+governance_compliance,Governance & Compliance,2,discharge,datamuse,y
+governance_compliance,Governance & Compliance,2,establishment,wordnet,n
+governance_compliance,Governance & Compliance,2,governance,wordnet,y
+governance_compliance,Governance & Compliance,2,governing,wordnet,y
+governance_compliance,Governance & Compliance,2,governing body,wordnet,y
+governance_compliance,Governance & Compliance,2,government,datamuse|wordnet,y
+governance_compliance,Governance & Compliance,2,government activity,wordnet,y
+governance_compliance,Governance & Compliance,2,manage,datamuse,n
+governance_compliance,Governance & Compliance,2,management,datamuse,y
+governance_compliance,Governance & Compliance,2,managing,datamuse,y
+governance_compliance,Governance & Compliance,2,obligingness,wordnet,n
+governance_compliance,Governance & Compliance,2,organisation,wordnet,y
+governance_compliance,Governance & Compliance,2,organization,wordnet,y
+governance_compliance,Governance & Compliance,2,power,datamuse,n
+governance_compliance,Governance & Compliance,2,rule,datamuse,y
+governance_compliance,Governance & Compliance,2,ruling,datamuse,y
+governance_compliance,Governance & Compliance,2,structure,datamuse,y
+governance_compliance,Governance & Compliance,2,submission,wordnet,n
+governance_compliance,Governance & Compliance,2,technocracy,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,accede,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,aligned,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,alignment,wordnet,y
+stakeholder_alignment,Stakeholder Alignment,2,alinement,wordnet,y
+stakeholder_alignment,Stakeholder Alignment,2,alliance,wordnet,y
+stakeholder_alignment,Stakeholder Alignment,2,bilateral,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,coalition,wordnet,y
+stakeholder_alignment,Stakeholder Alignment,2,conjunction,wordnet,n
+stakeholder_alignment,Stakeholder Alignment,2,consultation,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,consulting,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,inflection,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,interest,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,off,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,orientation,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,part,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,party,datamuse,y
+stakeholder_alignment,Stakeholder Alignment,2,register,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,registered,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,someone,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,stack,datamuse,n
+stakeholder_alignment,Stakeholder Alignment,2,stakeholder,wordnet,y
+execution_planning,Execution Planning,2,abort,datamuse,n
+execution_planning,Execution Planning,2,achievement,datamuse,y
+execution_planning,Execution Planning,2,achieving,datamuse,y
+execution_planning,Execution Planning,2,administer,datamuse,y
+execution_planning,Execution Planning,2,administration,datamuse,y
+execution_planning,Execution Planning,2,be after,wordnet,n
+execution_planning,Execution Planning,2,capital punishment,wordnet,n
+execution_planning,Execution Planning,2,carrying into action,wordnet,n
+execution_planning,Execution Planning,2,carrying out,wordnet,n
+execution_planning,Execution Planning,2,contrive,wordnet,n
+execution_planning,Execution Planning,2,craft,datamuse,n
+execution_planning,Execution Planning,2,cunning,datamuse,n
+execution_planning,Execution Planning,2,death penalty,wordnet,n
+execution_planning,Execution Planning,2,design,wordnet,n
+execution_planning,Execution Planning,2,environment,datamuse,n
+execution_planning,Execution Planning,2,executing,wordnet,y
+execution_planning,Execution Planning,2,execution,wordnet,y
+execution_planning,Execution Planning,2,execution of instrument,wordnet,y
+execution_planning,Execution Planning,2,general staff,datamuse,n
+execution_planning,Execution Planning,2,hand,datamuse,n
+execution_planning,Execution Planning,2,implementation,wordnet,y
+execution_planning,Execution Planning,2,instruction execution,wordnet,y
+execution_planning,Execution Planning,2,mastermind,datamuse,n
+execution_planning,Execution Planning,2,murder,wordnet,n
+execution_planning,Execution Planning,2,operation,datamuse,y
+execution_planning,Execution Planning,2,performance,wordnet,y
+execution_planning,Execution Planning,2,plan,wordnet,y
+execution_planning,Execution Planning,2,planning,wordnet,y
+execution_planning,Execution Planning,2,preparation,wordnet,y
+execution_planning,Execution Planning,2,project,wordnet,y
+execution_planning,Execution Planning,2,provision,wordnet,n
+execution_planning,Execution Planning,2,purpose,datamuse,y
+execution_planning,Execution Planning,2,respite,datamuse,n
+execution_planning,Execution Planning,2,slaying,wordnet,n
+execution_planning,Execution Planning,2,tactician,datamuse,n
+execution_planning,Execution Planning,2,writ of execution,wordnet,n
+continuous_improvement_v2,Continuous Improvement,2,advance,wordnet,n
+continuous_improvement_v2,Continuous Improvement,2,advancement,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,betterment,wordnet,y
+continuous_improvement_v2,Continuous Improvement,2,continuous,wordnet,y
+continuous_improvement_v2,Continuous Improvement,2,continuousness,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,economic growth,datamuse,n
+continuous_improvement_v2,Continuous Improvement,2,improve,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,improvement,wordnet,y
+continuous_improvement_v2,Continuous Improvement,2,improvements,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,improving,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,incrementalism,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,innovation,datamuse,n
+continuous_improvement_v2,Continuous Improvement,2,melioration,wordnet,y
+continuous_improvement_v2,Continuous Improvement,2,progress,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,progressing,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,progression,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,progressional,datamuse,n
+continuous_improvement_v2,Continuous Improvement,2,progressiveness,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,uninterrupted,wordnet,y
+continuous_improvement_v2,Continuous Improvement,2,upgradability,datamuse,y
+continuous_improvement_v2,Continuous Improvement,2,upgradation,datamuse,y
+ai_ml,AI/ML,1,artificial intelligence,manual,y
+ai_ml,AI/ML,1,machine learning,manual,y
+ai_ml,AI/ML,1,ml,manual,y
+ai_ml,AI/ML,1,model,manual,y
+ai_ml,AI/ML,1,algorithm,manual,y
+ai_ml,AI/ML,1,prediction,manual,y
+ai_ml,AI/ML,1,predictive,manual,y
+ai_ml,AI/ML,1,training data,manual,y
+ai_ml,AI/ML,1,neural network,manual,y
+ai_ml,AI/ML,1,deep learning,manual,y
+ai_ml,AI/ML,1,automation,manual,y
+ai_ml,AI/ML,1,automated,manual,y
+ai_ml,AI/ML,1,chatbot,manual,y
+ai_ml,AI/ML,1,llm,manual,y
+ai_ml,AI/ML,1,large language model,manual,y
+ai_ml,AI/ML,1,model accuracy,manual,y
+ai_ml,AI/ML,1,model quality,manual,y
+ai_ml,AI/ML,1,inference,manual,y
+ai_ml,AI/ML,1,recommendation engine,manual,y
+ai_ml,AI/ML,1,nlp,manual,y
+ai_ml,AI/ML,1,natural language processing,manual,y
+ai_ml,AI/ML,1,generative ai,manual,y
+ai_ml,AI/ML,1,genai,manual,y
+go_to_market,Go-to-Market,2,go to market,manual,y
+go_to_market,Go-to-Market,2,gtm,manual,y
+go_to_market,Go-to-Market,2,launch,manual,y
+go_to_market,Go-to-Market,2,launch plan,manual,y
+go_to_market,Go-to-Market,2,launch strategy,manual,y
+go_to_market,Go-to-Market,2,market entry,manual,y
+go_to_market,Go-to-Market,2,market launch,manual,y
+go_to_market,Go-to-Market,2,rollout,manual,y
+go_to_market,Go-to-Market,2,channel strategy,manual,y
+go_to_market,Go-to-Market,2,distribution strategy,manual,y
+go_to_market,Go-to-Market,2,sales channel,manual,y
+go_to_market,Go-to-Market,2,marketing channel,manual,y
+go_to_market,Go-to-Market,2,positioning,manual,y
+go_to_market,Go-to-Market,2,messaging,manual,y
+go_to_market,Go-to-Market,2,commercial launch,manual,y
+go_to_market,Go-to-Market,2,product launch,manual,y
+go_to_market,Go-to-Market,2,market readiness,manual,y
+go_to_market,Go-to-Market,2,launch readiness,manual,y

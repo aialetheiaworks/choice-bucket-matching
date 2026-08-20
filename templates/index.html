@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CHOICE Bucket Matching — Test UI</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --panel: #171a21;
+      --border: #2a2e38;
+      --text: #e6e8ec;
+      --muted: #8b909c;
+      --accent: #6ea8fe;
+      --accent-dim: #2a3a52;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px 20px 80px;
+    }
+    h1 {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin: 0 0 4px;
+    }
+    .subtitle {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin: 0 0 28px;
+    }
+    form {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 20px;
+    }
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+    textarea {
+      width: 100%;
+      min-height: 110px;
+      resize: vertical;
+      background: #0d0f13;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+    textarea:focus { outline: 2px solid var(--accent); border-color: transparent; }
+    button {
+      margin-top: 14px;
+      background: var(--accent);
+      color: #0b1220;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    button:hover { opacity: 0.9; }
+    .results { margin-top: 32px; }
+    .results h2 {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin: 0 0 14px;
+    }
+    .tooltip-line {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .tooltip-line .rank {
+      display: inline-block;
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: var(--accent-dim);
+      border-radius: 4px;
+      padding: 1px 7px;
+      margin-right: 8px;
+      font-weight: 600;
+    }
+    .tooltip-line .text { font-size: 0.95rem; }
+    .tooltip-line .meta {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .tooltip-line .meta code {
+      background: #0d0f13;
+      border-radius: 4px;
+      padding: 1px 5px;
+      color: #b8c4d9;
+    }
+    .empty {
+      color: var(--muted);
+      font-size: 0.9rem;
+      font-style: italic;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>CHOICE Bucket Matching</h1>
+    <p class="subtitle">Internal test UI — paste a Choice Forge master prompt and see the ranked tooltip output.</p>
+
+    <form method="post">
+      <label for="master_prompt">Master prompt</label>
+      <textarea id="master_prompt" name="master_prompt" placeholder="e.g. Increase annual sales of premium office chairs by 30% within the next 12 months by targeting small and medium-sized businesses in India...">{{ master_prompt }}</textarea>
+      <button type="submit">Get tooltip</button>
+    </form>
+
+    {% if request.method == "POST" %}
+    <div class="results">
+      <h2>Tooltip output</h2>
+      {% if ranked %}
+        {% for r in ranked %}
+        <div class="tooltip-line">
+          <div class="text"><span class="rank">{{ loop.index }}</span>{{ r.tooltip_line }}</div>
+          <div class="meta">
+            tier {{ r.tier }} &middot; score {{ r.score }}
+            {% if r.matched_terms %} &middot; matched: {% for t in r.matched_terms %}<code>{{ t }}</code>{% if not loop.last %} {% endif %}{% endfor %}{% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p class="empty">No tooltip lines returned.</p>
+      {% endif %}
+    </div>
+    {% endif %}
+  </div>
+</body>
+</html>
