@@ -54,27 +54,36 @@ same way tests or a summary would be.
 
 ## Test UI (not part of the phased build — for internal testing only)
 
-Two front ends over the same pipeline, both added 2026-08-20:
+Three front ends over the same pipeline (`match_buckets` + `get_tooltip`),
+all added 2026-08-20 while chasing a free way to host this live:
 
-- `app.py` + `templates/index.html` — Flask version, local-only. Run with
-  `python3 app.py`, open `http://127.0.0.1:5000`. Was going to be
-  deployed via Docker to Hugging Face Spaces, but Docker Spaces need a
-  verified payment method on a free HF account — blocked, kept the
-  `Dockerfile` around in case that changes later.
-- `gradio_app.py` — Gradio version, same pipeline (`match_buckets` +
-  `get_tooltip`), built specifically to deploy on Hugging Face Spaces'
-  free tier without payment verification. This is the one `README.md`'s
-  Space front matter (`sdk: gradio`, `app_file: gradio_app.py`) points
-  at. Run locally with `python3 gradio_app.py`.
+- `app.py` + `templates/index.html` — Flask version, local-only
+  (`python3 app.py`, open `http://127.0.0.1:5000`). Was meant for Docker
+  on Hugging Face Spaces, but free HF accounts can't create Docker
+  Spaces (needs a verified payment method). `Dockerfile` kept around in
+  case that changes.
+- `gradio_app.py` — Gradio version. Also blocked on HF's free tier: as of
+  2026-08-20, HF requires a *paid* plan for Gradio Spaces too — only
+  Static (browser-only, no real Python) is free, which can't run spaCy.
+  Kept in the repo; `README.md`'s HF Space front matter still points at
+  it in case HF Pro ever happens.
+- `streamlit_app.py` — **this is the one actually being deployed.**
+  Streamlit Community Cloud runs a real Python backend for free from a
+  GitHub repo (no payment verification), unlike HF's current tier.
 
-`requirements.txt` covers both (`flask`, `gradio`, `spacy`, plus a direct
-wheel URL for `en_core_web_sm` — Gradio Spaces just run `pip install -r
-requirements.txt`, there's no Docker build step to run `spacy download`
-in, so the model has to be installable as a normal pip package).
+**Live deploy status:** pushed to
+`https://github.com/aialetheiaworks/choice-bucket-matching` (public repo,
+`main` branch) on 2026-08-20. Streamlit Cloud deploy (share.streamlit.io,
+pointed at `streamlit_app.py`) requires the user's own GitHub OAuth login
+to Streamlit — that last click has to happen in their browser, not
+something doable from here. Once deployed the app auto-redeploys on every
+push to `main` (Streamlit Cloud's default behavior) — so future pipeline
+or synonym-list changes just need a normal `git push`, no redeploy step.
 
-This project is now a git repo (`git init` done 2026-08-20, initial
-commit made) specifically so it can be pushed to a Hugging Face Space.
-Not yet pushed — needs the user's own HF account/token.
+`requirements.txt` covers all three front ends (`flask`, `gradio`,
+`streamlit`, `spacy`) plus a direct pip-installable wheel URL for
+`en_core_web_sm` (works with all three hosts — none of them run a
+`spacy download` step, so the model has to install as a normal package).
 
 ## Locked decisions (mirrored from the build brief — check that file for full rationale)
 
