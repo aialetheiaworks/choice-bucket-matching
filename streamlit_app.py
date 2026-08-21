@@ -57,7 +57,7 @@ with col2:
 if submitted and master_prompt.strip():
     bucket_index = get_bucket_index()
     match_results = match_buckets(master_prompt, bucket_index=bucket_index)
-    ranked = rank_buckets(match_results, bucket_index)
+    ranked = rank_buckets(match_results, bucket_index, master_prompt=master_prompt)
 
     if not ranked:
         st.info("No buckets matched.")

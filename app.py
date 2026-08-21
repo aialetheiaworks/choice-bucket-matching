@@ -35,7 +35,7 @@ def index():
         master_prompt = request.form.get("master_prompt", "").strip()
         if master_prompt:
             match_results = match_buckets(master_prompt, bucket_index=_bucket_index)
-            ranked = rank_buckets(match_results, _bucket_index)
+            ranked = rank_buckets(match_results, _bucket_index, master_prompt=master_prompt)
             lines = render_tooltip(ranked)
             for r, line in zip(ranked, lines):
                 r["tooltip_line"] = line

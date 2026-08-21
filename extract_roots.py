@@ -33,6 +33,16 @@ import spacy
 MODEL_NAME = "en_core_web_sm"
 KEEP_POS = {"NOUN", "PROPN", "VERB", "ADJ"}
 
+# en_core_web_sm lemmatizes "data" to "datum" when it tags the token as
+# plural (NNS -- its default outside a noun-modifier position), but leaves
+# it as "data" when tagged singular (NN, e.g. directly before another noun
+# as in "data strategy"). Business phrasing uses "data" as an uncountable
+# mass noun and never means literal "datum", so force a single lemma
+# regardless of position -- otherwise the same surface word silently
+# extracts/matches inconsistently depending on sentence position (found in
+# Phase 6 eval, see PHASE6_EVAL_RESULTS.md).
+IRREGULAR_LEMMAS = {"data": "data"}
+
 _nlp = None
 
 
@@ -41,6 +51,10 @@ def _get_nlp():
     if _nlp is None:
         _nlp = spacy.load(MODEL_NAME)
     return _nlp
+
+
+def _lemma_of(token):
+    return IRREGULAR_LEMMAS.get(token.text.lower(), token.lemma_.lower())
 
 
 def extract_roots(master_prompt):
@@ -55,7 +69,7 @@ def extract_roots(master_prompt):
             continue
         if token.pos_ not in KEEP_POS:
             continue
-        lemma = token.lemma_.lower().strip()
+        lemma = _lemma_of(token).strip()
         if lemma:
             roots.add(lemma)
 
@@ -66,7 +80,7 @@ def extract_roots(master_prompt):
         content_tokens = [t for t in chunk if not (t.is_stop or t.is_punct)]
         if len(content_tokens) < 2:
             continue  # single-word chunks are already covered by the token loop above
-        phrase = " ".join(t.lemma_.lower() for t in content_tokens).strip()
+        phrase = " ".join(_lemma_of(t) for t in content_tokens).strip()
         if phrase:
             roots.add(phrase)
 

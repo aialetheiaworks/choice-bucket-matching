@@ -35,7 +35,7 @@ def get_tooltip_markdown(master_prompt):
         return "_Enter a master prompt above and click Submit._"
 
     match_results = match_buckets(master_prompt, bucket_index=_bucket_index)
-    ranked = rank_buckets(match_results, _bucket_index)
+    ranked = rank_buckets(match_results, _bucket_index, master_prompt=master_prompt)
     if not ranked:
         return "_No buckets matched._"
 

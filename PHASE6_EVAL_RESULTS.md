@@ -159,3 +159,254 @@ whether to special-case known irregular lemmas.
 - Consider the "data"/"datum" lemma-mismatch class of bug more broadly —
   spot-check other bucket synonym lists for similar single-word terms
   that might silently mismatch depending on sentence position.
+
+## 2026-08-22 follow-up: lemma fix, and a rejected taxonomy fix
+
+**"data"/"datum" lemma bug — fixed.** Confirmed the root cause exactly as
+predicted above: `nlp("data")` alone tags NNS (plural) → lemma "datum",
+but `nlp("data strategy")` tags the first token NN (singular, modifying a
+following noun) → lemma stays "data". The bucket loader lemmatized the
+literal synonym "data" in isolation, so it became "datum" in
+`match_terms` and never matched the literal "data" that phrasing like
+"data strategy"/"customer data"/"data quality" actually extracts. Fixed
+with an `IRREGULAR_LEMMAS = {"data": "data"}` override applied at the
+token level in both `extract_roots.py` and `match_buckets.py`'s
+`_lemmatize_term`, so "data" always lemmatizes the same way regardless of
+its position in the sentence. Verified directly:
+
+```
+"Improve our data strategy."   -> data_ai matches: ['data']  (was: no match)
+"We rely on customer data."    -> data_ai matches: ['data']  (was: no match)
+"Better data quality is needed." -> data_ai matches: ['data']  (was: no match)
+```
+
+Re-ran the full 18-case eval after this fix: 66/90 = 73.3%, same
+aggregate as before — the fix is real (verified above, not just
+theoretical) but this eval set's tie-breaks absorb it: case 11 gained a
+`Data & AI` hit and lost a `Timeline` hit to a top-5 tie-break in the same
+case, netting zero on the aggregate count for this particular set.
+
+**Bucket taxonomy overlap — attempted a fix, evidence says no.** Tried
+the fix this doc suggested: fold `Compliance`/`Governance`/`Legal` into
+`Governance & Compliance` as one canonical slot, the same way
+`get_tooltip.py` already merges same-named Tier 1/Tier 2 pairs. Measured
+against the 18-case eval:
+
+| | Before | After equivalence-group merge |
+|---|---|---|
+| Recall | 66/90 = 73.3% | 63/90 = 70.0% |
+| Avg hits/case | 3.67 | 3.50 |
+
+Net **negative**, and case 7 (the motivating example from the first Phase
+6 run) didn't even register as fixed, because the eval scores by exact
+bucket name and the merged result renders as "Governance & Compliance",
+not "Compliance" (case 7's expected label). The real disqualifying
+evidence was case 12 — *"Get our fintech lending product RBI-compliant
+and audit-ready before our Series B raise closes in Q3"* — whose human-
+labeled `expected_buckets` are `Compliance`, `Legal`, `Governance`,
+`Risk`, `Timeline`: **three of the four "duplicate" buckets, expected as
+three distinct hits.** Before the merge, the pipeline correctly surfaced
+all three independently (4/5 on this case, missing only Timeline); after
+the merge it could only ever supply one of the three, dropping to 2/5.
+
+This disproves the assumption (made when this doc was first written) that
+these buckets are pure vocabulary duplicates that should always collapse.
+In a broad, generic statement (case 7's SOC 2 mention) they behave like
+duplicates; in a regulatory-specific statement (case 12) they're
+legitimately distinct facets (compliance execution vs. legal obligation
+vs. decision-rights/governance). A blanket merge can't satisfy both.
+Reverted the merge entirely — code is back to the original same-name-only
+tier dedup. Left `Sales`/`Marketing`/`Growth Strategy` untouched too,
+since the same caution now applies to it without case-by-case evidence.
+
+**Revised recommendation:** don't attempt another blanket merge here.
+Either (a) add more eval cases spanning both a generic and a
+domain-specific phrasing for each suspected cluster, to see whether the
+distinct-vs-duplicate split is consistent per-domain and could drive a
+conditional rule, or (b) treat this as inherent top-5-capacity pressure
+that isn't cleanly fixable by taxonomy changes at all, and deprioritize it
+below Phase 5.
+
+## 2026-08-22 follow-up #2: eval cases for the never-exercised domains
+
+The original 18 cases never exercised 21 of 77 buckets (measured on raw
+match_buckets() output, not just top-5 survivors), including all five
+domains flagged above as "unexercised, not necessarily broken": Ethics,
+Privacy, Sustainability, Accessibility, Localization. Added 5 new cases
+(19-23, one per domain, realistic statements genuinely relevant to that
+domain plus 4 other buckets) to `eval_set.json` to check.
+
+**Result: mixed, and more interesting than "broken vs. fine."**
+
+| Case | Domain | Bucket's raw match | What happened |
+|---|---|---|---|
+| 19 | Ethics | Matched (score 1, "ethical") | **Lost the top-5 tie-break** — crowded out by Business Objective/AI/ML/Timeline (score 2) and Compliance/Data & AI (score 1, won tie-break) |
+| 20 | Privacy | Matched (score 1, "privacy") | **Lost the top-5 tie-break** — crowded out similarly |
+| 21 | Sustainability | Matched (score 1, via the bucket's own name, not a synonym) | **Lost the top-5 tie-break** |
+| 22 | Accessibility | Matched, made top-5 | **Hit** — no issue found |
+| 23 | Localization | **Zero raw match** | **Genuine vocabulary gap** — see below |
+
+So 3 of 5 "unexercised" buckets (Ethics, Privacy, Sustainability) are
+**not** vocabulary-broken — they matched correctly on real phrasing but
+lost a top-5 slot to other legitimately-relevant buckets in the same
+statement. This is the same top-5-capacity-pressure pattern behind the
+bucket-taxonomy-overlap finding above, but now showing up **across
+unrelated bucket clusters** (Ethics/Privacy/Sustainability aren't
+near-duplicates of Business Objective/AI/ML/Timeline the way
+Compliance/Governance/Legal are of each other) — suggesting the top-5 cap
+itself, not just specific overlapping clusters, is the recurring
+constraint. Worth keeping in mind if this comes up again: synonym tuning
+can't fix a slot-capacity problem.
+
+**Localization — genuine gap, fixed.** Zero raw match on `"...translating
+the product catalog... and adapting pricing to each region's
+currency..."` despite `translation` and `adaptation` already being listed
+synonyms. Root cause: the same lemma-mismatch *class* of bug as the
+"data"/"datum" fix above, but a different mechanism — spaCy lemmatizes
+the verb forms actually used in real phrasing ("translating" ->
+"translate", "adapting" -> "adapt") to their verb lemma, which doesn't
+match the noun-form synonyms stored ("translation", "adaptation"). Fixed
+by adding the verb forms (`"translate"`, `"adapt"`, and `"localize"` for
+the same reason) to `bucket_library.json`'s Localization synonym list.
+Verified: case 23 went 2/5 -> 3/5 (Localization now hits; still missing
+Pricing and Timeline, which is a separate, unrelated gap not investigated
+here). Full eval: 81/115 -> 82/115 recall (70.4% -> 71.3%), no
+regressions on any other case.
+
+**Not fixed / not attempted:** the Ethics/Privacy/Sustainability crowding
+issue is the same "decision, not synonym tuning" category as the
+taxonomy-overlap finding above, and given the earlier equivalence-merge
+attempt's negative result, no tie-break change was attempted here either
+without stronger evidence on what rule would actually help across cases
+without hurting others.
+
+## 2026-08-22 follow-up #3: round 2 of eval coverage (cases 24-28)
+
+Continued closing the untested-bucket gap: added 5 more cases targeting
+Lessons Learned, Communication, Monitoring, Dependencies, Quality (the
+next batch of the buckets no case had ever raw-matched). Same pattern as
+before, split cleanly into two categories:
+
+**Genuine vocabulary gaps, found and fixed (3 of 5):**
+- **Communication** — zero raw match on "weekly stakeholder update
+  cadence and a shared status report... leadership stays informed."
+  Synonym list was all formal/written-correspondence terms (briefing,
+  communique, memorandum, transmittal) with no plain business words for
+  routine updates. Added `update`, `report`, `reporting`, `status
+  update`, `inform`.
+- **Monitoring** — zero raw match on "real-time dashboards and automated
+  alerts... latency and error rate... on-call team." Synonym list was
+  all formal supervision/inspection terms (inspectorate, superintendence,
+  surveillance) despite the bucket's own prompt literally saying
+  "observability, alerts" — those words just weren't in the synonym
+  list. Added `alert`, `alerting`, `dashboard`, `observability`,
+  `on-call`, `uptime`.
+- **Dependencies** — zero raw match on "blocked until both of their
+  upstream changes ship." Synonym list was only word-form variants of
+  "dependency" itself (dependance, dependence, dependency, dependent) —
+  no real phrasing for how people actually describe being blocked. Added
+  `blocked`, `blocker`, `upstream`, `downstream`, `prerequisite`.
+
+Verified directly (raw score, terms matched) and via full re-run: all
+three now score >0 on their case AND win their top-5 slot outright (not
+just a marginal win — Communication scored 3, Monitoring 2, Dependencies
+2, comfortably ahead of the competing buckets in each case). Full-eval
+recall: 89/140 -> 91/140 (63.6% -> 65.0%).
+
+**Top-5 crowding, not fixed (2 of 5):** Lessons Learned and Quality both
+raw-matched correctly (score 1, via "lesson" and "quality" respectively)
+but lost their top-5 slot to other buckets in the same statement — the
+same pattern as Ethics/Privacy/Sustainability in follow-up #2. That's now
+**5 independent cases** of a real match losing to top-5 capacity, across
+completely unrelated bucket clusters (Compliance-family, Ethics/Privacy/
+Sustainability, and now Lessons Learned/Quality). Not attempted here, per
+the standing "needs a decision" boundary — but the evidence for this
+being a structural, not incidental, issue keeps growing.
+
+**New lead not chased this round:** case 26 (Monitoring) still only hit
+1 of 5 expected even after the fix, because `Reliability`, `Performance`,
+`Metrics`, and `Risk` all raw-scored zero on "latency and error rate...
+catch failures" -- none of their synonym lists cover that incident-
+response vocabulary either. Flagging for a future round rather than
+scope-creeping this one.
+
+**Remaining untested buckets after this round: 8 of 77** (down from 21
+after follow-up #2's round, down from the original 37) —
+`Assumptions`, `Competition`, `Competitive Landscape`, `Constraints`,
+`External Environment`, `Innovation`, `Problem Definition`, `ROI`.
+Converging faster than the original per-round estimate, partly because
+new cases incidentally exercise buckets they weren't written to target.
+
+## 2026-08-22 follow-up #4: round 3 of eval coverage (cases 29-34) — all 77 buckets now verified
+
+**Correction to follow-up #3:** re-checked case 26's raw scores (not just
+top-5 membership) before treating it as an open lead. `Performance` and
+`Metrics` were mischaracterized as a possible vocabulary gap -- they
+actually raw-matched fine (`latency`, `rate`) and lost the top-5 tie-break
+to `Customer`/`Cost`/`Customer Experience`/`Feedback`, i.e. a 6th instance
+of the crowding pattern, not a vocab gap. `Reliability`, however, was a
+genuine zero-raw-match gap: its prompt literally says "failure scenarios"
+but neither "fail" nor "failure" was a synonym. Fixed (added both);
+verified `Reliability` now raw-matches `case 26` (score 1, term
+"failure") -- still loses its top-5 slot to the same crowd (a 7th
+crowding instance), but the vocabulary side is now correct.
+
+Added the last 6 cases (29-34) covering the remaining 8 never-tested
+buckets: Competition + Competitive Landscape (case 29), Assumptions +
+Constraints (case 30), External Environment (31), Innovation (32),
+Problem Definition (33), ROI (34).
+
+**Genuine vocabulary gaps found and fixed (3):**
+- **External Environment** — zero raw match on "new tariffs and a
+  slowing consumer economy." Its own prompt names "political, economic,
+  social, technological, legal, environmental" influences (a PESTLE
+  framework), but none of those PESTLE-dimension words were literal
+  synonyms except "environmental." Added `economic`, `economy`, `tariff`
+  -- deliberately did *not* add `political`/`social`/`technological`/
+  `legal` since those are bare, extremely generic words that would risk
+  the same over-triggering mistake Phase 6's first round found and fixed
+  in other buckets (e.g. `Legal` is already its own distinct bucket).
+- **Assumptions** — zero raw match on "instead of assuming it's a
+  checkout UX issue." Verb-form lemma mismatch, same class of bug as
+  "data"/"datum" and "translating"/"translation": the text lemmatizes
+  "assuming" to "assume," but the synonym list only had noun forms
+  (assumption, premise, presumption). Added `assume`.
+- **Customer Experience** — zero raw match on the same sentence's
+  "checkout UX issue," despite the bucket's own prompt being "usability,
+  satisfaction, and delight." Neither `ux` nor `user experience` was a
+  synonym. Added both.
+
+Verified: case 31 (External Environment) 2/5 -> 3/5; case 33 (Customer
+Experience + Assumptions) 0/5 -> 2/5 (was a full zero-hit case before the
+fix). Full-eval recall: 61.8% -> 63.5% (34 cases), zero-hit cases back to
+0/34.
+
+**Not fixed / not real bugs:** `Market` and `Risk` still miss in case 31,
+and `Business Objective`/`ROI`/`Resources`/`Technology`-adjacent misses
+recur in cases 33/34 -- checked raw scores and these are a mix of (a)
+more crowding instances (ROI itself raw-matched in case 34 but lost its
+slot to Finance/Financial Viability) and (b) cases where my own case text
+didn't actually contain strong triggering vocabulary for that expected
+bucket (e.g. case 31 never really says "market," it implies it) --
+labeling honesty note: not every miss here is a pipeline bug, some are
+just a generous expected-bucket label on a case that doesn't literally
+evoke it. Not force-fixed by padding synonym lists to match invented
+gaps, per the standing "don't reverse-engineer the eval set" discipline.
+
+**Milestone: 0 of 77 buckets remain untested** (raw match) as of this
+round -- every bucket in `bucket_library.json` has now been exercised by
+at least one real eval case. This closes the "verify every bucket at
+least once" goal in 4 rounds total (this session), faster than the
+original ~6-7 round estimate, since several rounds' cases incidentally
+covered buckets beyond their intended target.
+
+**What's left is no longer coverage — it's the crowding pattern.** Across
+all 4 rounds this session, **7 independent instances** of a bucket
+matching correctly and still losing its top-5 slot have now been found,
+spanning 5 unrelated bucket clusters (Compliance family; Ethics/Privacy/
+Sustainability; Lessons Learned/Quality; Performance/Metrics;
+Reliability/ROI/Technology). That is now the dominant remaining gap in
+this pipeline, well past "maybe noise" — but per the reverted
+equivalence-merge lesson, fixing it needs a real design decision (raise
+`TOP_N`? a different tie-break rule? show more than 5 lines when there's
+a genuine tie?), not another round of synonym tuning.

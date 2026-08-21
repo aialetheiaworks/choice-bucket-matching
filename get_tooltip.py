@@ -38,6 +38,7 @@ Usage:
 import sys
 
 from match_buckets import load_bucket_index, match_buckets
+from match_logger import log_match
 
 CORE_BUCKETS = ["Business Objective", "Customer", "Value Proposition", "Risk", "Market"]
 TOP_N = 5
@@ -56,7 +57,17 @@ def _dedupe_tiers(results):
     """Merge same-named buckets that matched in both Tier 1 and Tier 2
     into one entry: matched terms union for scoring/recall, but the
     rendered prompt always comes from the Tier 1 (shorter) text -- per
-    the 2026-08-18 decision in the build brief."""
+    the 2026-08-18 decision in the build brief.
+
+    An equivalence-group merge (folding Compliance/Governance/Legal/
+    Governance & Compliance into one canonical slot) was tried here and
+    measured against eval_set.json: it dropped recall 73.3% -> 70.0% and
+    didn't even fix its target case (case 7) under the eval's exact-name
+    scoring, because case 12 shows these are NOT reliably duplicates --
+    a regulatory-compliance statement where a human labeler expects
+    Compliance, Legal, and Governance as three genuinely distinct hits.
+    Reverted; see PHASE6_EVAL_RESULTS.md for the full writeup. The
+    bucket-taxonomy-overlap question is still open."""
     by_name = {}
     for r in results:
         existing = by_name.get(r["name"])
@@ -90,15 +101,24 @@ def _core_bucket_fallback(bucket_index):
     ]
 
 
-def rank_buckets(match_results, bucket_index):
+def rank_buckets(match_results, bucket_index, master_prompt=None):
     """Phase 3: turn match_buckets()'s per-bucket scores into the final
-    ranked selection (see module docstring for the rules)."""
-    if not match_results:
-        return _core_bucket_fallback(bucket_index)
+    ranked selection (see module docstring for the rules).
 
-    deduped = _dedupe_tiers(match_results)
-    deduped.sort(key=lambda r: (-r["score"], _core_rank(r["name"]), r["name"]))
-    return deduped[:TOP_N]
+    Also Phase 5 (persistence): this is the one point every front end (CLI,
+    Flask, Gradio, Streamlit) already calls with both match_results and the
+    final ranked list, so it's the chokepoint for logging a run -- see
+    match_logger.py. `master_prompt` is optional so existing callers don't
+    break; pass it to get the query text captured in the log."""
+    if not match_results:
+        ranked = _core_bucket_fallback(bucket_index)
+    else:
+        deduped = _dedupe_tiers(match_results)
+        deduped.sort(key=lambda r: (-r["score"], _core_rank(r["name"]), r["name"]))
+        ranked = deduped[:TOP_N]
+
+    log_match(master_prompt, match_results, ranked)
+    return ranked
 
 
 def render_tooltip(ranked):
@@ -116,7 +136,7 @@ def get_tooltip(master_prompt):
     final rendered tooltip lines out."""
     bucket_index = load_bucket_index()
     match_results = match_buckets(master_prompt, bucket_index=bucket_index)
-    ranked = rank_buckets(match_results, bucket_index)
+    ranked = rank_buckets(match_results, bucket_index, master_prompt=master_prompt)
     return render_tooltip(ranked)
 
 

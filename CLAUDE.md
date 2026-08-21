@@ -8,44 +8,124 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 - `CHOICE_Bucket_Matching_Requirements.md` — original requirements/design
   doc with the reasoning behind those decisions.
 
-## Pick up here (paused 2026-08-20)
+## Pick up here (paused 2026-08-22)
 
-**Immediate next action:** the user needs to deploy `streamlit_app.py` on
-Streamlit Community Cloud themselves (share.streamlit.io → sign in as
-GitHub account `aialetheiaworks` → New app → repo
-`aialetheiaworks/choice-bucket-matching`, branch `main`, file
-`streamlit_app.py` → Deploy). This needs their own browser/OAuth login,
-so it couldn't be done from here — everything up to that point (repo
-created, code pushed, `requirements.txt` ready) is done. Once they've
-deployed, next step is just confirming the live URL works, then decide
-between Phase 5 (persistence/logging) or the bucket-taxonomy-overlap
-question below.
+Deployed to Streamlit Community Cloud (confirmed by user) and Phase 5
+(persistence/logging) is done. All 6 build-brief phases (0-6) are now
+complete — what's left is follow-up investigation, not phased build work.
 
-## Current status (last updated: 2026-08-20)
+**Immediate next action:** git push today's changes (lemma fix, Phase 5
+logging, 5 new eval cases + Localization synonym fix) so the live
+Streamlit Cloud deploy picks them up (auto-redeploys on push to `main`).
+Not yet pushed as of this update — user said push will happen later.
+
+**2026-08-22 session, part 2 — eval set expanded to 23 cases:** added 5
+cases (19-23) targeting Ethics/Privacy/Sustainability/Accessibility/
+Localization, the domains the original 18 never exercised. Found:
+Accessibility was fine; Localization had a real vocabulary gap (fixed —
+verb-form synonyms like "translating"/"adapting" weren't matching
+noun-form synonyms like "translation"/"adaptation", same lemma-mismatch
+bug class as "data"/"datum"); Ethics/Privacy/Sustainability all matched
+correctly but **lost their top-5 slot to other relevant buckets in the
+same statement** — not a vocabulary problem, and notably this is the same
+top-5-capacity pressure seen in the (reverted) taxonomy-overlap merge
+attempt, but now showing up across *unrelated* bucket clusters too. Full
+eval recall: 70.4% -> 71.3% after the Localization fix. Full writeup:
+`PHASE6_EVAL_RESULTS.md` ("2026-08-22 follow-up #2").
+
+**2026-08-22 session, part 3 — eval set expanded to 28 cases:** added 5
+more (24-28) targeting Lessons Learned/Communication/Monitoring/
+Dependencies/Quality. Found and fixed 3 real vocabulary gaps
+(Communication, Monitoring, Dependencies — all zero raw match before,
+all now win their top-5 slot outright after adding real business terms
+their WordNet/Datamuse-built lists were missing). Recall: 63.6% -> 65.0%
+on 28 cases. Full writeup: `PHASE6_EVAL_RESULTS.md` ("follow-up #3").
+
+**Remaining untested buckets: down to 8 of 77** (`Assumptions`,
+`Competition`, `Competitive Landscape`, `Constraints`, `External
+Environment`, `Innovation`, `Problem Definition`, `ROI`) — converging
+faster than the original per-round estimate suggested, since new cases
+keep incidentally exercising buckets beyond their intended target.
+
+**2026-08-22 session, part 4 — eval set expanded to 34 cases, coverage
+goal reached:** added the last 6 cases (29-34), covering the final 8
+never-tested buckets. Found and fixed 3 more real vocabulary gaps
+(`External Environment` missing its own prompt's PESTLE-dimension words
+like "economic"; `Assumptions` missing the verb form "assume";
+`Customer Experience` missing "ux"/"user experience"). Also fixed
+`Reliability` (missing "fail"/"failure," found while re-checking case 26
+more carefully — see correction below). Recall: 61.8% -> 63.5% (34
+cases). **Milestone: 0 of 77 buckets are now untested** — every bucket
+has raw-matched at least once, reached in 4 rounds this session (faster
+than the ~6-7 round estimate). Full writeup: `PHASE6_EVAL_RESULTS.md`
+("follow-up #4").
+
+**Self-correction:** follow-up #3 mischaracterized `Performance`/
+`Metrics` in case 26 as a possible vocabulary gap. Re-checked raw scores
+before touching them this round — they actually match fine and lose the
+top-5 tie-break, same as the crowding pattern elsewhere. Lesson: always
+check raw `match_buckets()` scores, not just top-5 membership, before
+concluding something is a vocab gap vs. a crowding loss.
+
+**Next step:** with coverage done, **what's left is the crowding
+pattern, not more synonym tuning.** It's now shown up in **7 independent
+instances across 5 unrelated bucket clusters** this session alone —
+strong, repeated, no-longer-deniable evidence it's the pipeline's real
+remaining weakness. This needs your decision (raise `TOP_N`? different
+tie-break rule? something else?) before any more code changes here —
+don't attempt another blanket fix without it, per the reverted
+equivalence-merge lesson. Otherwise: push today's changes (the live
+Streamlit deploy is still running yesterday's code).
+
+## Current status (last updated: 2026-08-22)
 
 | Phase | What | Status |
 |---|---|---|
 | 0 | Synonym list generation (`generate_synonyms.py`, `merge_reviewed_synonyms.py` → `bucket_library.json`) | Done, tuned once (see Phase 6) |
-| 1 | NLP extraction (`extract_roots.py`) | Done |
-| 2 | Matching engine (`match_buckets.py`) | Done |
-| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done |
-| 5 | Persistence & logging of match results | **Not started** — no logging/saving exists in any pipeline script yet |
-| 6 | Evaluation against labeled eval set | **Run 2026-08-20, two tuning rounds applied, then deliberately stopped.** Recall went 22.2% → 73.3% (avg hits/case 1.11 → 3.67 out of 5). Full writeup: `PHASE6_EVAL_RESULTS.md`. `bucket_library.json` backed up pre-edit as `bucket_library.json.bak-20260820`. |
+| 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). |
+| 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix applied here too. |
+| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). |
+| 5 | Persistence & logging of match results | **Done 2026-08-22.** New `match_logger.py`, wired into `rank_buckets()` (the one chokepoint every front end already calls) so CLI/Flask/Gradio/Streamlit all log for free. Appends JSONL to `match_log.jsonl` (gitignored) — timestamp, master prompt, raw match data, zero-/low-match flags, and what was shown. Known gap: Streamlit Community Cloud's filesystem is ephemeral across redeploys, so this doesn't durably accumulate on the live deploy yet — fine for local/CLI use now, revisit with a real DB if the live deploy's history needs to survive redeploys. |
+| 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 more rounds 2026-08-22 to close every untested bucket: 23 cases (71.3%) → 28 cases (65.0%) → **34 cases, 0 of 77 buckets untested, recall 63.5%** (recall trends down as coverage widens into harder/thinner-vocab buckets, not a regression — every round's fixes were verified with no loss on prior cases). Full writeup: `PHASE6_EVAL_RESULTS.md`. |
 
-**Next step — this needs a decision, not more synonym tuning:** the eval
-run traced remaining misses down to individual tie-breaks and found the
-real blocker is **bucket taxonomy overlap**, not vocabulary — several
-tier-1/tier-2 buckets cover near-identical ground and split the same
-signal across multiple slots instead of deduping (only same-*name*
-buckets dedupe today): `Compliance` / `Governance` / `Legal` /
-`Governance & Compliance`, and `Sales` / `Marketing` / `Growth Strategy`.
-Decide whether to merge/rescope those, or change the tie-break rule —
-see "Where this stopped, and why" in `PHASE6_EVAL_RESULTS.md`. Until
-that's decided, this is a reasonable point to move on to Phase 5
-(persistence/logging) instead, since more synonym tuning here has
-diminishing returns. No pipeline code (`extract_roots.py`/
-`match_buckets.py`) was changed in either round — only
-`bucket_library.json` synonym lists.
+**2026-08-22 session — two items investigated:**
+
+1. **Fixed:** `extract_roots.py` / `match_buckets.py` — the "data"/"datum"
+   lemma bug flagged in the Phase 6 writeup was real. spaCy lemmatizes
+   standalone "data" to "datum" (default plural tag) but leaves it as
+   "data" when it directly precedes another noun ("data strategy"), and
+   the bucket-library loader lemmatized the literal synonym "data" down
+   to "datum" too — so phrasing like "data strategy" or "customer data"
+   silently never matched the `Data & AI` bucket. Fixed with a small
+   `IRREGULAR_LEMMAS` override (forces "data" -> "data" regardless of
+   spaCy's tag) in both files. Verified directly against all three
+   business phrasings from the original bug report — now match. Doesn't
+   move the 18-case eval's aggregate number (a `Data & AI` hit gained in
+   case 11 crowded out a `Timeline` hit via tie-break), but is a real,
+   confirmed fix — same pattern as the CRF join-coherence fix in the
+   sibling CHOICE Forge project.
+2. **Tried and reverted:** merging `Compliance`/`Governance`/`Legal` into
+   `Governance & Compliance` as one equivalence-group slot (extending the
+   existing same-name tier-dedup mechanism), to address the "bucket
+   taxonomy overlap" flagged below. Measured effect: recall **dropped**
+   73.3% → 70.0%, and it didn't even fix its target case (case 7) under
+   the eval's exact-name scoring. Root cause: case 12 (an RBI-compliance
+   fintech statement) expects `Compliance`, `Legal`, and `Governance` as
+   three genuinely **distinct** hits, not duplicates — disproving the
+   "these always overlap" assumption from the Phase 6 writeup. Reverted;
+   `get_tooltip.py`'s `_dedupe_tiers` docstring has the full note. The
+   taxonomy-overlap question is still open, but now with real evidence
+   that a blanket merge is the wrong fix — it may need to be case-by-case
+   (e.g. only merge when a statement's phrasing is generic vs. specific)
+   or a genuinely different tie-break rule, not a bucket-library change.
+   `Sales`/`Marketing`/`Growth Strategy` wasn't re-tested (same caution
+   applies — don't assume overlap without per-case evidence first).
+
+**Next step:** Phase 5 (persistence/logging) is the clear unblocked next
+step. The taxonomy-overlap question needs more per-case evidence (ideally
+more eval cases in the Compliance/Governance/Legal and Sales/Marketing/
+Growth Strategy space) before attempting another fix — don't re-attempt
+a blanket merge without that.
 
 ## Working agreement — keep this file current
 

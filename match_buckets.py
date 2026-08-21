@@ -32,7 +32,7 @@ from pathlib import Path
 
 import spacy
 
-from extract_roots import extract_roots
+from extract_roots import extract_roots, IRREGULAR_LEMMAS
 
 BUCKET_FILE = Path(__file__).parent / "bucket_library.json"
 MODEL_NAME = "en_core_web_sm"
@@ -56,7 +56,7 @@ def _lemmatize_term(nlp, term):
     the index."""
     doc = nlp(term)
     lemmas = [
-        t.lemma_.lower()
+        IRREGULAR_LEMMAS.get(t.text.lower(), t.lemma_.lower())
         for t in doc
         if not (t.is_stop or t.is_punct or t.is_space)
     ]
