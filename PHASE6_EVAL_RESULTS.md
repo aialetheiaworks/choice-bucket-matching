@@ -410,3 +410,56 @@ this pipeline, well past "maybe noise" — but per the reverted
 equivalence-merge lesson, fixing it needs a real design decision (raise
 `TOP_N`? a different tie-break rule? show more than 5 lines when there's
 a genuine tie?), not another round of synonym tuning.
+
+## 2026-08-25 follow-up #5: crowding fixed — "ties survive the cutoff"
+
+Before touching `get_tooltip.py`, checked whether a different tie-break
+*order* (the option originally on the table) could fix this. It can't:
+every one of the 7 crowding instances above is a bucket that raw-matches
+correctly and is just as relevant as the buckets that made the cut --
+case 7 (Compliance/Governance/Legal all matching "compliance") and case
+12 (the same three buckets independently confirmed as three genuinely
+distinct expected hits by a human labeler) together prove there's no
+principled order that picks a "correct" bucket to drop among co-equal
+ties. Reordering priority only changes who wins the coin flip; it
+doesn't remove the coin flip. This also explains in hindsight why the
+2026-08-22 equivalence-merge attempt made things worse (73.3% -> 70.0%)
+-- it tried to shrink the contention instead of making room for it.
+
+**Fix implemented:** `rank_buckets()` in `get_tooltip.py` no longer cuts
+at a flat `deduped[:TOP_N]`. It still cuts at position 5 by default, but
+if the 5th-place bucket is tied on score with buckets beyond it, the
+whole tied group is now included, capped at a new `MAX_N = 7`. This is a
+strict extension of the old rule -- the old top-5 is always a subset of
+the new result, so it cannot regress a case that was already passing;
+verified directly (0 regressions across all 34 cases). A statement that
+doesn't crowd the boundary still renders exactly 5 lines, unpadded --
+only case 1 in the eval set stays at 5; the other 33 statements are
+dense enough to hit somewhere between 6 and 7.
+
+Three cap values were measured against the full 34-case eval set before
+picking one:
+
+| Cap | Recall | Avg lines | Max lines |
+|---|---|---|---|
+| 5 (old behavior) | 108/170 = 63.5% | 5.00 | 5 |
+| 6 | 118/170 = 69.4% | 5.97 | 6 |
+| **7 (chosen)** | **127/170 = 74.7%** | **6.94** | **7** |
+| 8 | 132/170 = 77.6% | 7.74 | 8 |
+
+Cap 8 was rejected even though it scores highest: 27 of the 34 cases hit
+that ceiling, meaning in practice it reads as "always show 8 lines," not
+a tooltip that occasionally grows. Cap 7 was chosen as the balance point
+-- most of the recall gain (+11.2 points) while still bounded well short
+of "always maxed out."
+
+**Full-eval recall: 63.5% -> 74.7%** (34 cases, 170 expected slots), 0
+regressions, 0 cases with fewer hits than before. Verified against the
+live `rank_buckets()` code, not a projection.
+
+**What's left:** nothing scoped for this pipeline right now. The
+crowding pattern that drove the last 4 eval rounds is fixed; coverage
+was already complete (0 of 77 buckets untested) as of follow-up #4. Any
+further work here would be new-scope (e.g. revisiting the Sales/
+Marketing/Growth Strategy overlap question, never re-tested after the
+Compliance-family taxonomy finding) rather than continuing this thread.

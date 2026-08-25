@@ -20,7 +20,20 @@ Phase 3 -- ranking:
   order.
 - 1-4 matches: show that many lines, not padded with core buckets -- a
   short accurate tooltip beats a padded generic one.
-- 5+ matches: top 5 by the ranking above.
+- 5+ matches: top 5 by the ranking above, EXCEPT when the bucket in 5th
+  place is tied on score with buckets beyond it -- then the whole tied
+  group is shown, capped at MAX_N (7). "Ties survive the cutoff": a hard
+  cut at position 5 previously discarded a tied bucket for no reason but
+  alphabetical luck, even when it was just as relevant as the one that
+  made the cut. See PHASE6_EVAL_RESULTS.md's crowding-pattern writeup
+  (2026-08-22 -> 2026-08-25) for the evidence this fixes: 7 independent
+  instances across 5 unrelated bucket clusters where a correctly-matched
+  bucket lost only to slot-count, not relevance. Measured against the
+  34-case eval set: 63.5% -> 74.7% recall, zero regressions (this rule is
+  a strict extension of the old top-5, never a replacement of it). A
+  short statement that doesn't crowd the boundary still shows exactly 5
+  lines -- this only grows the tooltip when the tie genuinely goes deeper
+  than 5.
 
 Phase 4 -- rendering: plug each ranked bucket into the tooltip template,
 capped at 5 lines.
@@ -42,6 +55,7 @@ from match_logger import log_match
 
 CORE_BUCKETS = ["Business Objective", "Customer", "Value Proposition", "Risk", "Market"]
 TOP_N = 5
+MAX_N = 7
 
 TEMPLATE = "If you are speaking about {name}, also consider thinking about → {prompt}."
 
@@ -115,7 +129,12 @@ def rank_buckets(match_results, bucket_index, master_prompt=None):
     else:
         deduped = _dedupe_tiers(match_results)
         deduped.sort(key=lambda r: (-r["score"], _core_rank(r["name"]), r["name"]))
-        ranked = deduped[:TOP_N]
+        if len(deduped) <= TOP_N:
+            ranked = deduped
+        else:
+            cutoff_score = deduped[TOP_N - 1]["score"]
+            tied = [r for r in deduped if r["score"] >= cutoff_score]
+            ranked = tied[:MAX_N]
 
     log_match(master_prompt, match_results, ranked)
     return ranked

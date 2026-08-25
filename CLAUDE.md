@@ -8,16 +8,31 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 - `CHOICE_Bucket_Matching_Requirements.md` — original requirements/design
   doc with the reasoning behind those decisions.
 
-## Pick up here (paused 2026-08-22)
+## Pick up here (paused 2026-08-25)
 
-Deployed to Streamlit Community Cloud (confirmed by user) and Phase 5
-(persistence/logging) is done. All 6 build-brief phases (0-6) are now
-complete — what's left is follow-up investigation, not phased build work.
+Deployed to Streamlit Community Cloud (confirmed by user), all 6
+build-brief phases (0-6) are complete, and the top-5 crowding pattern
+flagged throughout the 2026-08-22 session is now fixed. There is no
+open item blocking this project right now — what follows is history for
+a cold-start session, not a pending task.
 
-**Immediate next action:** git push today's changes (lemma fix, Phase 5
-logging, 5 new eval cases + Localization synonym fix) so the live
-Streamlit Cloud deploy picks them up (auto-redeploys on push to `main`).
-Not yet pushed as of this update — user said push will happen later.
+**2026-08-25 session — crowding fixed, pushed live:** the 2026-08-22
+session's changes (lemma fix, Phase 5 logging, 34-case eval set) were
+pushed to `main` (was pending user confirmation before). Then, the
+"crowding" pattern flagged repeatedly below (a bucket matches correctly
+but loses its top-5 slot purely on slot count, not relevance — 7
+instances, 5 unrelated bucket clusters) was fixed: `get_tooltip.py`'s
+`rank_buckets()` no longer cuts at a flat top-5. If the 5th-place bucket
+is tied on score with buckets beyond it, the whole tied group is now
+included, capped at `MAX_N = 7`. A different tie-break *order* (raise
+priority of X over Y) was considered and rejected first — checked
+against the eval evidence, the losing buckets are genuinely relevant,
+not noise, so no ordering rule could correctly pick one to drop; only
+adding capacity helps. This is a strict extension of the old top-5 rule
+(old top-5 ⊆ new result), so it's regression-free by construction —
+verified 0 regressions across all 34 eval cases. Full-eval recall:
+63.5% → 74.7%. Full design writeup + cap-value comparison (6 vs 7 vs 8):
+`PHASE6_EVAL_RESULTS.md` ("2026-08-25 follow-up #5"). Pushed to `main`.
 
 **2026-08-22 session, part 2 — eval set expanded to 23 cases:** added 5
 cases (19-23) targeting Ethics/Privacy/Sustainability/Accessibility/
@@ -77,16 +92,16 @@ don't attempt another blanket fix without it, per the reverted
 equivalence-merge lesson. Otherwise: push today's changes (the live
 Streamlit deploy is still running yesterday's code).
 
-## Current status (last updated: 2026-08-22)
+## Current status (last updated: 2026-08-25)
 
 | Phase | What | Status |
 |---|---|---|
 | 0 | Synonym list generation (`generate_synonyms.py`, `merge_reviewed_synonyms.py` → `bucket_library.json`) | Done, tuned once (see Phase 6) |
 | 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). |
 | 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix applied here too. |
-| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). |
+| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). **2026-08-25: fixed the top-5 crowding pattern** — `rank_buckets()` now lets a tied 5th-place group extend past 5, capped at `MAX_N = 7`, instead of an arbitrary flat cut. See below and `PHASE6_EVAL_RESULTS.md` ("follow-up #5"). |
 | 5 | Persistence & logging of match results | **Done 2026-08-22.** New `match_logger.py`, wired into `rank_buckets()` (the one chokepoint every front end already calls) so CLI/Flask/Gradio/Streamlit all log for free. Appends JSONL to `match_log.jsonl` (gitignored) — timestamp, master prompt, raw match data, zero-/low-match flags, and what was shown. Known gap: Streamlit Community Cloud's filesystem is ephemeral across redeploys, so this doesn't durably accumulate on the live deploy yet — fine for local/CLI use now, revisit with a real DB if the live deploy's history needs to survive redeploys. |
-| 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 more rounds 2026-08-22 to close every untested bucket: 23 cases (71.3%) → 28 cases (65.0%) → **34 cases, 0 of 77 buckets untested, recall 63.5%** (recall trends down as coverage widens into harder/thinner-vocab buckets, not a regression — every round's fixes were verified with no loss on prior cases). Full writeup: `PHASE6_EVAL_RESULTS.md`. |
+| 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 more rounds 2026-08-22 to close every untested bucket: 23 cases (71.3%) → 28 cases (65.0%) → 34 cases, 0 of 77 buckets untested, recall 63.5%. **2026-08-25: crowding fix raised full-eval recall to 74.7%** (34 cases, 0 regressions). Full writeup: `PHASE6_EVAL_RESULTS.md`. |
 
 **2026-08-22 session — two items investigated:**
 
@@ -121,11 +136,16 @@ Streamlit deploy is still running yesterday's code).
    `Sales`/`Marketing`/`Growth Strategy` wasn't re-tested (same caution
    applies — don't assume overlap without per-case evidence first).
 
-**Next step:** Phase 5 (persistence/logging) is the clear unblocked next
-step. The taxonomy-overlap question needs more per-case evidence (ideally
-more eval cases in the Compliance/Governance/Legal and Sales/Marketing/
-Growth Strategy space) before attempting another fix — don't re-attempt
-a blanket merge without that.
+**Historical note:** at the time this paragraph was written (2026-08-22),
+Phase 5 and the crowding fix were both still open. Both are done now —
+see "Pick up here" at the top of this file for current status. The
+Compliance/Governance/Legal taxonomy-overlap question itself was
+resolved as "not actually overlap" by the 2026-08-25 crowding fix (all
+three are genuinely distinct hits competing for slots, not duplicates —
+see `PHASE6_EVAL_RESULTS.md` follow-up #5); `Sales`/`Marketing`/`Growth
+Strategy` still hasn't been specifically re-tested, but is lower-priority
+now that the general slot-capacity constraint behind most of these
+symptoms has been addressed.
 
 ## Working agreement — keep this file current
 
@@ -189,6 +209,14 @@ or synonym-list changes just need a normal `git push`, no redeploy step.
 - `CORE_BUCKETS = ["Business Objective", "Customer", "Value Proposition", "Risk", "Market"]`
   — used for tie-break priority and as the zero-match fallback (2026-08-18).
 - Fewer-than-5 matches: show fewer lines, don't pad with core buckets (2026-08-18).
+- 5+ matches, ties at the boundary (2026-08-25): don't cut a tied 5th-place
+  group with the existing core/alphabetical tie-break — extend the result
+  to include the whole tied group, capped at `MAX_N = 7`. Chosen over
+  reordering the tie-break itself (rejected — the buckets losing slots are
+  genuinely relevant, not noise, so no ordering rule has a principled
+  "loser" to pick) and over a flat `TOP_N` raise (cap 8 measured best
+  recall but nearly always maxes out in practice; cap 7 was the balance
+  point). See `PHASE6_EVAL_RESULTS.md` follow-up #5.
 
 ## Explicitly out of scope for this build
 
