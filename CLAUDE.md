@@ -11,17 +11,21 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 ## Pick up here (paused 2026-08-25)
 
 Deployed to Streamlit Community Cloud (confirmed by user), all 6
-build-brief phases (0-6) are complete, and the top-5 crowding pattern
-flagged throughout the 2026-08-22 session is now fixed. There is no
-open item blocking this project right now — what follows is history for
-a cold-start session, not a pending task.
+build-brief phases (0-6) are complete, the top-5 crowding pattern
+flagged throughout the 2026-08-22 session is fixed, and a stakeholder-
+supplied vocabulary expansion has been merged into `bucket_library.json`.
 
-**2026-08-25 session — crowding fixed, pushed live:** the 2026-08-22
-session's changes (lemma fix, Phase 5 logging, 34-case eval set) were
-pushed to `main` (was pending user confirmation before). Then, the
-"crowding" pattern flagged repeatedly below (a bucket matches correctly
-but loses its top-5 slot purely on slot count, not relevance — 7
-instances, 5 unrelated bucket clusters) was fixed: `get_tooltip.py`'s
+**Immediate next action:** git push today's changes (the crowding fix
+was already pushed earlier in the session; the vocabulary merge below
+was not — `bucket_library.json`, `PHASE6_EVAL_RESULTS.md`, and this file
+are all modified and uncommitted as of this update).
+
+**2026-08-25 session, part 1 — crowding fixed, pushed live:** the
+2026-08-22 session's changes (lemma fix, Phase 5 logging, 34-case eval
+set) were pushed to `main` (was pending user confirmation before). Then,
+the "crowding" pattern flagged repeatedly below (a bucket matches
+correctly but loses its top-5 slot purely on slot count, not relevance —
+7 instances, 5 unrelated bucket clusters) was fixed: `get_tooltip.py`'s
 `rank_buckets()` no longer cuts at a flat top-5. If the 5th-place bucket
 is tied on score with buckets beyond it, the whole tied group is now
 included, capped at `MAX_N = 7`. A different tie-break *order* (raise
@@ -33,6 +37,34 @@ adding capacity helps. This is a strict extension of the old top-5 rule
 verified 0 regressions across all 34 eval cases. Full-eval recall:
 63.5% → 74.7%. Full design writeup + cap-value comparison (6 vs 7 vs 8):
 `PHASE6_EVAL_RESULTS.md` ("2026-08-25 follow-up #5"). Pushed to `main`.
+
+**2026-08-25 session, part 2 — stakeholder vocabulary merged:**
+stakeholders supplied `Business_Root_Vocabulary_2.docx`, a 10,111-word
+expansion of the same 80-bucket taxonomy (verified accurate against its
+own stated counts) with a per-root-term "Knowledge Prompt" column that
+doesn't map onto the current one-prompt-per-bucket tooltip architecture
+(left unused, out of scope). Checked it against every wrong-sense/
+over-triggering bug Phase 6 round 1 had already found and fixed
+(Governance, Data & AI, Change Management) — clean on all three, and no
+reappearance of the old flat "customer"/"client"-everywhere pollution.
+Merged as a union (backup: `bucket_library.json.bak-20260825`) — every
+current synonym kept (incl. the two hand-additions the new doc lacked,
+`RBI`/`SOC 2`), 8,361 net-new entries added, vocabulary grew ~8.5x (970
+→ 8,210 lemmatized terms). Re-ran the 34-case eval: recall 74.7% →
+75.9%, net +2 hits but not regression-free this time — 8 cases improved,
+5 regressed by one bucket each. Traced the regression mechanism directly
+(not guessed): it's the *same* crowding pattern from part 1, recurring
+one level down — more vocabulary means the score=1 tier at the ranking
+boundary now sometimes exceeds 7 members, so `MAX_N=7` itself becomes a
+hard cutoff that can land mid-tie. Not re-tuned here (5 cases isn't
+enough evidence to pick a new cap, and net effect is still positive).
+Also found: `load_bucket_index()` now takes ~14s (was near-instant) —
+fine for the three front ends (all cache it at startup) but the CLI
+reloads it fresh every run, so a single `get_tooltip.py` invocation now
+takes ~14s. Neither the cap question nor the CLI load time was acted on
+— both flagged for a future session if they cause real friction. Full
+writeup: `PHASE6_EVAL_RESULTS.md` ("2026-08-25 follow-up #6"). **Not yet
+pushed.**
 
 **2026-08-22 session, part 2 — eval set expanded to 23 cases:** added 5
 cases (19-23) targeting Ethics/Privacy/Sustainability/Accessibility/
@@ -96,12 +128,12 @@ Streamlit deploy is still running yesterday's code).
 
 | Phase | What | Status |
 |---|---|---|
-| 0 | Synonym list generation (`generate_synonyms.py`, `merge_reviewed_synonyms.py` → `bucket_library.json`) | Done, tuned once (see Phase 6) |
+| 0 | Synonym list generation (`generate_synonyms.py`, `merge_reviewed_synonyms.py` → `bucket_library.json`) | Done, tuned once (see Phase 6). **2026-08-25: merged a stakeholder-supplied vocabulary expansion** (`Business_Root_Vocabulary_2.docx`, 10,111 words) — union merge, 970 → 8,210 lemmatized terms. See below and `PHASE6_EVAL_RESULTS.md` ("follow-up #6"). |
 | 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). |
 | 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix applied here too. |
 | 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). **2026-08-25: fixed the top-5 crowding pattern** — `rank_buckets()` now lets a tied 5th-place group extend past 5, capped at `MAX_N = 7`, instead of an arbitrary flat cut. See below and `PHASE6_EVAL_RESULTS.md` ("follow-up #5"). |
 | 5 | Persistence & logging of match results | **Done 2026-08-22.** New `match_logger.py`, wired into `rank_buckets()` (the one chokepoint every front end already calls) so CLI/Flask/Gradio/Streamlit all log for free. Appends JSONL to `match_log.jsonl` (gitignored) — timestamp, master prompt, raw match data, zero-/low-match flags, and what was shown. Known gap: Streamlit Community Cloud's filesystem is ephemeral across redeploys, so this doesn't durably accumulate on the live deploy yet — fine for local/CLI use now, revisit with a real DB if the live deploy's history needs to survive redeploys. |
-| 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 more rounds 2026-08-22 to close every untested bucket: 23 cases (71.3%) → 28 cases (65.0%) → 34 cases, 0 of 77 buckets untested, recall 63.5%. **2026-08-25: crowding fix raised full-eval recall to 74.7%** (34 cases, 0 regressions). Full writeup: `PHASE6_EVAL_RESULTS.md`. |
+| 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 more rounds 2026-08-22 to close every untested bucket: 23 cases (71.3%) → 28 cases (65.0%) → 34 cases, 0 of 77 buckets untested, recall 63.5%. **2026-08-25: crowding fix raised recall to 74.7%**, then the vocabulary merge raised it again to **75.9%** (34 cases; 5 cases regressed by one bucket each on the merge, 8 improved — see below). Full writeup: `PHASE6_EVAL_RESULTS.md`. |
 
 **2026-08-22 session — two items investigated:**
 

@@ -463,3 +463,82 @@ was already complete (0 of 77 buckets untested) as of follow-up #4. Any
 further work here would be new-scope (e.g. revisiting the Sales/
 Marketing/Growth Strategy overlap question, never re-tested after the
 Compliance-family taxonomy finding) rather than continuing this thread.
+
+## 2026-08-25 follow-up #6: stakeholder vocabulary merge (Business_Root_Vocabulary_2.docx)
+
+Stakeholders supplied `Business_Root_Vocabulary_2.docx` -- a much larger
+expansion of the same 80-bucket taxonomy: 10,111 words/phrases across
+3,120 root entries (verified by independently recomputing the doc's own
+stated counts -- exact match, including per-section word/root counts).
+Same bucket names, same tiers, same order as `bucket_library.json`, so
+it's a direct vocabulary-expansion candidate rather than a competing
+structure. It also carries a unique "Knowledge Prompt" per root term
+(3,120 of them) -- out of scope to use, since the pipeline only renders
+one prompt per *bucket* (`get_tooltip.py`'s template); left unused.
+
+**Quality check before merging.** Re-checked the doc against every
+wrong-sense/over-triggering failure mode this project already found and
+fixed in Phase 6 round 1 (2026-08-20): Governance (political-sense
+pollution), Data & AI (`java`/`prolog`/`bot`), Change Management
+(software-changelog jargon) -- all clean. Cross-bucket bare-word sharing
+tops out at 5-6 buckets and is semantically real (e.g. "audit" spans
+Compliance/Governance/Legal/Risk), not the old flat "customer"/"client"-
+everywhere pollution. 64 of 80 buckets were already a strict superset of
+the current library; of the 16 that looked short, 14 were normalization
+noise and only 2 were real gaps -- `RBI` and `SOC 2`, both manual
+additions from this project's own compliance-case work that a generic
+vocabulary pass wouldn't reproduce.
+
+**Merge performed:** union, not replace. Backed up to
+`bucket_library.json.bak-20260825`; every current synonym was kept
+(including RBI/SOC 2), and 8,361 net-new synonym entries were added
+across the 80 buckets (6,516 Tier 1 + 1,845 Tier 2). Vocabulary grew
+~8x: 970 -> 8,210 distinct lemmatized match terms.
+
+**Re-ran the 34-case eval against the merged library:**
+
+| | Before merge | After merge |
+|---|---|---|
+| Recall | 127/170 = 74.7% | 129/170 = 75.9% |
+| Avg lines | 6.94 | 6.74 |
+| Cases with 0 hits | 0 | 0 |
+
+Net positive, but **not** regression-free the way the pure ranking fix
+was (follow-up #5) -- a vocabulary change shifts raw scores, so it can
+change who wins a tie. Diffed all 34 cases directly: **8 cases improved,
+5 cases regressed by exactly one bucket each** (net +2 hits). Traced the
+regression mechanism directly (case 12, raw scores dumped before/after):
+it's the *same* crowding pattern from follow-up #5, recurring one level
+down. More vocabulary means more buckets legitimately score 1 on any
+given statement, so the score=1 tier at the ranking boundary now
+sometimes has more than 7 members -- and `MAX_N=7` itself becomes a hard
+cutoff that can land mid-tie, the same way the old flat `TOP_N=5` did.
+Case 12 ("RBI-compliant... before... Q3"): before the merge, 5 buckets
+tied at score 1 fit inside the cap; after, the merge added new score-1
+matches (`Sales` via "close", `Operational Readiness` via "ready") that
+push the tied group to 6, and `Timeline`/`Sales` alphabetically lose the
+last 2 of 7 slots. This is the cap's safety valve doing exactly what it
+was built to do (bound a runaway tie group) -- not a new defect, just
+the same known trade-off appearing at a higher vocabulary density. Not
+re-tuning `MAX_N` on this alone -- five cases isn't enough evidence to
+pick a new cap value, and net effect is still positive.
+
+**Two other side effects worth knowing about, neither acted on here:**
+- `load_bucket_index()` now takes ~14s (was near-instant) due to 8.5x
+  more terms to lemmatize through spaCy. All three front ends already
+  cache this at startup (`streamlit_app.py` via `@st.cache_resource`,
+  `app.py`/`gradio_app.py` at module load) so per-query latency is
+  unaffected -- but the CLI (`get_tooltip.py` run directly) reloads the
+  index fresh on every invocation, so a single `python3 get_tooltip.py
+  "..."` now takes ~14s. Not fixed here; flagging for a future session
+  if CLI usage makes this annoying.
+- A couple of newly-added single-word matches look generic enough to be
+  worth a second look eventually if they cause trouble: `close` (matches
+  `Sales`) and `ready` (matches `Operational Readiness`) are common
+  enough words that they could over-trigger on unrelated statements --
+  not proven to be a problem, just flagged from the one case where they
+  were observed.
+
+Full raw doc parse, per-bucket coverage diff, and cross-bucket frequency
+analysis were done in a scratch script (not committed) before merging;
+this section is the durable record of what was found and changed.
