@@ -15,10 +15,10 @@ build-brief phases (0-6) are complete, the top-5 crowding pattern
 flagged throughout the 2026-08-22 session is fixed, and a stakeholder-
 supplied vocabulary expansion has been merged into `bucket_library.json`.
 
-**Immediate next action:** git push today's changes (the crowding fix
-was already pushed earlier in the session; the vocabulary merge below
-was not — `bucket_library.json`, `PHASE6_EVAL_RESULTS.md`, and this file
-are all modified and uncommitted as of this update).
+**Update 2026-08-29:** everything below was already committed and
+pushed as of this check — working tree clean, `main` matches
+`origin/main` at `8a1bdcd` (the vocabulary merge commit). No push was
+actually pending; the "immediate next action" note below was stale.
 
 **2026-08-25 session, part 1 — crowding fixed, pushed live:** the
 2026-08-22 session's changes (lemma fix, Phase 5 logging, 34-case eval
