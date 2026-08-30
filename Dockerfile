@@ -6,11 +6,9 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
     && python -m spacy download en_core_web_sm
 
-COPY app.py extract_roots.py match_buckets.py get_tooltip.py bucket_library.json ./
-COPY templates/ templates/
+COPY api.py extract_roots.py match_buckets.py get_tooltip.py match_logger.py bucket_library.json ./
 
 ENV PORT=7860
-ENV FLASK_DEBUG=0
 EXPOSE 7860
 
-CMD ["python", "app.py"]
+CMD ["sh", "-c", "uvicorn api:app --host 0.0.0.0 --port ${PORT:-7860}"]
