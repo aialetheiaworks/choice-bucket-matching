@@ -45,9 +45,10 @@ real cold-start bug found and fixed:**
    change. **`bucket_index_cache.pkl` is committed to the repo** (not
    gitignored) so it ships pre-built in the deployed container — the
    Render cold start should no longer pay the lemmatization cost at all,
-   only a fast pickle load. Not yet re-verified live on Render itself
-   (only verified locally) — confirm actual cold-start time after this
-   deploys.
+   only a fast pickle load. **Verified live 2026-08-31:** cold start
+   dropped from 292.6s to 33.1s (Render's normal free-tier container
+   spin-up baseline, not the vocabulary rebuild — that cost is gone).
+   Warm requests: ~0.4s.
 5. **Maintenance note for future sessions:** if `bucket_library.json`
    changes again, `bucket_index_cache.pkl` must be regenerated (just call
    `load_bucket_index()` once) and **committed** — the hash check will
@@ -58,12 +59,12 @@ real cold-start bug found and fixed:**
 6. Wrote `API_DOCUMENTATION.md` — endpoint reference for whoever
    integrates the frontend, meant to be handed to another chat/session.
 
-**Next step:** confirm the fix on the actual Render deploy (push, wait
-for redeploy, cold-start-test again after a 15+min idle period to get a
-real number) — not yet done as of this note. After that, CORS is still
-open (`*`) and there's no auth; both fine for now but flagged in
-`API_DOCUMENTATION.md`'s "Operational notes" for whenever this stops
-being local/internal testing only.
+**Next step:** cold-start fix confirmed live and working — nothing
+blocking left on the API itself. CORS is still open (`*`) and there's no
+auth; both fine for now but flagged in `API_DOCUMENTATION.md`'s
+"Operational notes" for whenever this stops being local/internal testing
+only. Otherwise: ready to hand `API_DOCUMENTATION.md` + the live URL to
+whoever builds the Choice Forge frontend integration.
 
 ## Pick up here (paused 2026-08-25)
 
