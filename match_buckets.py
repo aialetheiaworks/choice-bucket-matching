@@ -26,7 +26,9 @@ Usage:
     # or: from match_buckets import match_buckets, load_bucket_index
 """
 
+import hashlib
 import json
+import pickle
 import sys
 from pathlib import Path
 
@@ -35,6 +37,8 @@ import spacy
 from extract_roots import extract_roots, IRREGULAR_LEMMAS
 
 BUCKET_FILE = Path(__file__).parent / "bucket_library.json"
+CACHE_FILE = Path(__file__).parent / "bucket_index_cache.pkl"
+CACHE_VERSION = 1  # bump if _lemmatize_term()/load_bucket_index() logic changes
 MODEL_NAME = "en_core_web_sm"
 
 _nlp = None
@@ -65,12 +69,36 @@ def _lemmatize_term(nlp, term):
     return " ".join(lemmas)
 
 
+def _cache_key():
+    """Ties the cache to both the vocabulary file's exact content and this
+    module's lemmatization logic -- either changing invalidates it."""
+    return f"{hashlib.sha256(BUCKET_FILE.read_bytes()).hexdigest()}:v{CACHE_VERSION}"
+
+
 def load_bucket_index():
     """Load bucket_library.json and return a list of bucket dicts, each
     augmented with a lemmatized 'match_terms' set (bucket name + every
-    synonym, lemmatized). Built fresh from the JSON file every call --
-    cheap enough (80 buckets, ~970 synonyms total) that callers don't need
-    to manage caching themselves."""
+    synonym, lemmatized).
+
+    Lemmatizing all ~8,210 vocabulary terms through spaCy on every call
+    used to be "cheap enough" when the vocabulary was ~970 terms, but
+    after the 2026-08-25 stakeholder vocabulary merge (8.5x growth) it
+    measured ~14s locally and, on a slow-CPU host (e.g. Render's free
+    tier), took ~5 minutes -- unacceptable for a cold API start. Now
+    cached to disk (bucket_index_cache.pkl): a hash of bucket_library.json
+    (+ CACHE_VERSION, for logic changes) keys the cache, so it's rebuilt
+    automatically whenever the vocabulary or lemmatization logic changes,
+    and reused as a fast pickle load otherwise. This also fixes the CLI's
+    per-invocation reload cost, not just the API's cold start."""
+    cache_key = _cache_key()
+    if CACHE_FILE.exists():
+        try:
+            cached_key, buckets = pickle.loads(CACHE_FILE.read_bytes())
+            if cached_key == cache_key:
+                return buckets
+        except Exception:
+            pass  # corrupt/incompatible cache -- fall through and rebuild
+
     nlp = _get_nlp()
     data = json.loads(BUCKET_FILE.read_text())
     buckets = [{**b, "tier": 1} for b in data["tier_1_buckets"]] + [
@@ -80,6 +108,12 @@ def load_bucket_index():
         terms = {_lemmatize_term(nlp, b["name"])}
         terms.update(_lemmatize_term(nlp, s) for s in b.get("synonyms", []))
         b["match_terms"] = {t for t in terms if t}
+
+    try:
+        CACHE_FILE.write_bytes(pickle.dumps((cache_key, buckets)))
+    except OSError:
+        pass  # caching is an optimization, not a requirement
+
     return buckets
 
 

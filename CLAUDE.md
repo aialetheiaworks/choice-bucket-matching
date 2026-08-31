@@ -8,6 +8,63 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 - `CHOICE_Bucket_Matching_Requirements.md` — original requirements/design
   doc with the reasoning behind those decisions.
 
+## Pick up here (paused 2026-08-31)
+
+**2026-08-29 → 2026-08-31 session — API service built, deployed, and a
+real cold-start bug found and fixed:**
+
+1. Built `api.py` (FastAPI): `POST /tooltip` + `GET /health`, loading the
+   bucket index once at startup rather than per-request. `requirements-api.txt`
+   added as a lean, deploy-only dependency set (`fastapi`/`uvicorn`/`spacy`
+   only) — the original `requirements.txt` bundles `flask`/`gradio`/
+   `streamlit` too, and `fastapi` and `gradio` have an unresolvable
+   `starlette` version conflict when installed together. `Dockerfile`
+   repointed at `api.py`/uvicorn (was serving the old Flask test UI).
+2. Deployed to **Render** (free web service tier, no card required —
+   same reasoning as the Streamlit Cloud choice). Live at
+   `https://choice-bucket-matching.onrender.com`. Language must be set to
+   **Python 3** explicitly on Render, not the auto-detected Docker (the
+   Docker path is unverified — no local Docker install to test it
+   against).
+3. **Found via load-testing the live deploy:** cold start (first request
+   after Render's free-tier ~15min idle spin-down) took **292.6 seconds**
+   — confirmed by direct measurement, not estimated. Root cause: the
+   long-flagged `load_bucket_index()` cost (~14s locally, per the
+   2026-08-25 vocabulary-merge note below) scales far worse on Render's
+   0.1 CPU free instance, because it re-lemmatizes all ~8,210 vocabulary
+   terms through spaCy on every process boot.
+4. **Fixed:** `load_bucket_index()` (`match_buckets.py`) now caches its
+   output to `bucket_index_cache.pkl`, keyed by a hash of
+   `bucket_library.json` + a `CACHE_VERSION` constant. Cache hit = a
+   pickle load (~0.8s), cache miss = old behavior (rebuild + re-save).
+   Verified the cached and freshly-built bucket index are byte-identical
+   (pure caching layer, zero logic change, so no eval re-run needed).
+   Local timing: 14.2s → 0.84s. CLI (`get_tooltip.py`) runtime also
+   dropped ~14s → ~1s as a side effect — this was the *other* long-flagged
+   issue from the 2026-08-25 vocabulary merge, fixed for free by the same
+   change. **`bucket_index_cache.pkl` is committed to the repo** (not
+   gitignored) so it ships pre-built in the deployed container — the
+   Render cold start should no longer pay the lemmatization cost at all,
+   only a fast pickle load. Not yet re-verified live on Render itself
+   (only verified locally) — confirm actual cold-start time after this
+   deploys.
+5. **Maintenance note for future sessions:** if `bucket_library.json`
+   changes again, `bucket_index_cache.pkl` must be regenerated (just call
+   `load_bucket_index()` once) and **committed** — the hash check will
+   correctly detect the mismatch and fall back to a fresh rebuild
+   automatically so nothing breaks, but that reintroduces the ~5-minute
+   Render cold start silently (fast locally, slow only on Render) until
+   the cache is regenerated and pushed.
+6. Wrote `API_DOCUMENTATION.md` — endpoint reference for whoever
+   integrates the frontend, meant to be handed to another chat/session.
+
+**Next step:** confirm the fix on the actual Render deploy (push, wait
+for redeploy, cold-start-test again after a 15+min idle period to get a
+real number) — not yet done as of this note. After that, CORS is still
+open (`*`) and there's no auth; both fine for now but flagged in
+`API_DOCUMENTATION.md`'s "Operational notes" for whenever this stops
+being local/internal testing only.
+
 ## Pick up here (paused 2026-08-25)
 
 Deployed to Streamlit Community Cloud (confirmed by user), all 6
