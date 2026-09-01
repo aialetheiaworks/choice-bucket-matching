@@ -34,11 +34,11 @@ from pathlib import Path
 
 import spacy
 
-from extract_roots import extract_roots, IRREGULAR_LEMMAS
+from extract_roots import extract_roots, IRREGULAR_LEMMAS, NEVER_STOP
 
 BUCKET_FILE = Path(__file__).parent / "bucket_library.json"
 CACHE_FILE = Path(__file__).parent / "bucket_index_cache.pkl"
-CACHE_VERSION = 1  # bump if _lemmatize_term()/load_bucket_index() logic changes
+CACHE_VERSION = 2  # bump if _lemmatize_term()/load_bucket_index() logic changes
 MODEL_NAME = "en_core_web_sm"
 
 _nlp = None
@@ -62,7 +62,8 @@ def _lemmatize_term(nlp, term):
     lemmas = [
         IRREGULAR_LEMMAS.get(t.text.lower(), t.lemma_.lower())
         for t in doc
-        if not (t.is_stop or t.is_punct or t.is_space)
+        if not (t.is_punct or t.is_space)
+        and not (t.is_stop and t.text.lower() not in NEVER_STOP)
     ]
     if not lemmas:
         return term.lower().strip()
@@ -135,11 +136,23 @@ def match_buckets(master_prompt, bucket_index=None):
         {id, name, tier, prompt, score, matched_terms}
     Pass a pre-built bucket_index (from load_bucket_index()) to avoid
     re-lemmatizing all 80 buckets on every call in a hot loop (e.g. Phase 6's
-    eval harness against 15-20 prompts)."""
+    eval harness against 15-20 prompts).
+
+    Builds the known-phrase vocabulary (every multi-word match_term across
+    all buckets) fresh from bucket_index each call and hands it to Phase 1
+    so root extraction can do vocabulary-driven longest-match phrase
+    detection -- see extract_roots()'s docstring. Deriving it from
+    bucket_index's already-lemmatized match_terms (rather than
+    re-lemmatizing bucket_library.json separately) guarantees the phrase
+    dictionary and the vocabulary being matched against can never drift
+    out of sync."""
     if bucket_index is None:
         bucket_index = load_bucket_index()
 
-    roots = extract_roots(master_prompt)
+    phrase_vocab = {
+        term for bucket in bucket_index for term in bucket["match_terms"] if " " in term
+    }
+    roots = extract_roots(master_prompt, phrase_vocab=phrase_vocab)
 
     results = []
     for bucket in bucket_index:

@@ -63,10 +63,11 @@ tooltip suggestions.
 | `ranked[].matched_terms` | string[] | Which specific words/phrases in the input triggered this bucket. Useful for debugging why a bucket matched. |
 | `ranked[].tooltip_line` | string | Same as the corresponding entry in `tooltip_lines` (and currently identical to `ranked[].prompt` too — kept as a separate field in case the rendering diverges from the raw prompt again later). |
 
-**Result size:** normally up to 5 buckets. Can occasionally return up to 7
-if there's a genuine tie at the boundary (all tied buckets are kept rather
-than dropped arbitrarily). Can return fewer than 5 if the input doesn't
-match that many buckets — this is intentional, not a bug.
+**Result size:** normally 5 buckets. Can return up to 9 if there's a
+genuine tie at the boundary (all tied buckets are kept rather than
+dropped arbitrarily) — expect this often, not as a rare edge case. Can
+return fewer than 5 if the input doesn't match that many buckets — this
+is intentional, not a bug.
 
 **Error responses:**
 

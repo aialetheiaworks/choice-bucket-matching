@@ -43,6 +43,16 @@ KEEP_POS = {"NOUN", "PROPN", "VERB", "ADJ"}
 # Phase 6 eval, see PHASE6_EVAL_RESULTS.md).
 IRREGULAR_LEMMAS = {"data": "data"}
 
+# spaCy's en_core_web_sm flags "go" as a stopword (verified: is_stop=True on
+# every occurrence, regardless of context/POS -- it's a static lexeme flag,
+# not context-sensitive). That silently broke every "go to market"/
+# "go-to-market" vocabulary phrase: with "go" dropped, both lemmatized down
+# to just "market", indistinguishable from the plain Market bucket (found
+# 2026-09-01 chasing a stakeholder bug report about exactly this phrase).
+# Never drop these specific words as stopwords, on either the vocabulary
+# side (match_buckets.py's _lemmatize_term) or the input side (below).
+NEVER_STOP = {"go"}
+
 _nlp = None
 
 
@@ -57,32 +67,70 @@ def _lemma_of(token):
     return IRREGULAR_LEMMAS.get(token.text.lower(), token.lemma_.lower())
 
 
-def extract_roots(master_prompt):
-    """Return a deduplicated set of lemma root words + root noun-chunk
-    phrases extracted from the master prompt."""
+def _is_content_token(token):
+    """Same filtering rule match_buckets.py's _lemmatize_term applies to
+    vocabulary terms (drop stopwords/punct/space, no POS restriction) --
+    kept in lockstep so a phrase built from the master prompt is directly
+    comparable to how bucket vocabulary phrases were lemmatized."""
+    if token.is_punct or token.is_space:
+        return False
+    if token.is_stop and token.text.lower() not in NEVER_STOP:
+        return False
+    return True
+
+
+def extract_roots(master_prompt, phrase_vocab=None):
+    """Return a deduplicated set of lemma root words + root phrases
+    extracted from the master prompt.
+
+    `phrase_vocab` (optional): the set of known multi-word bucket-vocabulary
+    phrases (lemmatized, space-joined -- see match_buckets.py's
+    _lemmatize_term), used to scan the prompt for real vocabulary phrases
+    instead of guessing at generic noun-chunk boundaries. Longest phrase
+    wins at each position, and once a phrase matches, its constituent words
+    are consumed -- they don't also surface as separate single-word roots.
+    This replaced a noun-chunk-based approach (2026-09-01, stakeholder
+    feedback) that had two problems: it only caught noun-phrase-shaped
+    text, missing verb-containing vocabulary idioms like "go to market"
+    entirely, and it never suppressed sub-words, so a matched phrase like
+    "target market" always coexisted with a separate "market" root,
+    diluting a specific match into also triggering unrelated broader
+    buckets. Called without `phrase_vocab` (e.g. this module's standalone
+    CLI), only single-word roots are extracted -- fine for that diagnostic
+    use, since Phase 2 scoring only cares about vocabulary-driven phrases
+    anyway."""
     nlp = _get_nlp()
     doc = nlp(master_prompt)
     roots = set()
 
-    for token in doc:
-        if token.is_stop or token.is_punct or token.is_space:
+    content_tokens = [t for t in doc if _is_content_token(t)]
+    lemmas = [_lemma_of(t) for t in content_tokens]
+    consumed = [False] * len(content_tokens)
+
+    if phrase_vocab:
+        max_len = max((len(p.split()) for p in phrase_vocab), default=1)
+        n = len(lemmas)
+        i = 0
+        while i < n:
+            for length in range(min(max_len, n - i), 1, -1):
+                candidate = " ".join(lemmas[i:i + length])
+                if candidate in phrase_vocab:
+                    roots.add(candidate)
+                    for j in range(i, i + length):
+                        consumed[j] = True
+                    i += length
+                    break
+            else:
+                i += 1
+
+    for idx, token in enumerate(content_tokens):
+        if consumed[idx]:
             continue
         if token.pos_ not in KEEP_POS:
             continue
-        lemma = _lemma_of(token).strip()
+        lemma = lemmas[idx].strip()
         if lemma:
             roots.add(lemma)
-
-    for chunk in doc.noun_chunks:
-        # Drop leading determiners/possessives ("the", "our") so "our value
-        # proposition" contributes the phrase "value proposition", matching
-        # how multi-word bucket names/synonyms are stored (no articles).
-        content_tokens = [t for t in chunk if not (t.is_stop or t.is_punct)]
-        if len(content_tokens) < 2:
-            continue  # single-word chunks are already covered by the token loop above
-        phrase = " ".join(_lemma_of(t) for t in content_tokens).strip()
-        if phrase:
-            roots.add(phrase)
 
     return roots
 

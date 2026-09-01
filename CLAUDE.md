@@ -8,7 +8,83 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 - `CHOICE_Bucket_Matching_Requirements.md` — original requirements/design
   doc with the reasoning behind those decisions.
 
-## Pick up here (paused 2026-08-31)
+## Pick up here (paused 2026-09-01)
+
+**2026-09-01 session — stakeholder feedback round: tooltip format
+shortened, chunk-priority matching built:**
+
+1. **Tooltip format shortened.** Stakeholder feedback: drop the "If you
+   are speaking about X, also consider thinking about →" wrapper — the
+   tooltip line is now just the bucket's prompt text directly (e.g.
+   "Consider market size, maturity, growth, and dynamics."). `get_tooltip.py`'s
+   `render_tooltip()` now returns `r["prompt"]` directly; the `TEMPLATE`
+   constant is gone. `API_DOCUMENTATION.md` updated to match.
+2. **Chunk-priority phrase matching built** (stakeholder feedback + a
+   real bug found in the process): when a longer known vocabulary phrase
+   matches (e.g. "go to market"), its constituent single words ("market",
+   "go") should no longer separately trigger other buckets — previously
+   they always did, since phrase extraction and single-word extraction
+   ran independently with no suppression between them.
+   - **Bug found:** spaCy's `en_core_web_sm` flags "go" as a stopword on
+     *every* occurrence (a static lexeme property, not context-dependent
+     — verified directly). That silently collapsed "go to market" and
+     "go-to-market" down to just "market" everywhere in the vocabulary,
+     making the dedicated Go-to-Market bucket's own synonym
+     indistinguishable from the generic Market bucket. Fixed with a
+     `NEVER_STOP = {"go"}` override in `extract_roots.py`, applied on
+     both the vocabulary-lemmatization side (`match_buckets.py`'s
+     `_lemmatize_term`) and the input side.
+   - **Architecture change:** `extract_roots()` (Phase 1) replaced its
+     noun-chunk-based phrase guessing (which only caught noun-phrase-shaped
+     text — never idioms like "go to market", a verb phrase) with
+     vocabulary-driven longest-match scanning: `match_buckets()` now
+     builds the set of every known multi-word bucket vocabulary phrase
+     and hands it to `extract_roots(master_prompt, phrase_vocab=...)`,
+     which scans the prompt for those exact phrases (longest first) and
+     marks matched positions as consumed so they can't also surface as
+     separate single-word roots. 67% of the vocabulary (6,442 of 9,555
+     synonyms) is multi-word, so this touches most of the matching
+     surface, not an edge case.
+   - **`bucket_index_cache.pkl` regenerated and `CACHE_VERSION` bumped
+     1 → 2** (the lemmatization logic changed, not just the vocabulary
+     file — the version bump is what forces every deployed instance to
+     rebuild instead of silently serving the stale pre-fix cache).
+   - **Eval impact, and the follow-on decision it forced:** at the
+     existing `MAX_N=7` crowding cap, recall on the 34-case eval *dropped*
+     75.9% → 71.8% — not because the phrase logic is wrong (verified
+     directly against the "go to market" example and several others,
+     works exactly as intended), but because suppressing redundant
+     sub-word matches removes "noise" scores that used to let some
+     buckets win clean top slots, pushing more buckets into score ties
+     and hitting the existing cap harder. Measured the cap directly:
+     `MAX_N=9` → 78.2%, `MAX_N=12` → 81.8% (ceiling — no case's tied
+     group exceeds 12; uncapped gives the same number). **User's decision:
+     raised `MAX_N` 7 → 9** — clears the pre-fix baseline (78.2% >
+     75.9%) while keeping the tooltip list closer to its original length
+     than 12 would (typical statements now show close to 9 lines, up
+     from 5-7 — a real, accepted UX tradeoff, not a bug). Full reasoning
+     in `get_tooltip.py`'s module docstring.
+3. **Reduce/improve ambiguity investigated** (stakeholder question: these
+   verbs could imply either a business or technical meaning). Cross-checked
+   against the stakeholder-supplied `Business Root Vocabulary 2.1.docx`
+   (their own source doc): it places `reduce`/`improve` under exactly the
+   same buckets we already have (Business Objective / Continuous
+   Improvement) — no technical bucket (Performance, Reliability, Technology,
+   etc.) uses either bare word as a synonym anywhere in the doc; those
+   buckets instead use specific compound terms ("performance degradation",
+   "performance gain", etc.). So this isn't a wrong-bucket-assignment
+   problem fixable by editing the vocabulary — the doc's own authors
+   already avoided attaching generic verbs to technical buckets. **Not
+   yet resolved** — reported back to the user as a precision/confidence
+   question (should single generic-verb-only matches be treated as
+   weaker signals than they currently are?), not something to fix
+   unilaterally. Open for next session.
+
+**Next step:** decide the reduce/improve precision question above (item
+3) with the user, then push today's changes live (Render auto-redeploys
+from `main`) and spot-check the deployed API against a few of today's
+examples ("go to market", "target market") to confirm production
+matches local behavior. Not yet pushed as of this note.
 
 **2026-08-29 → 2026-08-31 session — API service built, deployed, and a
 real cold-start bug found and fixed:**
@@ -187,9 +263,9 @@ Streamlit deploy is still running yesterday's code).
 | Phase | What | Status |
 |---|---|---|
 | 0 | Synonym list generation (`generate_synonyms.py`, `merge_reviewed_synonyms.py` → `bucket_library.json`) | Done, tuned once (see Phase 6). **2026-08-25: merged a stakeholder-supplied vocabulary expansion** (`Business_Root_Vocabulary_2.docx`, 10,111 words) — union merge, 970 → 8,210 lemmatized terms. See below and `PHASE6_EVAL_RESULTS.md` ("follow-up #6"). |
-| 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). |
-| 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix applied here too. |
-| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). **2026-08-25: fixed the top-5 crowding pattern** — `rank_buckets()` now lets a tied 5th-place group extend past 5, capped at `MAX_N = 7`, instead of an arbitrary flat cut. See below and `PHASE6_EVAL_RESULTS.md` ("follow-up #5"). |
+| 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). **2026-09-01: replaced noun-chunk phrase guessing with vocabulary-driven longest-match phrase scanning + sub-word suppression**, and fixed a spaCy stopword bug that silently broke "go to market"/"go-to-market" matching. See "Pick up here" above. |
+| 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix applied here too. **2026-09-01: `load_bucket_index()` now caches to `bucket_index_cache.pkl`** (see Phase 5 row); `match_buckets()` builds the phrase vocabulary for Phase 1. |
+| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). **2026-08-25: fixed the top-5 crowding pattern** — `rank_buckets()` now lets a tied 5th-place group extend past 5, capped at `MAX_N`, instead of an arbitrary flat cut. **2026-09-01: `MAX_N` raised 7 → 9** (crowding cap was cutting genuine matches after the phrase-suppression fix — see "Pick up here" above). **Tooltip rendering format also changed 2026-09-01** — dropped the "If you are speaking about X..." wrapper per stakeholder feedback; `render_tooltip()` now returns the bucket's prompt text directly. |
 | 5 | Persistence & logging of match results | **Done 2026-08-22.** New `match_logger.py`, wired into `rank_buckets()` (the one chokepoint every front end already calls) so CLI/Flask/Gradio/Streamlit all log for free. Appends JSONL to `match_log.jsonl` (gitignored) — timestamp, master prompt, raw match data, zero-/low-match flags, and what was shown. Known gap: Streamlit Community Cloud's filesystem is ephemeral across redeploys, so this doesn't durably accumulate on the live deploy yet — fine for local/CLI use now, revisit with a real DB if the live deploy's history needs to survive redeploys. |
 | 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 more rounds 2026-08-22 to close every untested bucket: 23 cases (71.3%) → 28 cases (65.0%) → 34 cases, 0 of 77 buckets untested, recall 63.5%. **2026-08-25: crowding fix raised recall to 74.7%**, then the vocabulary merge raised it again to **75.9%** (34 cases; 5 cases regressed by one bucket each on the merge, 8 improved — see below). Full writeup: `PHASE6_EVAL_RESULTS.md`. |
 

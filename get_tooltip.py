@@ -22,18 +22,28 @@ Phase 3 -- ranking:
   short accurate tooltip beats a padded generic one.
 - 5+ matches: top 5 by the ranking above, EXCEPT when the bucket in 5th
   place is tied on score with buckets beyond it -- then the whole tied
-  group is shown, capped at MAX_N (7). "Ties survive the cutoff": a hard
+  group is shown, capped at MAX_N. "Ties survive the cutoff": a hard
   cut at position 5 previously discarded a tied bucket for no reason but
   alphabetical luck, even when it was just as relevant as the one that
   made the cut. See PHASE6_EVAL_RESULTS.md's crowding-pattern writeup
   (2026-08-22 -> 2026-08-25) for the evidence this fixes: 7 independent
   instances across 5 unrelated bucket clusters where a correctly-matched
-  bucket lost only to slot-count, not relevance. Measured against the
-  34-case eval set: 63.5% -> 74.7% recall, zero regressions (this rule is
-  a strict extension of the old top-5, never a replacement of it). A
-  short statement that doesn't crowd the boundary still shows exactly 5
-  lines -- this only grows the tooltip when the tie genuinely goes deeper
-  than 5.
+  bucket lost only to slot-count, not relevance. A short statement that
+  doesn't crowd the boundary still shows exactly 5 lines -- this only
+  grows the tooltip when the tie genuinely goes deeper than 5.
+
+  **MAX_N raised 7 -> 9 (2026-09-01):** the chunk-priority phrase-matching
+  fix (extract_roots.py/match_buckets.py -- vocabulary-driven longest-match
+  scanning with sub-word suppression, per stakeholder feedback) reduces
+  redundant "noise" scores that used to let some buckets win clean top
+  slots outright. That pushed more buckets into score ties, so the old
+  MAX_N=7 cap started cutting genuine matches, not just noise -- recall on
+  the 34-case eval dropped 75.9% -> 71.8% at MAX_N=7 with the new matching
+  logic. Measured the cap directly: 9 -> 78.2%, 12 -> 81.8% (ceiling, same
+  as uncapped -- no case's tied group exceeds 12). Raised to 9 as the
+  chosen tradeoff (user's call, not guessed): clears the pre-fix baseline
+  while keeping the tooltip list closer to its original length than 12
+  would (most statements now show close to 9 lines, up from 5-7).
 
 Phase 4 -- rendering: plug each ranked bucket into the tooltip template,
 capped at 5 lines.
@@ -55,7 +65,7 @@ from match_logger import log_match
 
 CORE_BUCKETS = ["Business Objective", "Customer", "Value Proposition", "Risk", "Market"]
 TOP_N = 5
-MAX_N = 7
+MAX_N = 9
 
 
 def _core_rank(name):
