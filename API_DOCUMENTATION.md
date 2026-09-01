@@ -34,8 +34,8 @@ tooltip suggestions.
 ```json
 {
   "tooltip_lines": [
-    "If you are speaking about BUSINESS OBJECTIVE, also consider thinking about → Consider target business outcomes, KPIs, and success criteria.",
-    "If you are speaking about CUSTOMER, also consider thinking about → Consider customer segment, persona, needs, pain points, and expected outcomes."
+    "Consider target business outcomes, KPIs, and success criteria.",
+    "Consider customer segment, persona, needs, pain points, and expected outcomes."
   ],
   "ranked": [
     {
@@ -45,7 +45,7 @@ tooltip suggestions.
       "prompt": "Consider target business outcomes, KPIs, and success criteria.",
       "score": 2,
       "matched_terms": ["improve", "reduce"],
-      "tooltip_line": "If you are speaking about BUSINESS OBJECTIVE, also consider thinking about → Consider target business outcomes, KPIs, and success criteria."
+      "tooltip_line": "Consider target business outcomes, KPIs, and success criteria."
     }
   ]
 }
@@ -61,7 +61,7 @@ tooltip suggestions.
 | `ranked[].prompt` | string | The underlying "consider" guidance text for this bucket. |
 | `ranked[].score` | int | Number of distinct vocabulary terms matched — higher means a stronger match. Not normalized/percentage, just a raw count. |
 | `ranked[].matched_terms` | string[] | Which specific words/phrases in the input triggered this bucket. Useful for debugging why a bucket matched. |
-| `ranked[].tooltip_line` | string | Same as the corresponding entry in `tooltip_lines`. |
+| `ranked[].tooltip_line` | string | Same as the corresponding entry in `tooltip_lines` (and currently identical to `ranked[].prompt` too — kept as a separate field in case the rendering diverges from the raw prompt again later). |
 
 **Result size:** normally up to 5 buckets. Can occasionally return up to 7
 if there's a genuine tie at the boundary (all tied buckets are kept rather

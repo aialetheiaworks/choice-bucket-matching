@@ -57,8 +57,6 @@ CORE_BUCKETS = ["Business Objective", "Customer", "Value Proposition", "Risk", "
 TOP_N = 5
 MAX_N = 7
 
-TEMPLATE = "If you are speaking about {name}, also consider thinking about → {prompt}."
-
 
 def _core_rank(name):
     """Index of `name` in CORE_BUCKETS, or len(CORE_BUCKETS) if not core
@@ -141,13 +139,11 @@ def rank_buckets(match_results, bucket_index, master_prompt=None):
 
 
 def render_tooltip(ranked):
-    """Phase 4: render each ranked bucket into the tooltip template.
-    Bucket prompts in bucket_library.json already end in a period, so
-    strip a trailing one before formatting to avoid a double period."""
-    return [
-        TEMPLATE.format(name=r["name"].upper(), prompt=r["prompt"].rstrip("."))
-        for r in ranked
-    ]
+    """Phase 4: render each ranked bucket's tooltip line. Stakeholder
+    feedback (2026-09-01) dropped the "If you are speaking about X, also
+    consider thinking about" framing -- the prompt text alone is the
+    tooltip line now."""
+    return [r["prompt"] for r in ranked]
 
 
 def get_tooltip(master_prompt):
