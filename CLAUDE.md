@@ -80,11 +80,14 @@ shortened, chunk-priority matching built:**
    weaker signals than they currently are?), not something to fix
    unilaterally. Open for next session.
 
-**Next step:** decide the reduce/improve precision question above (item
-3) with the user, then push today's changes live (Render auto-redeploys
-from `main`) and spot-check the deployed API against a few of today's
-examples ("go to market", "target market") to confirm production
-matches local behavior. Not yet pushed as of this note.
+**Next step:** pushed and confirmed live 2026-09-01 — Render redeployed
+from `main` (`4bb781d`), spot-checked `/health` (32.6s cold start, in
+line with the earlier fix) and `/tooltip` with the "go to market"
+example directly against production: correctly returns Go-to-Market +
+Marketing, no diluted separate Market hit, shortened tooltip format
+confirmed live too. Nothing outstanding on deploy. Remaining open item
+for next session: the reduce/improve precision question (item 3 above)
+— still needs the user's call, not resolved yet.
 
 **2026-08-29 → 2026-08-31 session — API service built, deployed, and a
 real cold-start bug found and fixed:**
