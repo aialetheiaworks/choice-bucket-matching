@@ -59,11 +59,15 @@ logic untouched; `CACHE_VERSION` stays 2).
 
 **Committed + pushed 2026-09-02** (`b963d03` on `main`) after the user
 reviewed the eval numbers and a live example — Render + Streamlit Cloud
-auto-redeploy from `main`. **Deploy not yet spot-checked** (next step:
-hit `/health` for cold-start time and `/tooltip` to confirm
-`count_salience` ranking + the new `count_score`/`salience_score` fields
-are live). To revert the ranking behavior without a full rollback: set
-`RANK_MODE = "count"` in `get_tooltip.py` and push.
+auto-redeploy from `main`. **Deploy verified live 2026-09-02:** Render
+redeployed, `/health` 200 (32.6s cold start, normal baseline), `/tooltip`
+now returns the `count_score`/`salience_score` fields and the
+`count_salience` ranking is active in production (spot-checked the
+"marketing manager / CEO wants" example — `Customer Needs` at salience
+1.0 correctly ranked ahead of the salience-0.5 buckets in its count-tier,
+matching local). Nothing outstanding. To revert the ranking behavior
+without a full rollback: set `RANK_MODE = "count"` in `get_tooltip.py`
+and push.
 
 ## Pick up here (paused 2026-09-01)
 
