@@ -44,6 +44,8 @@ tooltip suggestions.
       "tier": 1,
       "prompt": "Consider target business outcomes, KPIs, and success criteria.",
       "score": 2,
+      "count_score": 2,
+      "salience_score": 1.5,
       "matched_terms": ["improve", "reduce"],
       "tooltip_line": "Consider target business outcomes, KPIs, and success criteria."
     }
@@ -59,7 +61,9 @@ tooltip suggestions.
 | `ranked[].name` | string | Human-readable bucket name. |
 | `ranked[].tier` | int | 1 or 2 — which taxonomy tier the bucket belongs to. |
 | `ranked[].prompt` | string | The underlying "consider" guidance text for this bucket. |
-| `ranked[].score` | int | Number of distinct vocabulary terms matched — higher means a stronger match. Not normalized/percentage, just a raw count. |
+| `ranked[].score` | number | The primary ranking score — currently equal to `count_score`. Not normalized/percentage. |
+| `ranked[].count_score` | int | Number of distinct vocabulary terms matched. |
+| `ranked[].salience_score` | number | Those terms' summed dependency-parse salience (each term weighted `1/(hops from its mention up to the sentence's grammatical root + 1)`, so a term matched via the statement's main subject/verb counts ~1.0 and one matched only through a word in a subordinate clause counts a fraction). Used to break `count_score` ties when ranking. |
 | `ranked[].matched_terms` | string[] | Which specific words/phrases in the input triggered this bucket. Useful for debugging why a bucket matched. |
 | `ranked[].tooltip_line` | string | Same as the corresponding entry in `tooltip_lines` (and currently identical to `ranked[].prompt` too — kept as a separate field in case the rendering diverges from the raw prompt again later). |
 

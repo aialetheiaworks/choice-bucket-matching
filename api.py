@@ -56,7 +56,9 @@ class RankedBucket(BaseModel):
     name: str
     tier: int
     prompt: str
-    score: int
+    score: float  # primary ranking score (int count, unless salience scoring)
+    count_score: int = 0  # distinct matched vocabulary terms
+    salience_score: float = 0.0  # those terms' summed dependency-salience weight
     matched_terms: list[str]
     tooltip_line: str
 

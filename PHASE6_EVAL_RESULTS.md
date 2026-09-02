@@ -542,3 +542,64 @@ pick a new cap value, and net effect is still positive.
 Full raw doc parse, per-bucket coverage diff, and cross-bucket frequency
 analysis were done in a scratch script (not committed) before merging;
 this section is the durable record of what was found and changed.
+
+## 2026-09-02 follow-up #7: dependency-salience scoring (stakeholder sample script)
+
+The stakeholder shared `concept_scoring_sample.pdf` — a standalone spaCy
+dependency-parse concept weighter (no LLM): for each matched concept, walk
+`token.head` up to the sentence ROOT, count the hops, score `1/(hops+1)`
+(a concept that *is* the main verb = 1.0; one buried three clauses deep =
+0.25), normalize. Adapted into the pipeline as an optional scoring signal.
+
+**What was built:**
+- `extract_roots.extract_roots_salience()` — same roots as `extract_roots()`
+  but each mapped to its salience weight (min hop-distance across its
+  occurrences → `1/(hops+1)`). Phrases use the shallowest constituent
+  token's distance. `set(extract_roots_salience(x)) == extract_roots(x)`
+  always, so it's a drop-in weighted variant.
+- `match_buckets.py` now computes **both** scores for every bucket on one
+  parse: `count_score` (distinct matched terms — the original) and
+  `salience_score` (those terms' summed salience weights). `SCORING_MODE`
+  picks which is the primary `score` field.
+- `get_tooltip.RANK_MODE` picks the ranking order: `count` (original),
+  `salience` (pure), or `count_salience` (rank by count, break ties by
+  salience_score, then core priority, then name).
+- `eval_harness.py` — committed at last (was always a throwaway scratch
+  script). `--compare` runs all three configs; `--verbose` adds the
+  per-case diff.
+
+**Eval (34 cases, 170 expected slots):**
+
+| config | recall (full list) | recall (top 5) | precision (full) | avg lines |
+|---|---|---|---|---|
+| `count` (previous default) | 78.2% (133/170) | 60.0% (102) | 49.0% | 8.15 |
+| `count_salience` (new default) | 77.1% (131/170) | **62.4% (106)** | 48.3% | 8.15 |
+| `salience` (pure) | 62.9% (107/170) | 59.4% (101) | 54.3% | 5.91 |
+
+**Reading:**
+- **Pure `salience` is not worth it here.** It regresses full-list recall
+  ~15 pts. Continuous scores collapse the boundary tie groups, so buckets
+  that `count` surfaced in positions 6-9 get cut. It does produce shorter
+  (5.91 vs 8.15 lines), higher-precision tooltips — a real option if the
+  priority ever shifts to brevity, but not against this project's
+  recall-first history. 19 cases regressed, 0 improved on full-list.
+- **`count_salience` is a modest, defensible win and the new default.**
+  Full-list recall is flat within noise (−2 hits; 3 cases improved, 3
+  regressed — the same tie-shift mechanism documented in follow-up #6).
+  **Top-5 recall is up +4 hits (102 → 106):** the salience tiebreak pulls
+  genuinely-central buckets *up* into the first five lines ahead of
+  buckets triggered only by an incidental word. This is the right use of
+  the idea — it never decides *whether* a bucket matches, only *which
+  matched bucket owns a contested slot*, so it can't manufacture a wrong
+  match, only reorder near-ties. Tooltip length unchanged (8.15).
+- This also gives a principled answer to the **reduce/improve precision
+  question** left open on 2026-09-01: a bucket triggered only by a bare
+  generic verb in a subordinate clause now scores a low salience weight
+  and loses contested slots to buckets matched through the statement's
+  actual subject/verb — without needing any vocabulary edit.
+
+**Caveats:** salience is per-sentence (each sentence has its own ROOT), and
+`en_core_web_sm`'s parse is imperfect, so the weight is a soft signal, not
+ground truth — which is exactly why it's wired as a tiebreak, not the
+primary score. `bucket_library.json` and `bucket_index_cache.pkl` are
+unchanged (lemmatization logic untouched; `CACHE_VERSION` stays at 2).

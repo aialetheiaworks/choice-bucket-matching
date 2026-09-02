@@ -21,9 +21,22 @@ query-vs-prompt source weighting it existed to support) has been dropped --
 Choice Forge's master prompt is the single source of truth going into this
 pipeline.
 
+**2026-09-02 -- dependency-salience weighting (optional):**
+`extract_roots_salience()` returns the same roots as `extract_roots()` but
+each mapped to a 0-1 weight derived from how central it is to the sentence
+it appears in -- the hop-distance from the root's token up to that
+sentence's dependency ROOT, converted to `1 / (hops + 1)` (a concept that
+*is* the main verb scores 1.0; one buried three clauses deep scores 0.25).
+Adapted from a stakeholder-supplied sample script. Phase 2 can sum these
+weights instead of counting matched terms, so a bucket triggered only by a
+word in a throwaway subordinate clause ranks below one triggered by the
+statement's actual subject/verb. `extract_roots()` itself is unchanged --
+the weighting is a separate entry point Phase 2 opts into via its
+SCORING_MODE constant.
+
 Usage:
     python3 extract_roots.py "<master prompt>"
-    # or: from extract_roots import extract_roots
+    # or: from extract_roots import extract_roots, extract_roots_salience
 """
 
 import sys
@@ -79,6 +92,77 @@ def _is_content_token(token):
     return True
 
 
+def _hops_to_root(token):
+    """Number of dependency-arc hops from `token` up to its sentence's ROOT
+    (the ROOT itself is 0 hops). spaCy points a root's .head at itself, so
+    the walk terminates there. Guarded against a malformed cycle by capping
+    at the sentence length."""
+    hops = 0
+    current = token
+    limit = len(token.doc) + 1
+    while current.head != current and hops < limit:
+        current = current.head
+        hops += 1
+    return hops
+
+
+def _salience_weight(hops):
+    """Inverse hop-distance -> 0-1 salience. Root-level match (hops 0) = 1.0,
+    then 0.5, 0.33, 0.25 ... -- close to the sentence's main verb counts for
+    much more than a mention nested deep in a subordinate clause. Same curve
+    as the stakeholder sample script (`1 / (distance + 1)`)."""
+    return 1.0 / (hops + 1)
+
+
+def _extract_roots_with_hops(master_prompt, phrase_vocab=None):
+    """Shared core for extract_roots() / extract_roots_salience(): returns
+    `{root_lemma_or_phrase: min_hops_to_root}` -- the smallest hop-distance
+    across every occurrence of that root (its most central mention wins, the
+    same "best occurrence" rule the sample script uses)."""
+    nlp = _get_nlp()
+    doc = nlp(master_prompt)
+    roots = {}
+
+    def _note(root, hops):
+        if root and (root not in roots or hops < roots[root]):
+            roots[root] = hops
+
+    content_tokens = [t for t in doc if _is_content_token(t)]
+    lemmas = [_lemma_of(t) for t in content_tokens]
+    consumed = [False] * len(content_tokens)
+
+    if phrase_vocab:
+        max_len = max((len(p.split()) for p in phrase_vocab), default=1)
+        n = len(lemmas)
+        i = 0
+        while i < n:
+            for length in range(min(max_len, n - i), 1, -1):
+                candidate = " ".join(lemmas[i:i + length])
+                if candidate in phrase_vocab:
+                    span_tokens = content_tokens[i:i + length]
+                    # The phrase's salience = its shallowest token's (its
+                    # syntactic head sits at or above every other token in
+                    # the span, so min-hops is the span-root's distance).
+                    _note(candidate, min(_hops_to_root(t) for t in span_tokens))
+                    for j in range(i, i + length):
+                        consumed[j] = True
+                    i += length
+                    break
+            else:
+                i += 1
+
+    for idx, token in enumerate(content_tokens):
+        if consumed[idx]:
+            continue
+        if token.pos_ not in KEEP_POS:
+            continue
+        lemma = lemmas[idx].strip()
+        if lemma:
+            _note(lemma, _hops_to_root(token))
+
+    return roots
+
+
 def extract_roots(master_prompt, phrase_vocab=None):
     """Return a deduplicated set of lemma root words + root phrases
     extracted from the master prompt.
@@ -99,50 +183,32 @@ def extract_roots(master_prompt, phrase_vocab=None):
     CLI), only single-word roots are extracted -- fine for that diagnostic
     use, since Phase 2 scoring only cares about vocabulary-driven phrases
     anyway."""
-    nlp = _get_nlp()
-    doc = nlp(master_prompt)
-    roots = set()
+    return set(_extract_roots_with_hops(master_prompt, phrase_vocab=phrase_vocab))
 
-    content_tokens = [t for t in doc if _is_content_token(t)]
-    lemmas = [_lemma_of(t) for t in content_tokens]
-    consumed = [False] * len(content_tokens)
 
-    if phrase_vocab:
-        max_len = max((len(p.split()) for p in phrase_vocab), default=1)
-        n = len(lemmas)
-        i = 0
-        while i < n:
-            for length in range(min(max_len, n - i), 1, -1):
-                candidate = " ".join(lemmas[i:i + length])
-                if candidate in phrase_vocab:
-                    roots.add(candidate)
-                    for j in range(i, i + length):
-                        consumed[j] = True
-                    i += length
-                    break
-            else:
-                i += 1
-
-    for idx, token in enumerate(content_tokens):
-        if consumed[idx]:
-            continue
-        if token.pos_ not in KEEP_POS:
-            continue
-        lemma = lemmas[idx].strip()
-        if lemma:
-            roots.add(lemma)
-
-    return roots
+def extract_roots_salience(master_prompt, phrase_vocab=None):
+    """Like extract_roots(), but returns `{root: salience_weight}` instead
+    of a bare set -- the weight (0-1) is how close the root's most central
+    mention sits to its sentence's dependency ROOT. See _salience_weight()
+    and this module's docstring. Same extraction/phrase logic as
+    extract_roots(); only the return shape differs, so
+    `set(extract_roots_salience(x)) == extract_roots(x)` always holds."""
+    return {
+        root: _salience_weight(hops)
+        for root, hops in _extract_roots_with_hops(
+            master_prompt, phrase_vocab=phrase_vocab
+        ).items()
+    }
 
 
 def main():
     if len(sys.argv) != 2:
         print('Usage: python3 extract_roots.py "<master prompt>"')
         sys.exit(1)
-    roots = extract_roots(sys.argv[1])
-    print(f"Extracted {len(roots)} root words/phrases:")
-    for r in sorted(roots):
-        print(f"  {r}")
+    weighted = extract_roots_salience(sys.argv[1])
+    print(f"Extracted {len(weighted)} root words/phrases (with salience weight):")
+    for r, w in sorted(weighted.items(), key=lambda kv: (-kv[1], kv[0])):
+        print(f"  {w:.3f}  {r}")
 
 
 if __name__ == "__main__":

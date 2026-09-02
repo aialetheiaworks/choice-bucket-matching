@@ -45,6 +45,16 @@ Phase 3 -- ranking:
   while keeping the tooltip list closer to its original length than 12
   would (most statements now show close to 9 lines, up from 5-7).
 
+  **Salience scoring interaction (2026-09-02):** when match_buckets.py runs
+  in SCORING_MODE="salience", scores are continuous (summed dependency-
+  salience weights) rather than integer term counts, so exact ties at the
+  position-5 boundary are rare and the tied-group extension above almost
+  always returns exactly TOP_N. That is the intended effect -- the crowding
+  pattern this MAX_N machinery exists to contain is largely a symptom of
+  integer scores producing large tied groups. The machinery is kept as-is:
+  it is a no-op on well-separated scores and still bounds the occasional
+  genuine tie. MAX_N still applies as the hard ceiling.
+
 Phase 4 -- rendering: plug each ranked bucket into the tooltip template,
 capped at 5 lines.
 
@@ -60,12 +70,32 @@ Usage:
 
 import sys
 
-from match_buckets import load_bucket_index, match_buckets
+from match_buckets import load_bucket_index, match_buckets, SCORING_MODE
 from match_logger import log_match
 
 CORE_BUCKETS = ["Business Objective", "Customer", "Value Proposition", "Risk", "Market"]
 TOP_N = 5
 MAX_N = 9
+
+# How the ranked list is ordered (2026-09-02). match_buckets.py attaches
+# both a count_score (distinct matched terms) and a salience_score (those
+# terms' summed dependency-salience weights) to every result, so ranking
+# can use either or both:
+#   "count"            -- sort by count_score; ties broken by core priority
+#                         then name (the original behaviour, unchanged).
+#   "salience"         -- sort by salience_score directly. Continuous, so
+#                         the boundary ties MAX_N exists to bound mostly
+#                         vanish -- but eval shows this trades ~15pt of
+#                         full-list recall for shorter, higher-precision
+#                         lists (see PHASE6_EVAL_RESULTS.md 2026-09-02).
+#   "count_salience"   -- sort by count_score, then break ties by
+#                         salience_score (more syntactically central bucket
+#                         wins the slot), then core priority, then name.
+#                         Keeps count's recall; only changes who wins ties.
+# Must line up with match_buckets.SCORING_MODE for "salience" (that mode
+# is what makes score == salience_score); "count" and "count_salience"
+# both work with SCORING_MODE="count".
+RANK_MODE = "count_salience"
 
 
 def _core_rank(name):
@@ -73,6 +103,16 @@ def _core_rank(name):
     -- sort key so core buckets win score ties in their declared priority
     order, and non-core ties fall through to the alphabetical tiebreak."""
     return CORE_BUCKETS.index(name) if name in CORE_BUCKETS else len(CORE_BUCKETS)
+
+
+def _rank_sort_key(r, rank_mode):
+    """Ranking sort key per rank_mode (see RANK_MODE's comment). Lower
+    sorts first, so scores are negated."""
+    if rank_mode == "salience":
+        return (-r["salience_score"], _core_rank(r["name"]), r["name"])
+    if rank_mode == "count_salience":
+        return (-r["count_score"], -r["salience_score"], _core_rank(r["name"]), r["name"])
+    return (-r["count_score"], _core_rank(r["name"]), r["name"])
 
 
 def _dedupe_tiers(results):
@@ -96,9 +136,21 @@ def _dedupe_tiers(results):
         if existing is None:
             by_name[r["name"]] = dict(r)
             continue
-        merged_terms = sorted(set(existing["matched_terms"]) | set(r["matched_terms"]))
-        existing["matched_terms"] = merged_terms
-        existing["score"] = len(merged_terms)
+        # Union the per-term salience weights (a term matched in both tiers
+        # keeps its larger weight), then re-derive every score from that so
+        # count_score / salience_score / score all stay consistent for the
+        # merged entry regardless of which one Phase 3 ranks on.
+        merged_weights = dict(existing.get("term_weights", {}))
+        for term, weight in r.get("term_weights", {}).items():
+            merged_weights[term] = max(weight, merged_weights.get(term, 0.0))
+        existing["term_weights"] = merged_weights
+        existing["matched_terms"] = sorted(merged_weights)
+        existing["count_score"] = len(merged_weights)
+        existing["salience_score"] = round(sum(merged_weights.values()), 4)
+        existing["score"] = (
+            existing["salience_score"] if SCORING_MODE == "salience"
+            else existing["count_score"]
+        )
         if r["tier"] == 1 and existing["tier"] != 1:
             existing["prompt"] = r["prompt"]
             existing["tier"] = 1
@@ -116,14 +168,17 @@ def _core_bucket_fallback(bucket_index):
             "tier": 1,
             "prompt": by_name[name]["prompt"],
             "score": 0,
+            "count_score": 0,
+            "salience_score": 0.0,
             "matched_terms": [],
+            "term_weights": {},
         }
         for name in CORE_BUCKETS
         if name in by_name
     ]
 
 
-def rank_buckets(match_results, bucket_index, master_prompt=None):
+def rank_buckets(match_results, bucket_index, master_prompt=None, log=True, rank_mode=None):
     """Phase 3: turn match_buckets()'s per-bucket scores into the final
     ranked selection (see module docstring for the rules).
 
@@ -131,20 +186,31 @@ def rank_buckets(match_results, bucket_index, master_prompt=None):
     Flask, Gradio, Streamlit) already calls with both match_results and the
     final ranked list, so it's the chokepoint for logging a run -- see
     match_logger.py. `master_prompt` is optional so existing callers don't
-    break; pass it to get the query text captured in the log."""
+    break; pass it to get the query text captured in the log. `log=False`
+    skips the log write -- used by the Phase 6 eval harness so batch runs
+    don't accumulate in match_log.jsonl. `rank_mode` overrides the module
+    RANK_MODE constant (also for the eval harness's A/B runs)."""
+    if rank_mode is None:
+        rank_mode = RANK_MODE
     if not match_results:
         ranked = _core_bucket_fallback(bucket_index)
     else:
         deduped = _dedupe_tiers(match_results)
-        deduped.sort(key=lambda r: (-r["score"], _core_rank(r["name"]), r["name"]))
+        deduped.sort(key=lambda r: _rank_sort_key(r, rank_mode))
         if len(deduped) <= TOP_N:
             ranked = deduped
         else:
+            # The boundary tie is on the PRIMARY score (integer count in
+            # "count"/"count_salience", salience in "salience"); MAX_N still
+            # bounds a runaway tie group. In "count_salience" the group is
+            # already ordered by salience_score, so the salience tiebreak
+            # decides which of a tied count-tier's members make the cut.
             cutoff_score = deduped[TOP_N - 1]["score"]
             tied = [r for r in deduped if r["score"] >= cutoff_score]
             ranked = tied[:MAX_N]
 
-    log_match(master_prompt, match_results, ranked)
+    if log:
+        log_match(master_prompt, match_results, ranked)
     return ranked
 
 

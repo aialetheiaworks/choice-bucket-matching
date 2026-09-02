@@ -8,6 +8,59 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 - `CHOICE_Bucket_Matching_Requirements.md` — original requirements/design
   doc with the reasoning behind those decisions.
 
+## Pick up here (paused 2026-09-02)
+
+**2026-09-02 session — dependency-salience scoring added from a
+stakeholder sample script:**
+
+The stakeholder shared `~/Downloads/concept_scoring_sample.pdf` — a
+standalone spaCy dependency-parse concept weighter (no LLM): walk each
+matched concept's token up to its sentence ROOT, score `1/(hops+1)` so a
+concept that *is* the main verb counts ~1.0 and one buried deep in a
+subordinate clause counts a fraction of that. Adapted into the pipeline
+as an **optional scoring signal, wired as a tiebreak** (not a replacement
+for the count-based score).
+
+1. **`extract_roots.extract_roots_salience()`** — same roots as
+   `extract_roots()`, each mapped to its salience weight (min hop-distance
+   across occurrences → `1/(hops+1)`; phrases use their shallowest
+   token). `set(extract_roots_salience(x)) == extract_roots(x)` always.
+2. **`match_buckets.py` computes both scores on one parse:** `count_score`
+   (distinct matched terms — the original) and `salience_score` (summed
+   salience weights of those terms). `SCORING_MODE` (default `"count"`)
+   picks the primary `score` field; both always travel on every result.
+3. **`get_tooltip.RANK_MODE`** (default `"count_salience"`) picks ranking
+   order: `count` (original), `salience` (pure), or `count_salience`
+   (rank by count, break ties by salience, then core priority, then
+   name).
+4. **`eval_harness.py` committed** — was always a throwaway scratch
+   script re-written each session. `python3 eval_harness.py --compare
+   --verbose` runs all three configs with a per-case diff.
+5. **`api.py`** `RankedBucket` now also exposes `count_score` /
+   `salience_score` (additive, optional — no breaking change).
+
+**Eval (34 cases):** `count` (old default) full-list recall 78.2%, top-5
+60.0%, avg 8.15 lines. **`count_salience` (new default):** full-list
+77.1% (−2 hits, within tie-shift noise), **top-5 62.4% (+4 hits)** — the
+salience tiebreak pulls syntactically-central buckets *up* into the first
+5 lines. Pure `salience`: full-list 62.9% (bad — collapses the boundary
+tie groups that positions 6-9 recall depends on), but shorter (5.91
+lines) and higher precision (54.3%) — kept as a documented option if
+priorities ever shift to brevity. Full writeup: `PHASE6_EVAL_RESULTS.md`
+follow-up #7.
+
+**This also answers the reduce/improve precision question** left open on
+2026-09-01: a bucket triggered only by a bare generic verb in a
+subordinate clause now scores a low salience weight and loses contested
+slots — no vocabulary edit needed. That open item is now resolved.
+
+`bucket_library.json` / `bucket_index_cache.pkl` unchanged (lemmatization
+logic untouched; `CACHE_VERSION` stays 2). **Not committed, not
+deployed** — the `count_salience` default is a UX/ranking judgment call
+(same class as the MAX_N 7→9 call): confirm before pushing, or switch
+`RANK_MODE` back to `"count"` in `get_tooltip.py` for the exact prior
+behavior.
+
 ## Pick up here (paused 2026-09-01)
 
 **2026-09-01 session — stakeholder feedback round: tooltip format
@@ -87,7 +140,8 @@ example directly against production: correctly returns Go-to-Market +
 Marketing, no diluted separate Market hit, shortened tooltip format
 confirmed live too. Nothing outstanding on deploy. Remaining open item
 for next session: the reduce/improve precision question (item 3 above)
-— still needs the user's call, not resolved yet.
+— still needs the user's call, not resolved yet. **[Resolved 2026-09-02
+by the dependency-salience tiebreak — see the top "Pick up here".]**
 
 **2026-08-29 → 2026-08-31 session — API service built, deployed, and a
 real cold-start bug found and fixed:**
@@ -261,16 +315,16 @@ don't attempt another blanket fix without it, per the reverted
 equivalence-merge lesson. Otherwise: push today's changes (the live
 Streamlit deploy is still running yesterday's code).
 
-## Current status (last updated: 2026-08-25)
+## Current status (last updated: 2026-09-02)
 
 | Phase | What | Status |
 |---|---|---|
 | 0 | Synonym list generation (`generate_synonyms.py`, `merge_reviewed_synonyms.py` → `bucket_library.json`) | Done, tuned once (see Phase 6). **2026-08-25: merged a stakeholder-supplied vocabulary expansion** (`Business_Root_Vocabulary_2.docx`, 10,111 words) — union merge, 970 → 8,210 lemmatized terms. See below and `PHASE6_EVAL_RESULTS.md` ("follow-up #6"). |
-| 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). **2026-09-01: replaced noun-chunk phrase guessing with vocabulary-driven longest-match phrase scanning + sub-word suppression**, and fixed a spaCy stopword bug that silently broke "go to market"/"go-to-market" matching. See "Pick up here" above. |
-| 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix applied here too. **2026-09-01: `load_bucket_index()` now caches to `bucket_index_cache.pkl`** (see Phase 5 row); `match_buckets()` builds the phrase vocabulary for Phase 1. |
-| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). **2026-08-25: fixed the top-5 crowding pattern** — `rank_buckets()` now lets a tied 5th-place group extend past 5, capped at `MAX_N`, instead of an arbitrary flat cut. **2026-09-01: `MAX_N` raised 7 → 9** (crowding cap was cutting genuine matches after the phrase-suppression fix — see "Pick up here" above). **Tooltip rendering format also changed 2026-09-01** — dropped the "If you are speaking about X..." wrapper per stakeholder feedback; `render_tooltip()` now returns the bucket's prompt text directly. |
+| 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). 2026-09-01: replaced noun-chunk phrase guessing with vocabulary-driven longest-match phrase scanning + sub-word suppression, and fixed a spaCy stopword bug that silently broke "go to market" matching. **2026-09-02: added `extract_roots_salience()`** — same roots, each with a dependency-parse salience weight (`1/(hops-to-ROOT + 1)`). See "Pick up here" above. |
+| 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix. 2026-09-01: `load_bucket_index()` caches to `bucket_index_cache.pkl`; `match_buckets()` builds the phrase vocabulary for Phase 1. **2026-09-02: every result now carries both `count_score` and `salience_score`** (one parse); `SCORING_MODE` (default `"count"`) picks the primary. |
+| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). 2026-08-25: fixed the top-5 crowding pattern — tied 5th-place group extends past 5, capped at `MAX_N`. 2026-09-01: `MAX_N` raised 7 → 9; dropped the "If you are speaking about X..." wrapper. **2026-09-02: added `RANK_MODE` (default `"count_salience"`)** — rank by count, break ties by dependency salience. Top-5 eval recall 60.0% → 62.4%; full-list flat. See "Pick up here" + `PHASE6_EVAL_RESULTS.md` follow-up #7. |
 | 5 | Persistence & logging of match results | **Done 2026-08-22.** New `match_logger.py`, wired into `rank_buckets()` (the one chokepoint every front end already calls) so CLI/Flask/Gradio/Streamlit all log for free. Appends JSONL to `match_log.jsonl` (gitignored) — timestamp, master prompt, raw match data, zero-/low-match flags, and what was shown. Known gap: Streamlit Community Cloud's filesystem is ephemeral across redeploys, so this doesn't durably accumulate on the live deploy yet — fine for local/CLI use now, revisit with a real DB if the live deploy's history needs to survive redeploys. |
-| 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 more rounds 2026-08-22 to close every untested bucket: 23 cases (71.3%) → 28 cases (65.0%) → 34 cases, 0 of 77 buckets untested, recall 63.5%. **2026-08-25: crowding fix raised recall to 74.7%**, then the vocabulary merge raised it again to **75.9%** (34 cases; 5 cases regressed by one bucket each on the merge, 8 improved — see below). Full writeup: `PHASE6_EVAL_RESULTS.md`. |
+| 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 rounds 2026-08-22 to 34 cases, 0 of 77 buckets untested. 2026-08-25: crowding fix + vocabulary merge → 75.9%. 2026-09-01 phrase fix + `MAX_N=9` → 78.2% full-list. **2026-09-02: `eval_harness.py` committed** (was a scratch script); `count_salience` ranking → full-list 77.1%, top-5 62.4% (from 60.0%). Full writeup: `PHASE6_EVAL_RESULTS.md` follow-up #7. |
 
 **2026-08-22 session — two items investigated:**
 
@@ -386,6 +440,17 @@ or synonym-list changes just need a normal `git push`, no redeploy step.
   "loser" to pick) and over a flat `TOP_N` raise (cap 8 measured best
   recall but nearly always maxes out in practice; cap 7 was the balance
   point). See `PHASE6_EVAL_RESULTS.md` follow-up #5.
+- Score-tie ordering (2026-09-02): the tie-break rejected in 2026-08-25 as
+  having "no principled loser" now has one — **dependency-parse salience**.
+  When buckets tie on matched-term count, the one whose match sits closer
+  to its sentence's ROOT (more syntactically central to what the author
+  said) wins the slot, ahead of the old core-priority/alphabetical rule.
+  `get_tooltip.RANK_MODE = "count_salience"`. Count stays the primary
+  score (pure-salience scoring measured a ~15pt full-list recall drop);
+  salience is tiebreak-only. Adapted from a stakeholder sample script
+  (`concept_scoring_sample.pdf`). See `PHASE6_EVAL_RESULTS.md` follow-up
+  #7. **Pending user confirmation before deploy** (UX judgment call, like
+  the MAX_N 7→9 decision).
 
 ## Explicitly out of scope for this build
 
