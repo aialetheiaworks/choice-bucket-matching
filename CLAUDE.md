@@ -55,11 +55,15 @@ subordinate clause now scores a low salience weight and loses contested
 slots — no vocabulary edit needed. That open item is now resolved.
 
 `bucket_library.json` / `bucket_index_cache.pkl` unchanged (lemmatization
-logic untouched; `CACHE_VERSION` stays 2). **Not committed, not
-deployed** — the `count_salience` default is a UX/ranking judgment call
-(same class as the MAX_N 7→9 call): confirm before pushing, or switch
-`RANK_MODE` back to `"count"` in `get_tooltip.py` for the exact prior
-behavior.
+logic untouched; `CACHE_VERSION` stays 2).
+
+**Committed + pushed 2026-09-02** (`b963d03` on `main`) after the user
+reviewed the eval numbers and a live example — Render + Streamlit Cloud
+auto-redeploy from `main`. **Deploy not yet spot-checked** (next step:
+hit `/health` for cold-start time and `/tooltip` to confirm
+`count_salience` ranking + the new `count_score`/`salience_score` fields
+are live). To revert the ranking behavior without a full rollback: set
+`RANK_MODE = "count"` in `get_tooltip.py` and push.
 
 ## Pick up here (paused 2026-09-01)
 
