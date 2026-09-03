@@ -58,7 +58,11 @@ or (c) left for the engine to dedupe at display time (current)? Also
 worth asking: should the tooltip show Tier-2 buckets at all, or is Tier 2
 a separate feature (strategic framing / the downstream Knowledge Graph)?
 
-Toggle back with `DEDUP_SIMILAR_PROMPTS = False`.
+**Pushed + verified live 2026-09-03** (`e75dde8` on `main`): hit the
+reported query against production — "Market Opportunity" is gone, the
+redundant "Assess market size, growth potential..." line no longer shows,
+Go-to-Market took the freed slot. Toggle back with
+`DEDUP_SIMILAR_PROMPTS = False`.
 
 ---
 
