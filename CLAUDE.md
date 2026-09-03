@@ -8,7 +8,59 @@ Platform" — the Intent Classifier / Pattern Matching step. Full design docs:
 - `CHOICE_Bucket_Matching_Requirements.md` — original requirements/design
   doc with the reasoning behind those decisions.
 
-## Pick up here (paused 2026-09-02)
+## Pick up here (paused 2026-09-03)
+
+**2026-09-03 session — near-duplicate tooltip lines fixed (display half
+of the bucket-overlap question):**
+
+A stakeholder-style test query ("I am a marketing manager, my CEO wants
+me to increase the sales of our product 3x next year, our product is
+B2C") returned **two lines saying the same thing** — *"Consider market
+size, maturity, growth, and dynamics."* (Market, T1) and *"Assess market
+size, growth potential, attractiveness, maturity, and whitespace..."*
+(Market Opportunity, T2).
+
+**Finding — structural, not a stray pair.** Pairwise prompt-text overlap
+across all 80 buckets turns up **12 Tier-1 / Tier-2 twin pairs** (a T1
+topic and its T2 "strategic lens" restating it): Competition/Competitive
+Landscape (1.00), Market/Market Opportunity (0.80), Revenue/Pricing &
+Monetization, Legal/Governance & Compliance, Customer/Customer Needs
+(0.75), then a tail at 0.5-0.6. Full table: `PHASE6_EVAL_RESULTS.md`
+follow-up #8.
+
+**Fixed (display half): `get_tooltip.DEDUP_SIMILAR_PROMPTS = True`**
+(threshold `PROMPT_OVERLAP_THRESHOLD = 0.75`). In `rank_buckets()`, after
+the sort and *before* the TOP_N/MAX_N cut, drop any bucket whose prompt
+near-duplicates a higher-ranked kept bucket's (overlap coefficient on
+content words). Higher-ranked twin kept; T1 sorts ahead of its T2 twin so
+the T1 prompt wins, consistent with `_dedupe_tiers`. Freed slot goes to a
+real bucket. New helpers `_prompt_content_words()` /
+`_near_duplicate_prompt()` / `_dedupe_similar_prompts()`. `dedup` param
+added to `rank_buckets()` for the harness. `eval_harness.py` gains a
+`count_salience_dedup` config. `bucket_library.json` **not touched**.
+
+**Eval:** vs the live `count_salience` default — full-list 77.1% → 76.5%,
+top-5 62.4% → 61.8% (−1 hit each, noise; the metric scores exact bucket
+*names* but dedup is about guidance *text*, so it understates the fix).
+3 cases moved: case 12 **+1** (dropped the redundant "Governance &
+Compliance" T2 umbrella, freed a slot for Timeline — and Compliance/
+Legal/Governance all stayed distinct, so the 2026-08-22 reverted-merge
+landmine held); case 13 −1 (Revenue → Pricing & Monetization, borderline);
+case 29 −1 (labeler wanted both Competition + Competitive Landscape, but
+their prompts overlap 1.00 so showing both *is* the redundancy). On the
+reported query: Market Opportunity drops, Go-to-Market takes the freed
+slot, no repeated guidance.
+
+**The library half is still open — stakeholder call.** Take the twin-pair
+table to them: should the ~12 Tier-2 twins be (a) rewritten to a
+genuinely distinct strategic-lens angle, (b) merged into their T1 twin,
+or (c) left for the engine to dedupe at display time (current)? Also
+worth asking: should the tooltip show Tier-2 buckets at all, or is Tier 2
+a separate feature (strategic framing / the downstream Knowledge Graph)?
+
+Toggle back with `DEDUP_SIMILAR_PROMPTS = False`.
+
+---
 
 **2026-09-02 session — dependency-salience scoring added from a
 stakeholder sample script:**
@@ -323,14 +375,14 @@ don't attempt another blanket fix without it, per the reverted
 equivalence-merge lesson. Otherwise: push today's changes (the live
 Streamlit deploy is still running yesterday's code).
 
-## Current status (last updated: 2026-09-02)
+## Current status (last updated: 2026-09-03)
 
 | Phase | What | Status |
 |---|---|---|
 | 0 | Synonym list generation (`generate_synonyms.py`, `merge_reviewed_synonyms.py` → `bucket_library.json`) | Done, tuned once (see Phase 6). **2026-08-25: merged a stakeholder-supplied vocabulary expansion** (`Business_Root_Vocabulary_2.docx`, 10,111 words) — union merge, 970 → 8,210 lemmatized terms. See below and `PHASE6_EVAL_RESULTS.md` ("follow-up #6"). |
 | 1 | NLP extraction (`extract_roots.py`) | Done. 2026-08-22: fixed a real lemma bug (see below). 2026-09-01: replaced noun-chunk phrase guessing with vocabulary-driven longest-match phrase scanning + sub-word suppression, and fixed a spaCy stopword bug that silently broke "go to market" matching. **2026-09-02: added `extract_roots_salience()`** — same roots, each with a dependency-parse salience weight (`1/(hops-to-ROOT + 1)`). See "Pick up here" above. |
 | 2 | Matching engine (`match_buckets.py`) | Done. 2026-08-22: same lemma fix. 2026-09-01: `load_bucket_index()` caches to `bucket_index_cache.pkl`; `match_buckets()` builds the phrase vocabulary for Phase 1. **2026-09-02: every result now carries both `count_score` and `salience_score`** (one parse); `SCORING_MODE` (default `"count"`) picks the primary. |
-| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). 2026-08-25: fixed the top-5 crowding pattern — tied 5th-place group extends past 5, capped at `MAX_N`. 2026-09-01: `MAX_N` raised 7 → 9; dropped the "If you are speaking about X..." wrapper. **2026-09-02: added `RANK_MODE` (default `"count_salience"`)** — rank by count, break ties by dependency salience. Top-5 eval recall 60.0% → 62.4%; full-list flat. See "Pick up here" + `PHASE6_EVAL_RESULTS.md` follow-up #7. |
+| 3-4 | Ranking + tooltip rendering (`get_tooltip.py`) | Done. 2026-08-22: tried and reverted an equivalence-group merge (see below). 2026-08-25: fixed the top-5 crowding pattern — tied 5th-place group extends past 5, capped at `MAX_N`. 2026-09-01: `MAX_N` raised 7 → 9; dropped the "If you are speaking about X..." wrapper. 2026-09-02: added `RANK_MODE` (default `"count_salience"`) — rank by count, break ties by dependency salience; top-5 recall 60.0% → 62.4%. **2026-09-03: added `DEDUP_SIMILAR_PROMPTS` (default on)** — drop a bucket whose prompt near-duplicates a higher-ranked one's (12 T1/T2 twin pairs, e.g. Market / Market Opportunity); library untouched, stakeholder call on merging. See "Pick up here" + `PHASE6_EVAL_RESULTS.md` follow-ups #7-8. |
 | 5 | Persistence & logging of match results | **Done 2026-08-22.** New `match_logger.py`, wired into `rank_buckets()` (the one chokepoint every front end already calls) so CLI/Flask/Gradio/Streamlit all log for free. Appends JSONL to `match_log.jsonl` (gitignored) — timestamp, master prompt, raw match data, zero-/low-match flags, and what was shown. Known gap: Streamlit Community Cloud's filesystem is ephemeral across redeploys, so this doesn't durably accumulate on the live deploy yet — fine for local/CLI use now, revisit with a real DB if the live deploy's history needs to survive redeploys. |
 | 6 | Evaluation against labeled eval set | Run 2026-08-20 (recall 22.2% → 73.3% on 18 cases). Expanded across 3 rounds 2026-08-22 to 34 cases, 0 of 77 buckets untested. 2026-08-25: crowding fix + vocabulary merge → 75.9%. 2026-09-01 phrase fix + `MAX_N=9` → 78.2% full-list. **2026-09-02: `eval_harness.py` committed** (was a scratch script); `count_salience` ranking → full-list 77.1%, top-5 62.4% (from 60.0%). Full writeup: `PHASE6_EVAL_RESULTS.md` follow-up #7. |
 
@@ -457,8 +509,17 @@ or synonym-list changes just need a normal `git push`, no redeploy step.
   score (pure-salience scoring measured a ~15pt full-list recall drop);
   salience is tiebreak-only. Adapted from a stakeholder sample script
   (`concept_scoring_sample.pdf`). See `PHASE6_EVAL_RESULTS.md` follow-up
-  #7. **Pending user confirmation before deploy** (UX judgment call, like
-  the MAX_N 7→9 decision).
+  #7. Confirmed by the user and deployed live 2026-09-02.
+- Near-duplicate tooltip lines (2026-09-03): ~12 Tier-1/Tier-2 bucket
+  pairs have near-identical prompt text (Competition/Competitive
+  Landscape, Market/Market Opportunity, Customer/Customer Needs, ...).
+  **Display-time fix:** `get_tooltip.DEDUP_SIMILAR_PROMPTS` drops the
+  lower-ranked twin when both would show (prompt-overlap ≥ 0.75). Chosen
+  over editing `bucket_library.json` — merging the twins or rewriting the
+  Tier-2 prompts is a taxonomy decision the stakeholders own (they
+  supplied the 80-bucket taxonomy). This is the safe, reversible half;
+  the library half is an open question for them. Eval-neutral (−1 hit,
+  noise). See `PHASE6_EVAL_RESULTS.md` follow-up #8.
 
 ## Explicitly out of scope for this build
 

@@ -12,11 +12,12 @@ each session (see PHASE6_EVAL_RESULTS.md). Committed now so the number is
 reproducible and A/B comparisons (scoring mode, ranking mode, MAX_N,
 vocabulary changes) are one command.
 
-Configs (scoring mode / ranking mode -- see match_buckets.SCORING_MODE and
-get_tooltip.RANK_MODE):
-    count           count / count            -- original behaviour
-    count_salience  count / count_salience   -- salience breaks count ties
-    salience        salience / salience      -- pure salience scoring
+Configs (scoring mode / ranking mode / prompt dedup -- see
+match_buckets.SCORING_MODE, get_tooltip.RANK_MODE, DEDUP_SIMILAR_PROMPTS):
+    count                 count / count / off
+    count_salience        count / count_salience / off
+    count_salience_dedup  count / count_salience / on   (current live default)
+    salience              salience / salience / off
 
 Usage:
     python3 eval_harness.py                       # current configured default
@@ -30,14 +31,16 @@ import json
 from pathlib import Path
 
 from match_buckets import load_bucket_index, match_buckets, SCORING_MODE
-from get_tooltip import rank_buckets, RANK_MODE, TOP_N
+from get_tooltip import rank_buckets, RANK_MODE, TOP_N, DEDUP_SIMILAR_PROMPTS
 
 EVAL_FILE = Path(__file__).parent / "eval_set.json"
 
+# name -> (scoring mode, rank mode, prompt dedup)
 CONFIGS = {
-    "count": ("count", "count"),
-    "count_salience": ("count", "count_salience"),
-    "salience": ("salience", "salience"),
+    "count": ("count", "count", False),
+    "count_salience": ("count", "count_salience", False),
+    "count_salience_dedup": ("count", "count_salience", True),
+    "salience": ("salience", "salience", False),
 }
 
 
@@ -48,9 +51,9 @@ def _norm(name):
     return name.lower().strip().removesuffix("_v2").strip()
 
 
-def run_case(case, bucket_index, scoring, rank_mode):
+def run_case(case, bucket_index, scoring, rank_mode, dedup):
     results = match_buckets(case["objective"], bucket_index=bucket_index, scoring=scoring)
-    ranked = rank_buckets(results, bucket_index, log=False, rank_mode=rank_mode)
+    ranked = rank_buckets(results, bucket_index, log=False, rank_mode=rank_mode, dedup=dedup)
     predicted_full = [r["name"] for r in ranked]
     predicted_top5 = predicted_full[:TOP_N]
 
@@ -72,8 +75,8 @@ def run_case(case, bucket_index, scoring, rank_mode):
 
 
 def evaluate(config_name, bucket_index, cases):
-    scoring, rank_mode = CONFIGS[config_name]
-    rows = [run_case(c, bucket_index, scoring, rank_mode) for c in cases]
+    scoring, rank_mode, dedup = CONFIGS[config_name]
+    rows = [run_case(c, bucket_index, scoring, rank_mode, dedup) for c in cases]
     tot_exp = sum(r["n_expected"] for r in rows)
     tot_hit_top5 = sum(r["n_hits_top5"] for r in rows)
     tot_hit_full = sum(r["n_hits_full"] for r in rows)
@@ -121,7 +124,7 @@ def print_diff(res_a, res_b):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--config", choices=list(CONFIGS), default=None)
-    ap.add_argument("--compare", action="store_true", help="all three configs side by side")
+    ap.add_argument("--compare", action="store_true", help="all configs side by side")
     ap.add_argument("--verbose", action="store_true", help="per-case diff vs count (with --compare)")
     args = ap.parse_args()
 
@@ -135,18 +138,20 @@ def main():
             print_summary(results[name])
             print()
         if args.verbose:
-            for name in ("count_salience", "salience"):
+            for name in ("count_salience", "count_salience_dedup", "salience"):
                 print_diff(results["count"], results[name])
         return
 
     name = args.config
     if name is None:
         name = next(
-            (n for n, (s, r) in CONFIGS.items() if s == SCORING_MODE and r == RANK_MODE),
+            (n for n, (s, r, d) in CONFIGS.items()
+             if s == SCORING_MODE and r == RANK_MODE and d == DEDUP_SIMILAR_PROMPTS),
             None,
         )
         if name is None:
             print(f"configured SCORING_MODE={SCORING_MODE!r} + RANK_MODE={RANK_MODE!r} "
+                  f"+ DEDUP_SIMILAR_PROMPTS={DEDUP_SIMILAR_PROMPTS!r} "
                   f"is not a named config; pass --config explicitly")
             return
     res = evaluate(name, bucket_index, cases)

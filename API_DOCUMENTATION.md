@@ -56,7 +56,7 @@ tooltip suggestions.
 | Field | Type | Notes |
 |---|---|---|
 | `tooltip_lines` | string[] | Pre-rendered display strings, ready to show as-is. |
-| `ranked` | object[] | Same data, broken into fields — use this if you want to render tooltips with custom styling instead of the pre-built string. |
+| `ranked` | object[] | Same data, broken into fields — use this if you want to render tooltips with custom styling instead of the pre-built string. May be shorter than the raw number of matched buckets: buckets whose guidance text near-duplicates a higher-ranked bucket's (e.g. "Market" vs "Market Opportunity") are collapsed to one line. |
 | `ranked[].id` | string | Stable bucket identifier. |
 | `ranked[].name` | string | Human-readable bucket name. |
 | `ranked[].tier` | int | 1 or 2 — which taxonomy tier the bucket belongs to. |

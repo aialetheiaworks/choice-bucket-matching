@@ -16,6 +16,11 @@ Phase 3 -- ranking:
 - Sort by score descending. Tie-break: a bucket in CORE_BUCKETS outranks
   one that isn't, in CORE_BUCKETS's priority order; non-core ties break
   alphabetically by name for determinism.
+- Content dedup (DEDUP_SIMILAR_PROMPTS, 2026-09-03): after the sort, drop
+  any bucket whose prompt near-duplicates a higher-ranked bucket's (e.g.
+  Market vs Market Opportunity -- ~12 Tier-1/Tier-2 twin pairs exist).
+  Runs before the cut below so a freed slot goes to a real bucket. The
+  library is untouched -- see _dedupe_similar_prompts and follow-up #8.
 - Zero matches: fall back to exactly CORE_BUCKETS (all 5), in priority
   order.
 - 1-4 matches: show that many lines, not padded with core buckets -- a
@@ -68,6 +73,7 @@ Usage:
     # or: from get_tooltip import get_tooltip
 """
 
+import re
 import sys
 
 from match_buckets import load_bucket_index, match_buckets, SCORING_MODE
@@ -96,6 +102,71 @@ MAX_N = 9
 # is what makes score == salience_score); "count" and "count_salience"
 # both work with SCORING_MODE="count".
 RANK_MODE = "count_salience"
+
+# Content dedup (2026-09-03). Several Tier-2 "strategic lens" buckets have
+# prompt text that substantially restates a Tier-1 bucket's -- e.g. Market
+# ("market size, maturity, growth, and dynamics") vs Market Opportunity
+# ("market size, growth potential, attractiveness, maturity, whitespace").
+# When both rank, the tooltip shows the same guidance twice. This drops a
+# bucket whose prompt overlaps a higher-ranked bucket's prompt by at least
+# PROMPT_OVERLAP_THRESHOLD (shared content words / smaller prompt's content
+# word count). The higher-ranked twin is always the one kept -- and since a
+# Tier-1 bucket sorts ahead of its Tier-2 twin on the existing tie-break,
+# the Tier-1 prompt wins by default, consistent with _dedupe_tiers.
+#
+# This is the display-time half of the bucket-overlap question (12 T1/T2
+# twin pairs, see PHASE6_EVAL_RESULTS.md follow-up #8). It does NOT touch
+# bucket_library.json -- whether the twins should be merged or their
+# prompts rewritten is a taxonomy decision for the stakeholders.
+DEDUP_SIMILAR_PROMPTS = True
+PROMPT_OVERLAP_THRESHOLD = 0.75
+
+# Boilerplate that every "consider X, Y, Z" prompt shares -- ignored when
+# comparing prompts so the overlap score reflects actual guidance content.
+_PROMPT_STOPWORDS = {
+    "consider", "assess", "evaluate", "identify", "the", "a", "an", "and",
+    "or", "of", "to", "for", "in", "with", "whether", "should", "come",
+    "together", "be", "is", "are", "this", "that", "its", "their", "our",
+    "how", "will", "as",
+}
+
+
+def _prompt_content_words(text):
+    """Meaningful words in a bucket prompt: lowercased, boilerplate and
+    short tokens dropped, trailing -s stripped so plural/singular match
+    (crude but enough for these short curated strings)."""
+    words = set()
+    for raw in re.findall(r"[a-zA-Z]+", text.lower()):
+        if len(raw) <= 2 or raw in _PROMPT_STOPWORDS:
+            continue
+        words.add(raw[:-1] if raw.endswith("s") else raw)
+    return words
+
+
+def _near_duplicate_prompt(words_a, words_b):
+    """True if two prompt content-word sets overlap by at least
+    PROMPT_OVERLAP_THRESHOLD, measured as shared / smaller set (overlap
+    coefficient -- so a short prompt fully contained in a longer one
+    counts as a duplicate even though Jaccard would look low)."""
+    if not words_a or not words_b:
+        return False
+    shared = len(words_a & words_b)
+    return shared / min(len(words_a), len(words_b)) >= PROMPT_OVERLAP_THRESHOLD
+
+
+def _dedupe_similar_prompts(ranked):
+    """Drop any bucket whose prompt near-duplicates a higher-ranked
+    bucket's (see DEDUP_SIMILAR_PROMPTS). Input must already be sorted --
+    the earlier bucket in the list is the one kept."""
+    kept = []
+    kept_words = []
+    for r in ranked:
+        words = _prompt_content_words(r["prompt"])
+        if any(_near_duplicate_prompt(words, w) for w in kept_words):
+            continue
+        kept.append(r)
+        kept_words.append(words)
+    return kept
 
 
 def _core_rank(name):
@@ -178,7 +249,8 @@ def _core_bucket_fallback(bucket_index):
     ]
 
 
-def rank_buckets(match_results, bucket_index, master_prompt=None, log=True, rank_mode=None):
+def rank_buckets(match_results, bucket_index, master_prompt=None, log=True,
+                 rank_mode=None, dedup=None):
     """Phase 3: turn match_buckets()'s per-bucket scores into the final
     ranked selection (see module docstring for the rules).
 
@@ -189,14 +261,22 @@ def rank_buckets(match_results, bucket_index, master_prompt=None, log=True, rank
     break; pass it to get the query text captured in the log. `log=False`
     skips the log write -- used by the Phase 6 eval harness so batch runs
     don't accumulate in match_log.jsonl. `rank_mode` overrides the module
-    RANK_MODE constant (also for the eval harness's A/B runs)."""
+    RANK_MODE constant, `dedup` overrides DEDUP_SIMILAR_PROMPTS (both for
+    the eval harness's A/B runs)."""
     if rank_mode is None:
         rank_mode = RANK_MODE
+    if dedup is None:
+        dedup = DEDUP_SIMILAR_PROMPTS
     if not match_results:
         ranked = _core_bucket_fallback(bucket_index)
     else:
         deduped = _dedupe_tiers(match_results)
         deduped.sort(key=lambda r: _rank_sort_key(r, rank_mode))
+        # Drop near-duplicate-content buckets BEFORE the TOP_N/MAX_N cut, so
+        # removing a redundant line frees a real slot for the next genuine
+        # bucket rather than just shortening the list.
+        if dedup:
+            deduped = _dedupe_similar_prompts(deduped)
         if len(deduped) <= TOP_N:
             ranked = deduped
         else:

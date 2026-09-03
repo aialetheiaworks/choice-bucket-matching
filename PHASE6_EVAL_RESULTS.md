@@ -603,3 +603,80 @@ dependency-parse concept weighter (no LLM): for each matched concept, walk
 ground truth — which is exactly why it's wired as a tiebreak, not the
 primary score. `bucket_library.json` and `bucket_index_cache.pkl` are
 unchanged (lemmatization logic untouched; `CACHE_VERSION` stays at 2).
+
+## 2026-09-03 follow-up #8: near-duplicate tooltip lines (bucket-overlap, display half)
+
+**Symptom (from a stakeholder-style test query):** "I am a marketing
+manager, my CEO wants me to increase the sales of our product 3x next
+year, our product is B2C" returned both *"Consider market size, maturity,
+growth, and dynamics."* (**Market**, T1) and *"Assess market size, growth
+potential, attractiveness, maturity, and whitespace opportunities."*
+(**Market Opportunity**, T2) — the same guidance worded twice, matched on
+the identical terms, identical score.
+
+**Finding — this is structural, not a stray pair.** Pairwise content-word
+overlap across all 80 bucket prompts (overlap coefficient = shared /
+smaller prompt's content-word count) turns up **12 Tier-1 / Tier-2 twin
+pairs**, i.e. a Tier-1 topic and its Tier-2 "strategic lens" restating it:
+
+| overlap | Tier 1 | Tier 2 |
+|---|---|---|
+| 1.00 | Competition | Competitive Landscape |
+| 0.80 | Market | Market Opportunity |
+| 0.75 | Revenue | Pricing & Monetization |
+| 0.75 | Legal | Governance & Compliance |
+| 0.75 | Customer | Customer Needs |
+| 0.60 | Risk | Risk & Uncertainty |
+| 0.60 | ROI | Financial Viability |
+| 0.60 | Pricing | Pricing & Monetization |
+| 0.60 | Data | Data & AI |
+| 0.50 | Technology | Technology Feasibility |
+| 0.50 | Operations | Operational Readiness |
+| 0.50 | Communication | Stakeholder Alignment |
+
+The T1↔T1 collisions the raw metric also shows (e.g. AI/ML ↔ Success
+Measures on "how/will/measured") are prompt-phrasing artifacts, not real.
+
+**Fix shipped (display half): `get_tooltip.DEDUP_SIMILAR_PROMPTS`.** After
+ranking, before the TOP_N/MAX_N cut, drop any bucket whose prompt overlaps
+a higher-ranked kept bucket's by ≥ `PROMPT_OVERLAP_THRESHOLD` (0.75). The
+higher-ranked twin is kept; since a Tier-1 bucket already sorts ahead of
+its Tier-2 twin, the Tier-1 prompt wins — consistent with `_dedupe_tiers`.
+Runs before the cut so a freed slot goes to a real bucket.
+`bucket_library.json` is **not touched** — whether the twins should be
+merged, or the Tier-2 prompts rewritten to a distinct angle, is a
+taxonomy call flagged to the stakeholders (the "library half").
+
+**Eval (34 cases), vs the `count_salience` live default:**
+
+| config | recall (full) | recall (top 5) | precision | avg lines |
+|---|---|---|---|---|
+| `count_salience` | 77.1% (131) | 62.4% (106) | 48.3% | 8.15 |
+| `count_salience_dedup` | 76.5% (130) | 61.8% (105) | 48.3% | 8.09 |
+
+Net **−1 hit full-list, −1 top-5** — noise level, and the metric
+understates the fix because it scores exact bucket *names* while dedup is
+about guidance *text*. The three cases that moved:
+- **case 12 (+1, IMPROVED):** dropped the T2 super-bucket "Governance &
+  Compliance" (near-dup of Legal) → freed slot → Timeline entered. The
+  landmine from the 2026-08-22 reverted merge held: Compliance, Legal and
+  Governance all stayed as three distinct hits — only the redundant T2
+  umbrella was removed.
+- **case 13 (−1):** "Revenue" collapsed into the higher-ranked "Pricing &
+  Monetization" (0.75, shared "revenue / stream / commercial"). Borderline
+  — the guidance is still shown, but Pricing & Monetization is genuinely
+  broader than Revenue.
+- **case 29 (−1):** the labeler expected *both* "Competition" and
+  "Competitive Landscape"; dedup keeps only Competition (prompts overlap
+  1.00 — near-identical text). Here the eval and the actual UX goal
+  diverge: showing both would be exactly the redundancy this fixes.
+
+**Why avg lines barely moved (8.15 → 8.09):** a twin pair only collapses
+when *both* members match *and* both rank high enough to appear — rare
+across the eval, common on the low-diversity conversational queries that
+triggered the report. On the reported query it fires cleanly: Market
+Opportunity drops, Go-to-Market takes the freed slot.
+
+Toggle: `DEDUP_SIMILAR_PROMPTS = False` in `get_tooltip.py` for the exact
+prior behaviour. `eval_harness.py --compare` now includes
+`count_salience_dedup`.
