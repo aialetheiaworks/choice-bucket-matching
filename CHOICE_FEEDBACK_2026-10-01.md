@@ -60,3 +60,10 @@ Prompts returned (9, in this order):
 - `POST /tooltip` with `{"master_prompt": "..."}` and the response shape: `ranked[]` items with `id`, `name`,
   `tier`, `prompt`, `score`, `matched_terms`, `tooltip_line`. Adding an optional request field is fine.
 - CHOICE runs this service locally on port 8102 (`../CHOICE/scripts/services.sh restart reflect`).
+
+## Done (8 Oct 2026)
+
+`POST /tooltip` takes an optional `max_lines` (CHOICE sends 6). When set, `api.py`'s `for_display()` keeps the
+engine's order but shows at most 2 technology buckets and one of each same-angle pair (`technology` /
+`technology_feasibility`, the #2/#9 duplicate). `rank_buckets()` and the eval are untouched. On the case above:
+6 prompts, 1 technical. Not done: down-weighting deep IT buckets by small-business wording.

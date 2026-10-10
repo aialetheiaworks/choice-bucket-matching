@@ -49,6 +49,35 @@ _bucket_index = load_bucket_index()
 
 class TooltipRequest(BaseModel):
     master_prompt: str = Field(..., min_length=1, description="The Choice Forge master prompt to match against the bucket library.")
+    max_lines: int | None = Field(None, ge=1, le=9, description=(
+        "Display cap for an end-user screen. When set, at most this many lines come back and at most "
+        "2 of them are technology/engineering buckets. Unset = the full ranked list (what the eval scores)."))
+
+
+# Engineering buckets that crowded out business angles for small-business owners
+# (CHOICE_FEEDBACK_2026-10-01.md: "app"/"platform" pulled in backlog, scalability, ...).
+TECH_BUCKETS = {"technology", "technology_feasibility", "data", "data_ai", "ai_ml", "security",
+                "scalability", "reliability", "performance", "backlog", "monitoring", "knowledge",
+                "accessibility"}
+MAX_TECH_SHOWN = 2
+# Tier-1/tier-2 pairs that say the same thing in different depth; show one of each.
+SAME_ANGLE = [{"technology", "technology_feasibility"}, {"data", "data_ai", "ai_ml"}]
+
+
+def for_display(ranked, max_lines):
+    """Keep the engine's order, but cap technology buckets, show one bucket per
+    SAME_ANGLE group, and cap the list length. A presentation step only:
+    rank_buckets() and the eval are untouched."""
+    shown, tech = [], 0
+    for r in ranked:
+        if any(r["id"] in g and g & {x["id"] for x in shown} for g in SAME_ANGLE):
+            continue
+        if r["id"] in TECH_BUCKETS:
+            if tech == MAX_TECH_SHOWN:
+                continue
+            tech += 1
+        shown.append(r)
+    return shown[:max_lines]
 
 
 class RankedBucket(BaseModel):
@@ -81,6 +110,8 @@ def tooltip(req: TooltipRequest):
 
     match_results = match_buckets(master_prompt, bucket_index=_bucket_index)
     ranked = rank_buckets(match_results, _bucket_index, master_prompt=master_prompt)
+    if req.max_lines:
+        ranked = for_display(ranked, req.max_lines)
     lines = render_tooltip(ranked)
     for r, line in zip(ranked, lines):
         r["tooltip_line"] = line
